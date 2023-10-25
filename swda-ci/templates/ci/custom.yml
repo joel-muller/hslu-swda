@@ -1,0 +1,26 @@
+.custom-job:
+  image: $CICD_DEVOPS_PATH/ci-agents/docker:$CICD_DIND_IMAGE_VER
+  tags:
+    - $CICD_RUNNER
+  services:
+    - name: docker:dind
+
+  before_script:
+
+    # wait until docker side container is ready
+    - "until docker info; do sleep 1; done"
+
+    # load branch /env specific settings
+    - !reference [.plCustomize, script]
+
+    # provide version infos
+    - !reference [.versionInfo, script]
+    
+    # gather access to docker registry
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - export CICD_NETRC="machine gitlab.switch.ch login gitlab-ci-token password $CI_JOB_TOKEN"
+    - export GONOSUMDB="hslu.ch,gitlab.enterpriselab.ch,gitlab.switch.ch"
+
+  after_script:
+    # clean up
+    - docker logout $CI_REGISTRY

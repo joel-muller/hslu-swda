@@ -1,0 +1,26 @@
+.envConfigSysCommon:
+  variables:
+
+    # vault secret store
+    VAULT_ADDR: https://vault.sys.hslu-rnd.ch
+    CICD_VT_ADDR: https://vault.sys.hslu-rnd.ch
+    CICD_TRANSIT_VT_ADDR: https://transit-vault.sys.hslu-rnd.ch
+    CICD_VT_AUTH: auth/jwt/switch/login
+
+    # shared resources
+    CICD_DEVOPS_PATH: ${CI_REGISTRY}/hslu/shared/devops
+    CICD_DIND_IMAGE_VER: 5f562b30
+    CICD_IPS_HSLU: "147.88.200.0/24"
+    CICD_IPS_RUNNERS: "86.119.44.175, 86.119.44.158, 86.119.46.225"
+    CICD_IPS_MONITORING: "18.130.156.195, 34.246.131.0, 35.173.69.86, 50.17.185.102,18.179.133.14,34.246.131.0,13.251.205.206,52.60.140.174,13.55.57.184,52.42.49.200,13.232.175.73,18.228.60.182,18.130.156.195"
+
+    # runner settings
+    CICD_RUNNER: hslu
+    CICD_K8_AGENT: ${CI_REGISTRY}/hslu/shared/devops/ci-agents/k8:890464c4
+
+    #DOCKER_HOST: "tcp://docker:2376"
+    #DOCKER_TLS_CERTDIR: /certs
+    #DOCKER_TLS_VERIFY: 1
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""

@@ -1,0 +1,11 @@
+include:
+  - /swda/config/config.yml
+  - /templates/ci/dkc.yml
+
+build:
+  extends:
+    - .buildDKC
+    - .job
+  stage: build
+  rules:
+    - !reference [.filterBuild, rules]

@@ -1,0 +1,83 @@
+include:
+  - local: /templates/common/scripts.yml
+
+.template: &validate |
+
+  # lookup
+  if [ -n "$CICD_BUILD_COMPOSE_FILE" ]; then
+    echo 'note: using explicitly definend file for CICD_BUILD_COMPOSE_FILE'
+  elif [ -f "stack.build.yml" ]; then
+    echo 'note: found file for CICD_BUILD_COMPOSE_FILE'
+    CICD_BUILD_COMPOSE_FILE=stack.build.yml
+  fi
+  
+  # fail if missing
+  if [ ! -f "$CICD_BUILD_COMPOSE_FILE" ]; then
+    echo 'ERROR: no build compose file was found'
+    exit -1
+  fi
+
+.buildAndPushDKC:
+  script: |
+    echo "build and publishing image $CICD_IMAGE_ID with configuration $CICD_BUILD_COMPOSE_FILE..."
+    !reference [.registryPullLogin, script]
+    docker-compose -f $CICD_BUILD_COMPOSE_FILE config 
+    docker-compose -f $CICD_BUILD_COMPOSE_FILE build --build-arg=BUILDKIT_INLINE_CACHE=1 $CICD_SERVICE_FILTER
+    if [ -z ${CICD_PUSH_AUTH_OVERRIDE+x} ]; then
+      docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    fi             
+    !reference [.registryPushLogin, script]
+    docker-compose -f $CICD_BUILD_COMPOSE_FILE push $CICD_SERVICE_FILTER
+
+.buildDKC:
+  image: $CICD_DEVOPS_PATH/ci-agents/docker:$CICD_DIND_IMAGE_VER
+  tags:
+    - $CICD_RUNNER
+  services:
+    - name: docker:dind
+  before_script:
+    - "until docker info; do sleep 1; done"
+  script:
+
+    # load branch /env specific settings
+    - !reference [.plCustomize, script]
+
+    # sanity checks
+    - *validate
+
+    # provide version infos
+    - !reference [.versionInfo, script]
+    
+    # build images and publish
+    - echo "build and publishing image $CICD_IMAGE_ID with configuration $CICD_BUILD_COMPOSE_FILE..."
+    - !reference [.registryPullLogin, script]
+    - docker-compose -f $CICD_BUILD_COMPOSE_FILE config
+    - docker-compose -f $CICD_BUILD_COMPOSE_FILE build --build-arg=BUILDKIT_INLINE_CACHE=1 $CICD_SERVICE_FILTER
+    - !reference [.registryPushLogin, script]
+    - docker-compose -f $CICD_BUILD_COMPOSE_FILE push $CICD_SERVICE_FILTER
+
+    # preserve settings for downstream jobs
+    - echo "CICD_IMAGE_ID=$CICD_IMAGE_ID" >> build.env
+
+  after_script:
+    # clean up
+    - docker logout $CI_REGISTRY
+
+.buildDocker:
+  image: $CICD_DEVOPS_PATH/ci-agents/docker:$CICD_DIND_IMAGE_VER
+  services:
+    - name: docker:dind
+  variables:
+    CICD_JOB_IMAGE: $CI_REGISTRY_IMAGE
+    CICD_JOB_DOCKERFILE: "Dockerfile"
+    CICD_JOB_DIRECTORY: "."
+  before_script:
+    # wait until docker side container is ready
+    - "until docker info; do sleep 1; done"
+    - !reference [.versionInfo, script]
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - cd $CICD_JOB_DIRECTORY
+    - docker build --tag $CICD_JOB_IMAGE:$CICD_IMAGE_TAG --tag $CICD_JOB_IMAGE:latest -f Dockerfile .
+    - docker push $CICD_JOB_IMAGE:latest
+    - docker push $CICD_JOB_IMAGE:$CICD_IMAGE_TAG

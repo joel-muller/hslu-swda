@@ -1,0 +1,7 @@
+.buildNode:
+  image: $CICD_DEVOPS_PATH/ci-agents/node:lts
+  tags:
+    - $CICD_RUNNER
+  before_script:
+    - !reference [.plCustomize, script]
+    - !reference [.versionInfo, script]

@@ -1,0 +1,4 @@
+include:
+  - /sys/config/config.yml
+  - /templates/ci/custom.yml
+  - /templates/cd/k8s.yml

@@ -1,0 +1,8 @@
+stages:
+  - generate
+  - trigger
+  - build
+  - quality
+  - test
+  - publish
+  - deploy

@@ -1,0 +1,60 @@
+include:
+  - /swda/config/config.yml
+  - /templates/ci/java.yml
+  - /templates/ci/dkc.yml
+
+build:
+  extends:
+    - .job
+    - .build
+  stage: build
+  rules:
+    - !reference [.filterBuild, rules]
+
+coverage:
+  extends:
+    - .job
+    - .coverage
+  stage: quality
+  rules:
+    - !reference [.filterFastCI, rules]
+    - !reference [.filterBuild, rules]
+
+site:
+  extends:
+    - .job
+    - .site
+  stage: quality
+  rules:
+    - !reference [.filterFastCI, rules]
+    - !reference [.filterBuild, rules]
+
+depcheck:
+  extends:
+    - .job
+    - .depcheck
+  stage: test
+  rules:
+    - !reference [.filterFastCI, rules]
+    - !reference [.filterBuild, rules]
+
+pages:
+  extends:
+    - .job
+    - .pages
+  needs:
+    - site
+  stage: publish
+  rules:
+    - !reference [.filterFastCI, rules]
+    - !reference [.filterBuild, rules]
+
+dockerize:
+  extends:
+    - .job
+    - .buildDKC
+  needs:
+    - build
+  stage: publish
+  rules:
+    - !reference [.filterBuild, rules]
