@@ -1,7 +1,11 @@
 include:
+  - project: hslu/shared/devops/cicd
+    ref: v5-stable
+    file:
+      - /edu/config/config.yml
+      - /templates/ci/dkc.yml
   - /swda/config/config.yml
   - /templates/ci/java.yml
-  - /templates/ci/dkc.yml
 
 build:
   extends:

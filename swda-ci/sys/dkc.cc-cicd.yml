@@ -1,7 +1,0 @@
-include:
-  - local: /templates/auto.cc-cicd.yml
-
-variables:
-  CICD_CONFIG: /sys/config/config.yml
-  CICD_CI_SCRIPT: /templates/ci/dkc.yml
-  CICD_CD_SCRIPT: /sys/auto.cd.yml
