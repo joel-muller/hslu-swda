@@ -1,3 +1,0 @@
-include:
-  - /swda/config/config.yml
-  - /templates/ci/custom.yml 

@@ -1,8 +1,11 @@
 include:
-  - local: /templates/common/scripts.yml
+  - project: hslu/shared/devops/cicd
+    ref: v5-stable
+    file:
+      - /templates/common/scripts.yml
 
 default:
-  image: $CICD_DEVOPS_PATH/ci-agents/maven:3.9.5-temurin-17
+  image: $CICD_DEVOPS_PATH/ci-agents/maven:3.9.5
 
 variables:
     MAVEN_CLI_OPTS: "--batch-mode"
@@ -24,6 +27,7 @@ variables:
 .build:
   extends: .javaJob
   script:
+      - !reference [.registryPullLogin, script]
       - mvn $MAVEN_CLI_OPTS clean install $MAVEN_OPTS
       - java -jar ./config/jacocoreader-0.0.1.jar ./target/site/jacoco/index.html
   coverage: '/Total.*?([0-9]{1,3})%/'
