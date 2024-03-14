@@ -5,7 +5,7 @@ include:
       - /templates/common/scripts.yml
 
 default:
-  image: $CICD_DEVOPS_PATH/ci-agents/maven:3.9.5
+  image: $CICD_DEVOPS_PATH/ci-agents/maven:3.9.6-temurin-21
 
 variables:
     MAVEN_CLI_OPTS: "--batch-mode"
