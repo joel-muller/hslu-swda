@@ -25,3 +25,7 @@
 
     # registry
     CICD_VT_PULL_REGISTRIES: 'secret/sys/cicd/docker-registries/hslu-shared-devops secret/edu/cicd/docker-registries/hslu-edu'
+
+id_tokens:
+  CICD_VAULT_JWT:
+    aud: https://vault.sys.hslu-rnd.ch/
