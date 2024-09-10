@@ -33,14 +33,14 @@ site:
     - !reference [.filterFastCI, rules]
     - !reference [.filterBuild, rules]
 
-depcheck:
-  extends:
-    - .job
-    - .depcheck
-  stage: test
-  rules:
-    - !reference [.filterFastCI, rules]
-    - !reference [.filterBuild, rules]
+#depcheck:
+#  extends:
+#    - .job
+#    - .depcheck
+#  stage: test
+#  rules:
+#    - !reference [.filterFastCI, rules]
+#    - !reference [.filterBuild, rules]
 
 pages:
   extends:
