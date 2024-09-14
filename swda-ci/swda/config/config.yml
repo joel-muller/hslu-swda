@@ -3,7 +3,6 @@ include:
   - /swda/config/stages.yml
   - /swda/config/environments/swda.common.yml
 
-
 # job templates with environment config
 .job:
   extends: .configSwda
