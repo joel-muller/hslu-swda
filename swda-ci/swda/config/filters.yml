@@ -4,10 +4,6 @@
 .filterFastCI:
   rules:
 
-    # not for tags
-    - if: $CI_COMMIT_TAG
-      when: never
-
     - if: $CICD_FAST
       when: never
 
@@ -17,10 +13,6 @@
 .filterBuild:
   rules:
 
-    # not for tags
-    - if: $CI_COMMIT_TAG
-      when: never
-
     # auto run
     - when: on_success
 
@@ -29,10 +21,6 @@
 ##########
 .filterPublish:
   rules:
-
-    # not for tags
-    - if: $CI_COMMIT_TAG
-      when: never
 
     # only on main branch
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
