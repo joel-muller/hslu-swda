@@ -1,0 +1,23 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+// TODO: Anhand von Datenflüssen beschreiben wie das zu entwickelnde System eingesetzt wird.
+// Also Daten, welche Benutzer oder umgebende Systeme in das zu entwickelnde System einspeisen oder abgreifen.
+// Diese Beschreibung wird oft von einem Diagramm unterstützt, Dieses Diagram ist in VSK pflicht!
+// Hinweis: Hier Benutzerschnittstellen und externe Schnittstellen mit Version spezifizieren.
+
+[[section-system-scope-and-context]]
+== System Scope and Context
+
+=== Business Context
+
+**<Diagram or Table>**
+
+**<optionally: Explanation of external domain interfaces>**
+
+=== Technical Context
+
+**<Diagram or Table>**
+
+**<optionally: Explanation of technical interfaces>**
+
+**<Mapping Input/Output to Channels>**

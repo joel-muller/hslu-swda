@@ -1,0 +1,10 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+// TODO: Entwurfsentscheide auflisten.
+// Hinweis: Hier die verwendeten Patterns (z.B. Adapter, Strategy) dokumentieren (jeweils mit Diagramm und kurzer Beschreibung).
+
+[[section-design-decisions]]
+== Architecture Decisions
+
+
+

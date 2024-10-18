@@ -1,0 +1,9 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+// TODO: Gewählter Lösungsansatz mit Begründung beschreiben. Gefragt ist eine sehr kurze Zusammenfassung.
+
+[[section-solution-strategy]]
+== Solution Strategy
+
+
+

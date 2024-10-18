@@ -1,0 +1,9 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+// TODO: Randbedingungen, welche bei der Lösung eingehalten werden müssen, z.B. bestehende Systeme, welche unterstützt werden müssen oder spezielle Anforderungen, welche den Lösungsraum einschränken. 
+
+[[section-architecture-constraints]]
+== Architecture Constraints
+
+
+

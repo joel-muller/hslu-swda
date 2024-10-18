@@ -1,0 +1,34 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+// TODO: Konzepte, welche mehrere Komponenten betreffen (z.B. Schnittstellen, Datenmodell, Testing, Sicherheit) beschreiben.
+// Hinweise:
+// - Hier die proprietäre Schnittstelle zwischen LoggerComponent und LoggerServer dokumentieren.
+// - Hier die Teststrategie dokumentieren (ca. ½ A4-Seite):
+//   - Auf welchem Level (System, Komponente, Unit) wird welche Funktionalität getestet mit Begründung der Wahl.
+//   - Welche Funktionalität wird automatisch getestet und welche manuell mit Begründung der Wahl.
+//   - Welche Funktionalität wird nicht getestet mit Begründung, warum dies kein Problem ist.
+//   - Zusätzliche Informationen, z.B. ob und für welche Funktionalitäten Test-First eingesetzt wird mit Begründung.
+
+
+[[section-concepts]]
+== Cross-cutting Concepts
+
+
+
+
+
+=== _<Concept 1>_
+
+_<explanation>_
+
+
+
+=== _<Concept 2>_
+
+_<explanation>_
+
+...
+
+=== _<Concept n>_
+
+_<explanation>_

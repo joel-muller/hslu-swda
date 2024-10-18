@@ -1,0 +1,109 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+// TODO: Beschreibung der Bausteinsicht hinzufügen. Für VSK obligatorisch.
+// In Fall von VSK möchten wir alle vier Ebenen des C4-Modells sehen (Diagramme aber kein Code).
+// Zu allen Diagrammen wird eine Beschreibung erwartet.
+
+[[section-building-block-view]]
+
+
+== Building Block View
+
+=== Whitebox Overall System
+
+// TODO: Vollständiges System in seinem Kontext beschreiben.
+
+_**<Overview Diagram>**_
+
+Motivation::
+
+_<text explanation>_
+
+Contained Building Blocks::
+_<Description of contained building block (black boxes)>_
+
+Important Interfaces::
+_<Description of important interfaces>_
+
+
+==== <Name black box 1>
+
+_<Purpose/Responsibility>_
+
+_<Interface(s)>_
+
+_<(Optional) Quality/Performance Characteristics>_
+
+_<(Optional) Directory/File Location>_
+
+_<(Optional) Fulfilled Requirements>_
+
+_<(optional) Open Issues/Problems/Risks>_
+
+==== <Name black box 2>
+
+_<black box template>_
+
+==== <Name black box n>
+
+_<black box template>_
+
+==== <Name interface 1>
+
+...
+
+==== <Name interface m>
+
+
+
+=== Level 2
+
+// TODO: Sicht auf Module, welche mehrere Komponenten umfassen (z.B. Teilsysteme oder Services).
+
+==== White Box _<building block 1>_
+
+_<white box template>_
+
+==== White Box _<building block 2>_
+
+_<white box template>_
+
+...
+
+==== White Box _<building block m>_
+
+_<white box template>_
+
+=== Level 3
+
+// TODO: Pro Modul, welches mehrere Komponenten umfasst ein Unterkapitel: Sicht in das Modul (Teilsystem, Service, etc.) hinein (z.B. Komponentendiagram).
+
+
+==== White Box <_building block x.1_>
+
+_<white box template>_
+
+==== White Box <_building block x.2_>
+
+_<white box template>_
+
+==== White Box <_building block y.1_>
+
+_<white box template>_
+
+=== Level 4
+
+// TODO: Pro Komponente ein Unterkapitel: Sicht in die Komponente hinein (z.B. Klassen und Interfaces bei Java).
+// Hinweis: Nur für das Verständnis der Komponente relevante Details angeben.
+
+==== White Box <_building block x.1_>
+
+_<white box template>_
+
+==== White Box <_building block x.2_>
+
+_<white box template>_
+
+==== White Box <_building block y.1_>
+
+_<white box template>_
