@@ -45,6 +45,13 @@ Und man kann auch zitieren:
 [quote,Albert Einstein]
 Ein Mensch der keine Fehler macht, hat nie etwas neues ausprobiert.
 
+
+== tbd
+
+- scnittstellen beschreiben und dokumentieren
+- externe und interne schnittstellen
+- Risiken definieren
+
 // numbering from here on
 :numbered:
 
