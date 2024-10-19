@@ -10,7 +10,7 @@
 
     # shared resources
     CICD_DEVOPS_PATH: ${CI_REGISTRY}/hslu/shared/devops
-    CICD_DIND_IMAGE_VER: 5f562b30
+    CICD_DIND_IMAGE_VER: 27.3.1
 
     # runner settings
     CICD_RUNNER: hslu
