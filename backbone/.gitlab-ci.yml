@@ -1,0 +1,12 @@
+include:
+  - project: hslu/shared/devops/cicd
+    ref: v5-stable
+    file: 
+      - edu/swarm.cd.yml
+      - edu/config/swda.yml
+
+variables:
+
+  # deploy
+  CICD_STACK_NAME: sys-backbone
+  CICD_CUST_CMD: "docker network create --ingress --driver overlay ingress || true; docker network create traefik-public --scope=swarm --driver=overlay || true; docker network create bus --scope=swarm --driver=overlay || true"
