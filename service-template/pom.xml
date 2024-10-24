@@ -18,16 +18,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ch.hslu.swda24fs.g99</groupId>
-    <artifactId>g99-service-sample</artifactId>
+    <groupId>ch.hslu.swda24fs.g02</groupId>
+    <artifactId>g02-store-management-service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>g99-service-sample</name>
+    <name>g02-store-management-service</name>
     <description>
         Beispiel Microservice im Modul SWDA mit RabbitMQ für Gruppe g99.
     </description>
-    <url>https://gitlab.switch.ch/${scm.group.name}/g99/${project.artifactId}</url>
+    <url>https://gitlab.switch.ch/${scm.group.name}/g02/${project.artifactId}</url>
 
     <organization>
         <name>Hochschule Luzern - Informatik</name>
