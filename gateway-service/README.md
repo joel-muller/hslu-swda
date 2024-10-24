@@ -18,8 +18,8 @@ Beispiel (Gateway-)Microservice für SWDA, basierend auf [micronaut.io](https://
   zur Verfügung.
 
 ### Docker Build (nativ)
-* Erstellen des Docker-Images: `docker build . -t "swda/gateway-sample"`
-* Starten des Containers: `docker run -d --name swda-gateway -p 8090:8090 swda/gateway-sample`
+* Erstellen des Docker-Images: `docker build . -t "swda/gateway-service"`
+* Starten des Containers: `docker run -d --name swda-gateway -p 8090:8090 swda/gateway-service`
 * Logs verfolgen (tail): `docker logs swda-container`
 * Stoppen des Containers: `docker stop swda-container`
 Hinweis: Passen Sie das Portmapping wenn nötig an.
