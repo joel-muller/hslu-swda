@@ -34,24 +34,21 @@ Prio Sprint 1: Order, customer Management, accounting
 
 ==== Article Registry
 
-registerNewArticle()
+article.create
 - name : String
 - price : int
 - description : String
 
-unregisterArticle()
+article.delete
 - id : Integer
 
-checkArticleValidity()
+articles.checkValidity
 - orderId : int
 - Articles : Map <idArticle : Integer, count : Integer>
-return :
-- oderId : int
-- validity : true
 
 ==== Central Warehouse
 
-restock()
+warehouse.order
 - articles : Map <idArticle : Integer, count : Integer>
 
 ==== Authentication & User Management
@@ -60,7 +57,7 @@ restock()
 
 ==== Order
 
-createOrder()
+order.create
 - id: Integer
 - articles: Map <idArticle : Integer, count : Integer>
 - date : Date
@@ -69,16 +66,20 @@ createOrder()
 - employeeId: Integer
 - customerId: Integer
 
+order.validate
+- oderId : int
+- validity : true
+
 ==== Customer Management
 
-createCustomer()
+customer.create
 - id : Integer
 - firstName : String
 - lastName : String
 
 ==== Accounting
 
-sendOrderConfirmation()
+confirmation.create
 - orderId : Integer
 - customerId : Integer
 
@@ -107,8 +108,10 @@ Article (Article Registry)
 - description : String
 - unregistered : boolean
 
-Product (Store Management)
+Sortiment (Store Management)
 - articleId : int
 - actualCount : int
 - minCount : int
 - countAfterRefill : int
+
+Store (Store Management)
