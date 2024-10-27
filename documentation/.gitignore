@@ -11,3 +11,4 @@
 .tmp*
 .$*
 desktop.ini
+effective-pom.xml

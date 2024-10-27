@@ -21,3 +21,94 @@ ifndef::imagesdir[:imagesdir: ../images]
 **<optionally: Explanation of technical interfaces>**
 
 **<Mapping Input/Output to Channels>**
+
+=== Messages
+
+Nich sicher ob es ein eigener Header braucht oder nicht oder ob man es in die beiden anderen Header integrieren sollte
+
+Jeder MS hat die messages die er bekommt gelisted
+
+Prio Sprint 1: Order, customer Management, accounting
+
+==== Store Management
+
+==== Article Registry
+
+registerNewArticle()
+- name : String
+- price : int
+- description : String
+
+unregisterArticle()
+- id : Integer
+
+checkArticleValidity()
+- orderId : int
+- Articles : Map <idArticle : Integer, count : Integer>
+return :
+- oderId : int
+- validity : true
+
+==== Central Warehouse
+
+restock()
+- articles : Map <idArticle : Integer, count : Integer>
+
+==== Authentication & User Management
+
+==== Logs
+
+==== Order
+
+createOrder()
+- id: Integer
+- articles: Map <idArticle : Integer, count : Integer>
+- date : Date
+- status: Enum
+- storeId: Integer
+- employeeId: Integer
+- customerId: Integer
+
+==== Customer Management
+
+createCustomer()
+- id : Integer
+- firstName : String
+- lastName : String
+
+==== Accounting
+
+sendOrderConfirmation()
+- orderId : Integer
+- customerId : Integer
+
+=== DB Entries
+
+Order (Order)
+- id: Integer
+- valid : boolean
+- articles: Map <idArticle : Integer, count : Integer>
+- date : Date
+- status: Enum
+- storeId: Integer
+- employeeId: Integer
+- customerId: Integer
+vielleicht nach 24 stunden checken ob es noch invalied gibt und checkArticleValidity() ereut senden
+
+Customer (Customer Management)
+- id : Integer
+- firstName : String
+- lastName : String
+
+Article (Article Registry)
+- id : int
+- name : String
+- price : int
+- description : String
+- unregistered : boolean
+
+Product (Store Management)
+- articleId : int
+- actualCount : int
+- minCount : int
+- countAfterRefill : int
