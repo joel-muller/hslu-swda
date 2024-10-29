@@ -28,13 +28,13 @@ public final class Order {
 
     private int id;
     private boolean valid;
-    private Map<Article, Integer> articles;
+    private Map<Integer, Integer> articles;
     private LocalDate date;
     private int storeId;
     private int customerId;
     private int employeeId;
 
-    public Order(int id, boolean valid, Map<Article, Integer> articles, LocalDate date, int storeId, int customerId, int employeeId) {
+    public Order(int id, boolean valid, Map<Integer, Integer> articles, LocalDate date, int storeId, int customerId, int employeeId) {
         this.id = id;
         this.valid = valid;
         this.articles = articles;
@@ -60,11 +60,11 @@ public final class Order {
         this.valid = valid;
     }
 
-    public Map<Article, Integer> getArticles() {
+    public Map<Integer, Integer> getArticles() {
         return articles;
     }
 
-    public void setArticles(Map<Article, Integer> articles) {
+    public void setArticles(Map<Integer, Integer> articles) {
         this.articles = articles;
     }
 

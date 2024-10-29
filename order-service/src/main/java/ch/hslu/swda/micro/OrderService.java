@@ -55,6 +55,7 @@ public final class OrderService implements AutoCloseable {
         this.receiveStatisticsChange();
         this.receiveChatMessages();
         this.receiveOrderValidity();
+        this.receiveOrder();
     }
 
     /**
@@ -125,6 +126,12 @@ public final class OrderService implements AutoCloseable {
     private void receiveOrderValidity() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
         bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ChatReceiver(exchangeName, bus));
+    }
+
+
+    private void receiveOrder() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER);
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new ChatReceiver(exchangeName, bus));
     }
 
     /**
