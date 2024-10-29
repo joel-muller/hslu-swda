@@ -25,6 +25,10 @@ public final class Routes {
     static final String STATISTICS_CHANGED = "statistics.changed";
     static final String DEEP_THOUGHT_ASK = "deep-thought.ask";
     static final String TEMPLATE_CHAT = "template.chat";
+    static final String RECEIVE_ORDER_VALIDITY = "order.receive-validiy";
+
+    //Imports, dont know yet if we can make this global over all services
+    static final String CHECK_ORDER_VALIDITY = "articles.check-validity";
 
     /**
      * No instance allowed.

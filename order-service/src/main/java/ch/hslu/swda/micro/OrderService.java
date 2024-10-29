@@ -30,9 +30,9 @@ import java.util.concurrent.TimeoutException;
 /**
  * Beispielcode für Implementation eines Servcies mit RabbitMQ.
  */
-public final class ServiceTemplate implements AutoCloseable {
+public final class OrderService implements AutoCloseable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServiceTemplate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrderService.class);
     private final String exchangeName;
     private final BusConnector bus;
 
@@ -40,7 +40,7 @@ public final class ServiceTemplate implements AutoCloseable {
      * @throws IOException      IO-Fehler.
      * @throws TimeoutException Timeout.
      */
-    ServiceTemplate() throws IOException, TimeoutException {
+    OrderService() throws IOException, TimeoutException {
 
         // thread info
         String threadName = Thread.currentThread().getName();
@@ -54,6 +54,7 @@ public final class ServiceTemplate implements AutoCloseable {
         // start message receivers
         this.receiveStatisticsChange();
         this.receiveChatMessages();
+        this.receiveOrderValidity();
     }
 
     /**
@@ -72,6 +73,20 @@ public final class ServiceTemplate implements AutoCloseable {
         // send message to register student in registry, sync communication (awaiting response)
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.STUDENT_REGISTER);
         bus.talkAsync(exchangeName, Routes.STUDENT_REGISTER, data);
+
+    }
+
+
+    public void checkValidity() throws IOException, InterruptedException {
+
+        // create new student
+        final Student student = new Student(1, "Jane", "Doe", ThreadLocalRandom.current().nextInt(1, 13));
+        ObjectMapper mapper = new ObjectMapper();
+        String data = mapper.writeValueAsString(student);
+
+        // send message to register student in registry, sync communication (awaiting response)
+        LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
+        bus.talkAsync(exchangeName, Routes.CHECK_ORDER_VALIDITY, data);
 
     }
 
@@ -98,12 +113,18 @@ public final class ServiceTemplate implements AutoCloseable {
      */
     private void receiveStatisticsChange() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.STATISTICS_CHANGED);
-        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.STATISTICS_CHANGED, Routes.STATISTICS_CHANGED, new StatsReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.STATISTICS_CHANGED, Routes.STATISTICS_CHANGED, new StatsReceiver(exchangeName, bus));
     }
 
     private void receiveChatMessages() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.TEMPLATE_CHAT);
-        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.TEMPLATE_CHAT, Routes.TEMPLATE_CHAT, new ChatReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "OrderSerivce <- " + Routes.TEMPLATE_CHAT, Routes.TEMPLATE_CHAT, new ChatReceiver(exchangeName, bus));
+    }
+
+
+    private void receiveOrderValidity() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ChatReceiver(exchangeName, bus));
     }
 
     /**
