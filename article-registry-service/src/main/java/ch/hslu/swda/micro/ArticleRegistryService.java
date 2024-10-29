@@ -30,9 +30,9 @@ import java.util.concurrent.TimeoutException;
 /**
  * Beispielcode für Implementation eines Servcies mit RabbitMQ.
  */
-public final class ServiceTemplate implements AutoCloseable {
+public final class ArticleRegistryService implements AutoCloseable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServiceTemplate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ArticleRegistryService.class);
     private final String exchangeName;
     private final BusConnector bus;
 
@@ -40,7 +40,7 @@ public final class ServiceTemplate implements AutoCloseable {
      * @throws IOException      IO-Fehler.
      * @throws TimeoutException Timeout.
      */
-    ServiceTemplate() throws IOException, TimeoutException {
+    ArticleRegistryService() throws IOException, TimeoutException {
 
         // thread info
         String threadName = Thread.currentThread().getName();
@@ -54,6 +54,7 @@ public final class ServiceTemplate implements AutoCloseable {
         // start message receivers
         this.receiveStatisticsChange();
         this.receiveChatMessages();
+        this.receiveValidityCheck();
     }
 
     /**
@@ -93,17 +94,29 @@ public final class ServiceTemplate implements AutoCloseable {
         return response;
     }
 
+
+    public void sendValidity() throws IOException, InterruptedException {
+
+       //TBD
+    }
+
     /**
      * @throws IOException
      */
     private void receiveStatisticsChange() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.STATISTICS_CHANGED);
-        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.STATISTICS_CHANGED, Routes.STATISTICS_CHANGED, new StatsReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.STATISTICS_CHANGED, Routes.STATISTICS_CHANGED, new StatsReceiver(exchangeName, bus));
     }
 
     private void receiveChatMessages() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.TEMPLATE_CHAT);
-        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.TEMPLATE_CHAT, Routes.TEMPLATE_CHAT, new ChatReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.TEMPLATE_CHAT, Routes.TEMPLATE_CHAT, new ChatReceiver(exchangeName, bus));
+    }
+
+
+    private void receiveValidityCheck() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.CHECK_ORDER_VALIDITY, Routes.CHECK_ORDER_VALIDITY, new ChatReceiver(exchangeName, bus));
     }
 
     /**
