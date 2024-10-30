@@ -52,34 +52,12 @@ public final class OrderService implements AutoCloseable {
         this.bus.connect();
 
         // start message receivers
-        this.receiveStatisticsChange();
-        this.receiveChatMessages();
         this.receiveOrderValidity();
         this.receiveOrder();
     }
 
-    /**
-     * Erzeugt eine Student-Entity und sendet einen Event.
-     *
-     * @throws IOException          IOException.
-     * @throws InterruptedException InterruptedException.
-     */
-    public void registerStudent() throws IOException, InterruptedException {
-
-        // create new student
-        final Student student = new Student(1, "Jane", "Doe", ThreadLocalRandom.current().nextInt(1, 13));
-        ObjectMapper mapper = new ObjectMapper();
-        String data = mapper.writeValueAsString(student);
-
-        // send message to register student in registry, sync communication (awaiting response)
-        LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.STUDENT_REGISTER);
-        bus.talkAsync(exchangeName, Routes.STUDENT_REGISTER, data);
-
-    }
-
-
     public void checkValidity() throws IOException, InterruptedException {
-
+        LOG.info("check validity here in the method");
         // create new student
         final Student student = new Student(1, "Jane", "Doe", ThreadLocalRandom.current().nextInt(1, 13));
         ObjectMapper mapper = new ObjectMapper();
@@ -91,48 +69,19 @@ public final class OrderService implements AutoCloseable {
 
     }
 
-    public String askAboutUniverse() throws IOException, InterruptedException {
-
-        // create question
-        final String question = "What is the answer to the Ultimate Question of Life, the Universe, and Everything?";
-
-        // send question to deep thought
-        LOG.debug("Sending synchronous message to broker with routing [{}]", Routes.DEEP_THOUGHT_ASK);
-        String response = bus.talkSync(exchangeName, Routes.DEEP_THOUGHT_ASK, question);
-
-        // receive answer
-        if (response == null) {
-            LOG.debug("Received no response. Timeout occurred. Will retry later");
-            return null;
-        }
-        LOG.debug("Received response to question \"{}\": {}", question, response);
-        return response;
-    }
-
-    /**
-     * @throws IOException
-     */
-    private void receiveStatisticsChange() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.STATISTICS_CHANGED);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.STATISTICS_CHANGED, Routes.STATISTICS_CHANGED, new StatsReceiver(exchangeName, bus));
-    }
-
-    private void receiveChatMessages() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.TEMPLATE_CHAT);
-        bus.listenFor(exchangeName, "OrderSerivce <- " + Routes.TEMPLATE_CHAT, Routes.TEMPLATE_CHAT, new ChatReceiver(exchangeName, bus));
-    }
-
-
     private void receiveOrderValidity() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ChatReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ValidityReceiver(exchangeName, bus));
     }
 
 
     private void receiveOrder() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new ChatReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new OrderReceiver(exchangeName, bus));
+
     }
+
+
 
     /**
      * @see java.lang.AutoCloseable#close()
