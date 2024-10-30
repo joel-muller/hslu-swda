@@ -19,6 +19,7 @@ import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 
 import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,13 +41,8 @@ public final class ChatReceiver implements MessageReceiver {
     public void onMessageReceived(final String route, final String replyTo, final String corrId, final String message) {
 
         // receive message and reply
-        try {
-            LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
-            LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
-            bus.reply(exchangeName, replyTo, corrId, "Hello there. This is the service template.");
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
-        }
+        LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
+        LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
 
     }
 
