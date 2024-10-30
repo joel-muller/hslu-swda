@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.entities.Order;
+import ch.hslu.swda.entities.LogMessage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,9 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 
 public final class OrderReceiver implements MessageReceiver {
@@ -65,8 +63,7 @@ public final class OrderReceiver implements MessageReceiver {
             Order order = new Order(articles, orderNode.get("storeId").asInt(), orderNode.get("customerId").asInt(), orderNode.get("employeeId").asInt());
 
             LOG.info("Following order received: [{}]", order.toString());
-
-
+            service.log(new LogMessage(order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
             // TBD safe order to the database
 
             service.checkValidity(order);

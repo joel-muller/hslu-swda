@@ -17,15 +17,13 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.entities.Student;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
 
@@ -67,6 +65,16 @@ public final class OrderService implements AutoCloseable {
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
         bus.talkAsync(exchangeName, Routes.CHECK_ORDER_VALIDITY, data);
 
+    }
+
+    public void log(LogMessage message) throws IOException, InterruptedException {
+        ObjectMapper mapper = new ObjectMapper();
+        String data = mapper.writeValueAsString(message);
+
+        LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.LOG);
+        bus.talkAsync(exchangeName, Routes.LOG, data);
+
+        LOG.debug("Create log");
     }
 
     private void receiveOrderValidity() throws IOException {

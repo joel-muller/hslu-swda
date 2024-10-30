@@ -25,6 +25,7 @@ public final class Routes {
 
     //Imports, dont know yet if we can make this global over all services
     static final String CHECK_ORDER_VALIDITY = "articles.check-validity";
+    static final String LOG = "logs.new";
 
     /**
      * No instance allowed.
