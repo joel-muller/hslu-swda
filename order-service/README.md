@@ -22,3 +22,20 @@ Vorausgesetzt, der backbone läuft, kann der Service lokal vielfältig gestartet
   * `mvn docker:logs` - Anzeige der Logs
   * `mvn docker:stop` - Stoppen und löschen des Containers
 * Docker pur: `docker run --rm -it -e "RMQ_HOST=host.docker.internal" swda-24fs01/order-service`
+
+## Queue commands
+
+Creating an order manually from RabbitMQ Desktop:
+
+```json
+{
+  "articles": {
+    "101": 2,
+    "202": 5,
+    "303": 1
+  },
+  "storeId": 10,
+  "customerId": 1001,
+  "employeeId": 501
+}
+```

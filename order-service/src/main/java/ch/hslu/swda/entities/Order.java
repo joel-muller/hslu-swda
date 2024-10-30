@@ -16,13 +16,13 @@
 package ch.hslu.swda.entities;
 
 import java.util.*;
+import java.util.Calendar;
 
 /**
  * Einfaches Datenmodell einer Bestellung.
  */
 public final class Order {
 
-    private static final int NOID = -1;
 
     private int id;
     private boolean valid;
@@ -32,11 +32,11 @@ public final class Order {
     private int customerId;
     private int employeeId;
 
-    public Order(int id, boolean valid, Map<Integer, Integer> articles, Date date, int storeId, int customerId, int employeeId) {
-        this.id = id;
-        this.valid = valid;
+    public Order(Map<Integer, Integer> articles, int storeId, int customerId, int employeeId) {
+        this.id = 12;
+        this.valid = false;
         this.articles = articles;
-        this.date = date;
+        this.date = Calendar.getInstance().getTime();
         this.storeId = storeId;
         this.customerId = customerId;
         this.employeeId = employeeId;
@@ -47,7 +47,7 @@ public final class Order {
         for (int i = 0; i < 10; i++) {
             articles.put(i, 5+i);
         }
-        return new Order(12, true, articles, new Date(), 12, 23, 69);
+        return new Order(articles,12, 23, 69);
     }
 
     public int getId() {

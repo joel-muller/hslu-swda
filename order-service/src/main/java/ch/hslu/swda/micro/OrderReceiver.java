@@ -17,10 +17,19 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
+import ch.hslu.swda.entities.Order;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 
 public final class OrderReceiver implements MessageReceiver {
 
@@ -40,8 +49,28 @@ public final class OrderReceiver implements MessageReceiver {
     public void onMessageReceived(final String route, final String replyTo, final String corrId, final String message) {
 
         // receive message and reply
-        LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
-        LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
+        try {
+            LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
+            LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode orderNode = mapper.readTree(message);
+
+            String articlesString = orderNode.get("articles").toString();
+            Map<Integer, Integer> articles = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
+
+
+            Order order = new Order(articles, orderNode.get("storeId").asInt(), orderNode.get("customerId").asInt(), orderNode.get("employeeId").asInt());
+
+            LOG.info("Following order received: [{}]", order.toString());
+
+
+            // Safe order to the database
+
+//            bus.reply(exchangeName, replyTo, corrId, "Hello there. This is the service template.");
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
 
     }
 
