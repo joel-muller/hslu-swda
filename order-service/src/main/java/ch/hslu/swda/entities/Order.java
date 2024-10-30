@@ -15,9 +15,7 @@
  */
 package ch.hslu.swda.entities;
 
-import java.util.Objects;
-import java.util.Map;
-import java.time.LocalDate;
+import java.util.*;
 
 /**
  * Einfaches Datenmodell einer Bestellung.
@@ -29,12 +27,12 @@ public final class Order {
     private int id;
     private boolean valid;
     private Map<Integer, Integer> articles;
-    private LocalDate date;
+    private Date date;
     private int storeId;
     private int customerId;
     private int employeeId;
 
-    public Order(int id, boolean valid, Map<Integer, Integer> articles, LocalDate date, int storeId, int customerId, int employeeId) {
+    public Order(int id, boolean valid, Map<Integer, Integer> articles, Date date, int storeId, int customerId, int employeeId) {
         this.id = id;
         this.valid = valid;
         this.articles = articles;
@@ -42,6 +40,14 @@ public final class Order {
         this.storeId = storeId;
         this.customerId = customerId;
         this.employeeId = employeeId;
+    }
+
+    public static Order getExampleOrder() {
+        Map<Integer, Integer> articles = new HashMap<>();
+        for (int i = 0; i < 10; i++) {
+            articles.put(i, 5+i);
+        }
+        return new Order(12, true, articles, new Date(), 12, 23, 69);
     }
 
     public int getId() {
@@ -68,11 +74,11 @@ public final class Order {
         this.articles = articles;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

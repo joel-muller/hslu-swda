@@ -17,12 +17,14 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.Student;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
@@ -56,14 +58,12 @@ public final class OrderService implements AutoCloseable {
         this.receiveOrder();
     }
 
-    public void checkValidity() throws IOException, InterruptedException {
+    public void checkValidity(Order order) throws IOException, InterruptedException {
         LOG.info("check validity here in the method");
-        // create new student
-        final Student student = new Student(1, "Jane", "Doe", ThreadLocalRandom.current().nextInt(1, 13));
-        ObjectMapper mapper = new ObjectMapper();
-        String data = mapper.writeValueAsString(student);
 
-        // send message to register student in registry, sync communication (awaiting response)
+        ObjectMapper mapper = new ObjectMapper();
+        String data = mapper.writeValueAsString(order);
+
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
         bus.talkAsync(exchangeName, Routes.CHECK_ORDER_VALIDITY, data);
 

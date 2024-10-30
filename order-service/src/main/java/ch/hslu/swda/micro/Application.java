@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
+
+import ch.hslu.swda.entities.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +51,7 @@ public final class Application {
         @Override
         public void run() {
             try {
-                service.checkValidity();
+                service.checkValidity(Order.getExampleOrder());
             } catch (IOException | InterruptedException e) {
                 LOG.error(e.getMessage(), e);
             }

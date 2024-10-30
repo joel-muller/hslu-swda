@@ -40,8 +40,8 @@ public final class OrderReceiver implements MessageReceiver {
     public void onMessageReceived(final String route, final String replyTo, final String corrId, final String message) {
 
         // receive message and reply
-            LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
-            LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
+        LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
+        LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
 
     }
 
