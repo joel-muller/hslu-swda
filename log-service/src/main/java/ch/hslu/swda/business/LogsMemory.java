@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public final class LogsMemory implements Logs {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogsMemory.class);
-    private Map<UUID, LogEntry> logEntryMap = new HashMap<>();
+    private static Map<UUID, LogEntry> logEntryMap = new HashMap<>();
 
     @Override
     public boolean addLogEntry(LogEntry logEntry) {

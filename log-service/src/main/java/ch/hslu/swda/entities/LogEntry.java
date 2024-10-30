@@ -1,5 +1,6 @@
 package ch.hslu.swda.entities;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -14,6 +15,16 @@ public class LogEntry {
     private String eventType;
     private UUID objUuid;
     private String message;
+
+    public LogEntry() {
+        this.id = UUID.randomUUID();
+        this.source = "";
+        this.timestamp = Instant.now().getEpochSecond();
+        this.userId = 0;
+        this.eventType = "";
+        this.objUuid = UUID.randomUUID();
+        this.message = "";
+    }
 
     public LogEntry(String source, long timestamp, int userId, String eventType, UUID objUuid, String message) {
         this.id = UUID.randomUUID();

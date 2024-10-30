@@ -48,12 +48,7 @@ public final class Application {
 
         @Override
         public void run() {
-            try {
-                service.registerStudent();
-                service.askAboutUniverse();
-            } catch (IOException | InterruptedException e) {
-                LOG.error(e.getMessage(), e);
-            }
+            LOG.debug("Start");
         }
     }
 
