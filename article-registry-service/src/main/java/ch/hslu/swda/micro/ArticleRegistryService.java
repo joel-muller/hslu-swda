@@ -17,6 +17,7 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Student;
 import ch.hslu.swda.entities.Validity;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,6 +64,17 @@ public final class ArticleRegistryService implements AutoCloseable {
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
         bus.talkAsync(exchangeName, Routes.RECEIVE_ORDER_VALIDITY, data);
     }
+
+    public void log(LogMessage message) throws IOException, InterruptedException {
+        ObjectMapper mapper = new ObjectMapper();
+        String data = mapper.writeValueAsString(message);
+
+        LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.LOG);
+        bus.talkAsync(exchangeName, Routes.LOG, data);
+
+        LOG.debug("Create log");
+    }
+
 
 
     private void receiveValidityCheck() throws IOException {

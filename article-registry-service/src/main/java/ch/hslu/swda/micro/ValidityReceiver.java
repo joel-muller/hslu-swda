@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 
+import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Validity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -63,7 +64,10 @@ public final class ValidityReceiver implements MessageReceiver {
 
             // TBD, Hier die artickel pruefen
 
-            service.sendValidity(new Validity(true, orderId));
+            Validity validity = new Validity(true, orderId);
+
+            service.log(new LogMessage(jsonNode.get("employeeId").asInt(), "validity.ckecked", "Order validity of order " + validity.toString()));
+            service.sendValidity(validity);
         } catch (IOException | InterruptedException e) {
             LOG.error(e.getMessage(), e);
         }
