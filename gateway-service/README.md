@@ -30,3 +30,22 @@ Hinweis: Passen Sie das Portmapping wenn nötig an.
 * Logs anzeigen: `mvn docker:logs`
 * Stoppen des Containers: `mvn docker:stop`
 Hinweis: Maven entfernt beim Stoppen auch gleich den Container.
+
+### Curls commands
+
+Create a order:
+
+```json
+curl -X POST http://localhost:8090/api/v1/orders \
+-H "Content-Type: application/json" \
+-d '{
+  "articles": {
+    "12": 0,
+    "14": 0,
+    "18": 0
+  },
+  "storeId": 0,
+  "customerId": 0,
+  "employeeId": 0
+}'
+```
