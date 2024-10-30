@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ class LogsMemoryTest {
 
     @BeforeEach
     void prepare() {
-        logsMemory = new LogsMemory();
+        logsMemory = new LogsMemory(new HashMap<>());
         objUUIDList = new ArrayList<>();
         logList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

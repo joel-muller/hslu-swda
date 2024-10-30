@@ -15,6 +15,20 @@ public final class LogsMemory implements Logs {
     private static final Logger LOG = LoggerFactory.getLogger(LogsMemory.class);
     private static Map<UUID, LogEntry> logEntryMap = new HashMap<>();
 
+    /**
+     * Constructor for testing
+     * @param map
+     */
+    LogsMemory(Map map) {
+        logEntryMap = new HashMap<>();
+    }
+
+    /**
+     * Default constructor
+     */
+    public LogsMemory() {
+        // empty
+    }
     @Override
     public boolean addLogEntry(LogEntry logEntry) {
         logEntryMap.put(logEntry.getId(), logEntry);
