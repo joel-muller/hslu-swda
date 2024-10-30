@@ -50,11 +50,12 @@ public final class Application {
 
         @Override
         public void run() {
-            try {
-                service.checkValidity(Order.getExampleOrder());
-            } catch (IOException | InterruptedException e) {
-                LOG.error(e.getMessage(), e);
-            }
+            LOG.info("Heartbeat");
+//            try {
+//                service.checkValidity(Order.getExampleOrder());
+//            } catch (IOException | InterruptedException e) {
+//                LOG.error(e.getMessage(), e);
+//            }
         }
     }
 

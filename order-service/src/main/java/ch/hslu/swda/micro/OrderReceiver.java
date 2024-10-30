@@ -67,7 +67,7 @@ public final class OrderReceiver implements MessageReceiver {
 
             // Safe order to the database
 
-//            bus.reply(exchangeName, replyTo, corrId, "Hello there. This is the service template.");
+            bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
