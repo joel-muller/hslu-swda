@@ -18,20 +18,29 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 
-import java.io.IOException;
-
+import ch.hslu.swda.entities.Validity;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class ChatReceiver implements MessageReceiver {
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChatReceiver.class);
+public final class ValidityReceiver implements MessageReceiver {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ValidityReceiver.class);
     private final String exchangeName;
     private final BusConnector bus;
+    private final ArticleRegistryService service;
 
-    public ChatReceiver(final String exchangeName, final BusConnector bus) {
+    public ValidityReceiver(final String exchangeName, final BusConnector bus, ArticleRegistryService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
+        this.service = service;
     }
 
     /**
@@ -43,6 +52,21 @@ public final class ChatReceiver implements MessageReceiver {
         // receive message and reply
         LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
         LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(message);
+            String articlesString = jsonNode.get("articles").toString();
+            int orderId = jsonNode.get("id").asInt();
+            Map<Integer, Integer> articles = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
+            LOG.info("Order with the id [{}] received articles: [{}]", orderId, articles);
+
+            // TBD, Hier die artickel pruefen
+
+            service.sendValidity(new Validity(true, orderId));
+        } catch (IOException | InterruptedException e) {
+            LOG.error(e.getMessage(), e);
+        }
 
     }
 

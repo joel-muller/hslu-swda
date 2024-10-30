@@ -48,11 +48,12 @@ public final class Application {
 
         @Override
         public void run() {
-            try {
-                service.sendValidity();
-            } catch (IOException | InterruptedException e) {
-                LOG.error(e.getMessage(), e);
-            }
+            LOG.debug("Heartbeat");
+//            try {
+//                service.sendValidity();
+//            } catch (IOException | InterruptedException e) {
+//                LOG.error(e.getMessage(), e);
+//            }
         }
     }
 

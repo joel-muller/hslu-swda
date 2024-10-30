@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.entities.Student;
+import ch.hslu.swda.entities.Validity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,23 +56,18 @@ public final class ArticleRegistryService implements AutoCloseable {
         this.receiveValidityCheck();
     }
 
-    public void sendValidity() throws IOException, InterruptedException {
-        LOG.info("check validity here in the method");
-        // create new student
-        final Student student = new Student(1, "Jane", "Doe", ThreadLocalRandom.current().nextInt(1, 13));
+    public void sendValidity(Validity validity) throws IOException, InterruptedException {
         ObjectMapper mapper = new ObjectMapper();
-        String data = mapper.writeValueAsString(student);
+        String data = mapper.writeValueAsString(validity);
 
-        // send message to register student in registry, sync communication (awaiting response)
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
         bus.talkAsync(exchangeName, Routes.RECEIVE_ORDER_VALIDITY, data);
-
     }
 
 
     private void receiveValidityCheck() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
-        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.CHECK_ORDER_VALIDITY, Routes.CHECK_ORDER_VALIDITY, new ChatReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.CHECK_ORDER_VALIDITY, Routes.CHECK_ORDER_VALIDITY, new ValidityReceiver(exchangeName, bus, this));
     }
 
     /**
