@@ -50,7 +50,7 @@ public final class Application {
 
         @Override
         public void run() {
-            LOG.info("Heartbeat");
+            LOG.debug("Heartbeat");
 //            try {
 //                service.checkValidity(Order.getExampleOrder());
 //            } catch (IOException | InterruptedException e) {

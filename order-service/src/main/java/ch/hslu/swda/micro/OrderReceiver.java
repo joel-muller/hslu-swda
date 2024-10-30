@@ -36,10 +36,12 @@ public final class OrderReceiver implements MessageReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(OrderReceiver.class);
     private final String exchangeName;
     private final BusConnector bus;
+    private final OrderService service;
 
-    public OrderReceiver(final String exchangeName, final BusConnector bus) {
+    public OrderReceiver(final String exchangeName, final BusConnector bus, final OrderService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
+        this.service = service;
     }
 
     /**
@@ -65,13 +67,13 @@ public final class OrderReceiver implements MessageReceiver {
             LOG.info("Following order received: [{}]", order.toString());
 
 
-            // Safe order to the database
+            // TBD safe order to the database
 
+            service.checkValidity(order);
             bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             LOG.error(e.getMessage(), e);
         }
-
     }
 
 }

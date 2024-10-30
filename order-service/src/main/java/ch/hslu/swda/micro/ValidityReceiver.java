@@ -42,7 +42,7 @@ public final class ValidityReceiver implements MessageReceiver {
         // receive message and reply
         LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
         LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
-
+        LOG.info("Received validity check: [{}]", message);
     }
 
 }

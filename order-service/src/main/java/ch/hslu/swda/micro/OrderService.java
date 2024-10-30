@@ -59,7 +59,7 @@ public final class OrderService implements AutoCloseable {
     }
 
     public void checkValidity(Order order) throws IOException, InterruptedException {
-        LOG.info("check validity here in the method");
+        LOG.info("Checking validity of order");
 
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(order);
@@ -77,7 +77,7 @@ public final class OrderService implements AutoCloseable {
 
     private void receiveOrder() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new OrderReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new OrderReceiver(exchangeName, bus, this));
 
     }
 
