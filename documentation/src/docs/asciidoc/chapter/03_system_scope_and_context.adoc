@@ -32,6 +32,16 @@ Prio Sprint 1: Order, customer Management, accounting
 
 ==== Store Management
 
+inventory.update (auch für das Hinzufügen neuer Artikel/Einträge in die Inventory-Datenbank)
+- store: String
+- articleId : int
+- minimuimQuantity: int
+- actualQuantity: int
+
+
+inventory.check
+TBD
+
 ==== Article Registry
 
 article.create
