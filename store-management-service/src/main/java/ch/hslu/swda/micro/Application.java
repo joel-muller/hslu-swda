@@ -16,11 +16,14 @@
 package ch.hslu.swda.micro;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ch.hslu.swda.entities.StoreManagementDB;
 
 /**
  * Demo für Applikationsstart.
@@ -28,19 +31,19 @@ import org.slf4j.LoggerFactory;
 public final class Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
-
+    
+    
     /**
      * TimerTask für periodische Ausführung.
      */
     private static final class HeartBeat extends TimerTask {
 
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeat.class);
+        private StoreManagementService service;
 
-        private ServiceTemplate service;
-
-        HeartBeat() {
+        HeartBeat() throws SQLException {
             try {
-                this.service = new ServiceTemplate();
+                this.service = new StoreManagementService();
             } catch (IOException | TimeoutException e) {
                 LOG.error(e.getMessage(), e);
             }
@@ -48,12 +51,19 @@ public final class Application {
 
         @Override
         public void run() {
-            try {
-                service.registerStudent();
-                service.askAboutUniverse();
-            } catch (IOException | InterruptedException e) {
+/*             try { */
+                // service.registerStudent();
+                // service.askAboutUniverse();
+                LOG.info("Heartbeat...");
+
+                //service.db.insertInventoryRecord(1, 5, 7, 20);
+                //db.viewInventoryTable();
+/*             } catch (IOException | InterruptedException e) {
+                LOG.error(e.getMessage(), e); */
+/*             } catch () {
+                e.printStackTrace();
                 LOG.error(e.getMessage(), e);
-            }
+            } */
         }
     }
 
@@ -67,8 +77,9 @@ public final class Application {
      * main-Methode. Startet einen Timer für den HeartBeat.
      *
      * @param args not used.
+     * @throws SQLException 
      */
-    public static void main(final String[] args) throws InterruptedException {
+    public static void main(final String[] args) throws InterruptedException, SQLException {
         final long startTime = System.currentTimeMillis();
         LOG.info("Service starting...");
         if (!"OFF".equals(System.getenv("RABBIT"))) {
