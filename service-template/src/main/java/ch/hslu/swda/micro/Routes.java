@@ -20,6 +20,8 @@ package ch.hslu.swda.micro;
  */
 public final class Routes {
 
+    
+    static final String STORE_STATUS = "store.status";
     static final String STUDENT_REGISTER = "student.register";
     static final String STATISTICS_TOP_MONTH = "statistics.top-month";
     static final String STATISTICS_CHANGED = "statistics.changed";

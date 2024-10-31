@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.hslu.swda24fs.g02</groupId>
@@ -25,7 +26,7 @@
 
     <name>g02-store-management-service</name>
     <description>
-        Beispiel Microservice im Modul SWDA mit RabbitMQ für Gruppe g99.
+        Store Management Microservice im Modul SWDA mit RabbitMQ für Gruppe g02.
     </description>
     <url>https://gitlab.switch.ch/${scm.group.name}/g02/${project.artifactId}</url>
 
@@ -216,7 +217,7 @@
                 <artifactId>consolecaptor</artifactId>
                 <version>1.0.3</version>
                 <scope>test</scope>
-            </dependency>            
+            </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers</artifactId>
@@ -279,6 +280,27 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <!-- Micronaut Data JPA -->
+        <dependency>
+            <groupId>io.micronaut.data</groupId>
+            <artifactId>micronaut-data-hibernate-jpa</artifactId>
+            <version>${micronaut.version}</version>
+        </dependency>
+
+        <!-- Micronaut JDBC Hikari -->
+        <dependency>
+            <groupId>io.micronaut.sql</groupId>
+            <artifactId>micronaut-jdbc-hikari</artifactId>
+            <version>${micronaut.version}</version>
+        </dependency>
+
+        <!-- MySQL Connector -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.32</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -391,8 +413,8 @@
                             <groupId>net.sourceforge.pmd</groupId>
                             <artifactId>pmd-jsp</artifactId>
                             <version>${pmd.version}</version>
-                        </dependency>                    
-                    </dependencies>                
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -571,10 +593,12 @@
                         <configuration>
                             <outputFile>${project.build.directory}/service.jar</outputFile>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>${exec.mainClass}</mainClass>
                                 </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                             </transformers>
                             <filters>
                                 <filter>
