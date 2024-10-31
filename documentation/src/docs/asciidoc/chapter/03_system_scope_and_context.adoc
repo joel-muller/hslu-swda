@@ -24,7 +24,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === Messages
 
-Nich sicher ob es ein eigener Header braucht oder nicht oder ob man es in die beiden anderen Header integrieren sollte
+Nicht sicher ob es ein eigener Header braucht oder nicht oder ob man es in die beiden anderen Header integrieren sollte
 
 Jeder MS hat die messages die er bekommt gelisted
 
@@ -40,7 +40,9 @@ inventory.update (auch für das Hinzufügen neuer Artikel/Einträge in die Inven
 
 
 inventory.check
-TBD
+- store: String
+- articleId : int
+
 
 ==== Article Registry
 
