@@ -43,6 +43,17 @@ services:
     links:
       - "mongodb:mongo"
 
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: store_management
+    ports:
+      - "3306:3306"
+    networks :
+      - backbone
+      - demo
+
 ##############################################
 # Demo Stack                                 #
 # you can remove these services if you want  #
