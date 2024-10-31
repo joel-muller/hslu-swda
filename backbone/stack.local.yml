@@ -54,6 +54,16 @@ services:
       - backbone
       - demo
 
+  mysql-viewer:
+    image: adminer:latest
+    networks:
+      - backbone
+    ports:
+      - "8080:8080"
+    restart: always
+
+
+
 ##############################################
 # Demo Stack                                 #
 # you can remove these services if you want  #
