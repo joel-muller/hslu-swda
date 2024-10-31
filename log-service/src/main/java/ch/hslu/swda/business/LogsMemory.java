@@ -4,10 +4,7 @@ import ch.hslu.swda.entities.LogEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class LogsMemory implements Logs {
@@ -47,6 +44,7 @@ public final class LogsMemory implements Logs {
         List<LogEntry> logList = logEntryMap.entrySet().stream()
                 .filter(e -> event.equals(e.getValue().getEventType()))
                 .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
                 .limit(amount)
                 .collect(Collectors.toList());
         LOG.info("Event log list for " + event + " of size " + logList.size() + " retrieved");
@@ -58,6 +56,7 @@ public final class LogsMemory implements Logs {
         List<LogEntry> logList = logEntryMap.entrySet().stream()
                 .filter(e -> userId == e.getValue().getUserId())
                 .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
                 .limit(amount)
                 .collect(Collectors.toList());
         LOG.info("UserId log list for " + userId + " of size " + logList.size() + " retrieved");
@@ -69,6 +68,7 @@ public final class LogsMemory implements Logs {
         List<LogEntry> logList = logEntryMap.entrySet().stream()
                 .filter(e -> source.equals(e.getValue().getSource()))
                 .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
                 .limit(amount)
                 .collect(Collectors.toList());
         LOG.info("Source log list for " + source + " of size " + logList.size() + " retrieved");
@@ -80,6 +80,7 @@ public final class LogsMemory implements Logs {
         List<LogEntry> logList = logEntryMap.entrySet().stream()
                 .filter(e -> uuid.equals(e.getValue().getObjUuid()))
                 .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
                 .collect(Collectors.toList());
         LOG.info("Object log list for " + uuid + " of size " + logList.size() + " retrieved");
         return logList;
@@ -89,6 +90,7 @@ public final class LogsMemory implements Logs {
     public List<LogEntry> getRecent(int amount) {
         List<LogEntry> logList = logEntryMap.entrySet().stream()
                 .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
                 .limit(amount)
                 .collect(Collectors.toList());
         LOG.info("Log list of size " + logList.size() + " retrieved");
