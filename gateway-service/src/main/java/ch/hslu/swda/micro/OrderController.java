@@ -7,6 +7,7 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.serde.ObjectMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,8 @@ import java.util.concurrent.TimeoutException;
 /**
  * Controller for retrieving logs.
  */
+@Tag(name = "Order")
+
 @Controller("/api/v1/orders")
 public class OrderController {
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);

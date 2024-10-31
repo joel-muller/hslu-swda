@@ -24,6 +24,8 @@ import java.util.concurrent.TimeoutException;
 /**
  * Controller for retrieving logs.
  */
+@Tag(name = "Log")
+
 @Controller("/api/v1/logs")
 public class LogController {
     private static final Logger LOG = LoggerFactory.getLogger(LogController.class);
