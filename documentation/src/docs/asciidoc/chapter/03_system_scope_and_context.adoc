@@ -65,6 +65,17 @@ warehouse.order
 
 ==== Logs
 
+logs.new
+- source : String
+- timestamp : long
+- userId : int
+- eventType: String
+- objUuid: UUID
+- message: String
+
+logs.get
+(no Body)
+
 ==== Order
 
 order.create
