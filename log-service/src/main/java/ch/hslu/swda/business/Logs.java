@@ -1,6 +1,7 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.LogEntry;
+import ch.hslu.swda.entities.LogFilter;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +24,13 @@ public interface Logs {
      * @return LogEntry
      */
     LogEntry getById(UUID id);
+
+    /**
+     * Returns a specified amount of logs based on optional filters in a {@code LogFilter} object.
+     * @param filter
+     * @return
+     */
+    List<LogEntry> findByFilter(LogFilter filter);
 
     /**
      * Returns a maximum amount of logs related to an event type. Wildcards are allowed.

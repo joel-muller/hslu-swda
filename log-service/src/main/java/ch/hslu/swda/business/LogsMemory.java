@@ -1,6 +1,7 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.LogEntry;
+import ch.hslu.swda.entities.LogFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,21 @@ public final class LogsMemory implements Logs {
     public LogEntry getById(UUID id) {
         LOG.info("Log " + id + " retrieved");
         return logEntryMap.get(id);
+    }
+
+    @Override
+    public List<LogEntry> findByFilter(LogFilter filter) {
+        List<LogEntry> logList = logEntryMap.entrySet().stream()
+                .filter(e -> filter.getSource().isEmpty() || filter.getSource().equals(e.getValue().getSource()))
+                .filter(e -> filter.getUserId() == -1 || filter.getUserId() == e.getValue().getUserId())
+                .filter(e -> filter.getEventType().isEmpty() || filter.getEventType().equals(e.getValue().getEventType()))
+                .filter(e -> filter.getObjUuid().isEmpty() || filter.getObjUuid().equals(e.getValue().getObjUuid()))
+                .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
+                .limit(filter.getAmount())
+                .collect(Collectors.toList());
+        LOG.info("Filtered log list retrieved");
+        return logList;
     }
 
     @Override
