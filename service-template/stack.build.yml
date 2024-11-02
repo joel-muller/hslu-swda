@@ -9,10 +9,3 @@ services:
       args:
         CI_GIT_VERSION: $CICD_GIT_VERSION
         CI_GIT_DATE: $CICD_GIT_DATE
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: store_management
-    networks :
-      - bus
