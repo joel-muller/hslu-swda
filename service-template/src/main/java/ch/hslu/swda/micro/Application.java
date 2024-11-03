@@ -23,7 +23,6 @@ import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.hslu.swda.entities.StoreManagementDB;
 
 /**
  * Demo für Applikationsstart.
@@ -44,6 +43,7 @@ public final class Application {
         HeartBeat() throws SQLException {
             try {
                 this.service = new StoreManagementService();
+                service.provideArticleAvailability();
             } catch (IOException | TimeoutException e) {
                 LOG.error(e.getMessage(), e);
             }
@@ -51,19 +51,19 @@ public final class Application {
 
         @Override
         public void run() {
-/*             try { */
+            try {
                 // service.registerStudent();
                 // service.askAboutUniverse();
                 LOG.info("Heartbeat...");
+                service.provideArticleAvailability();
 
-                //service.db.insertInventoryRecord(1, 5, 7, 20);
-                //db.viewInventoryTable();
+                service.db.viewInventoryTable();
 /*             } catch (IOException | InterruptedException e) {
                 LOG.error(e.getMessage(), e); */
-/*             } catch () {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 LOG.error(e.getMessage(), e);
-            } */
+            }
         }
     }
 
