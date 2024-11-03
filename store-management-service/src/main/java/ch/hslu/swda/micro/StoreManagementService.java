@@ -17,20 +17,13 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
-import ch.hslu.swda.entities.Student;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
-import ch.hslu.swda.entities.Store;
 import ch.hslu.swda.entities.StoreManagementDB;
 
 /**
@@ -42,7 +35,7 @@ public final class StoreManagementService implements AutoCloseable {
     private final BusConnector bus;
     private final String exchangeName;
     private Connection connection;
-    private final StoreManagementDB db;
+    final StoreManagementDB db;
 
 
 
@@ -50,7 +43,7 @@ public final class StoreManagementService implements AutoCloseable {
      * @throws IOException      IO-Fehler.
      * @throws TimeoutException Timeout.
      */
-    StoreManagementService() throws IOException, TimeoutException, SQLException {
+    public StoreManagementService() throws IOException, TimeoutException, SQLException {
 
         // thread info
         String threadName = Thread.currentThread().getName();
@@ -62,19 +55,19 @@ public final class StoreManagementService implements AutoCloseable {
         this.bus.connect();
         this.db = new StoreManagementDB();
 
-        // start message receivers
-/*         this.receiveStatisticsChange();
-        this.receiveChatMessages(); */
 
-        // Initialize MySQL connection
-        //connectToDatabase();
     }
 
+    void provideArticleAvailability() throws SQLException {
+        LOG.info("Checking article availability...");
+        String queueName = "StoreManagementService <- " + Routes.INVENTORY_CHECK;
+        try {
+            bus.listenFor(exchangeName, queueName, Routes.INVENTORY_CHECK, new InventoryCheckReceiver(exchangeName, bus, db) );
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+        }
 
-
-
-
-
+    }
 
     /**
      * Erzeugt eine Student-Entity und sendet einen Event.
