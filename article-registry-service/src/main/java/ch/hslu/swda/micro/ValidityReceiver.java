@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 public final class ValidityReceiver implements MessageReceiver {
@@ -58,7 +59,8 @@ public final class ValidityReceiver implements MessageReceiver {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(message);
             String articlesString = jsonNode.get("articles").toString();
-            int orderId = jsonNode.get("id").asInt();
+            UUID orderId = UUID.fromString(jsonNode.get("id").asText());
+            UUID employeeId = UUID.fromString(jsonNode.get("employeeId").asText());
             Map<Integer, Integer> articles = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             LOG.info("Order with the id [{}] received articles: [{}]", orderId, articles);
 
@@ -66,7 +68,7 @@ public final class ValidityReceiver implements MessageReceiver {
 
             Validity validity = new Validity(true, orderId);
 
-            service.log(new LogMessage(jsonNode.get("employeeId").asInt(), "validity.ckecked", "Order validity of order " + validity.toString()));
+            service.log(new LogMessage(employeeId, "validity.ckecked", "Order validity of order " + validity.toString()));
             service.sendValidity(validity);
         } catch (IOException | InterruptedException e) {
             LOG.error(e.getMessage(), e);

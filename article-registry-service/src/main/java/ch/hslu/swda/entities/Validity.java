@@ -15,24 +15,26 @@
  */
 package ch.hslu.swda.entities;
 
+import java.util.UUID;
+
 /**
  * Einfaches Datenmodell eines Artikel.
  */
 public final class Validity {
 
-    private int idOrder;
+    private UUID idOrder;
     private boolean valid;
 
-    public Validity(boolean valid, int idOrder) {
+    public Validity(boolean valid, UUID idOrder) {
         this.valid = valid;
         this.idOrder = idOrder;
     }
 
-    public int getIdOrder() {
+    public UUID getIdOrder() {
         return idOrder;
     }
 
-    public void setIdOrder(int idOrder) {
+    public void setIdOrder(UUID idOrder) {
         this.idOrder = idOrder;
     }
 
