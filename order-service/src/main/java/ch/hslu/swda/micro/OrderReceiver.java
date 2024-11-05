@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 
 public final class OrderReceiver implements MessageReceiver {
@@ -59,8 +60,12 @@ public final class OrderReceiver implements MessageReceiver {
             String articlesString = orderNode.get("articles").toString();
             Map<Integer, Integer> articles = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
 
+            UUID storeId = UUID.fromString(orderNode.get("storeId").asText());
+            UUID customerId = UUID.fromString(orderNode.get("customerId").asText());
+            UUID employeeId = UUID.fromString(orderNode.get("employeeId").asText());
 
-            Order order = new Order(articles, orderNode.get("storeId").asInt(), orderNode.get("customerId").asInt(), orderNode.get("employeeId").asInt());
+
+            Order order = new Order(articles, storeId, customerId, employeeId);
 
             LOG.info("Following order received: [{}]", order.toString());
             service.log(new LogMessage(order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));

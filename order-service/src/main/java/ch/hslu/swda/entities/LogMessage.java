@@ -8,12 +8,12 @@ import java.time.Instant;
 public class LogMessage {
     private final String source;
     private final long timestamp;
-    private final int userId;
+    private final UUID userId;
     private final String eventType;
     private final UUID objUuid;
     private final String message;
 
-    public LogMessage(int userId, String eventType, String message) {
+    public LogMessage(UUID userId, String eventType, String message) {
         this.source = "order.service";
         this.timestamp = Instant.now().getEpochSecond();
         this.userId = userId;
@@ -30,7 +30,7 @@ public class LogMessage {
         return timestamp;
     }
 
-    public int getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 

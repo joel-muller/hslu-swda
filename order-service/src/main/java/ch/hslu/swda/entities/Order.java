@@ -28,17 +28,17 @@ import dev.morphia.annotations.*;
 public final class Order {
 
     @Id
-    private int id;
+    private UUID id;
     private boolean valid;
     @Reference
     private Map<Integer, Integer> articles;
     private Date date;
-    private int storeId;
-    private int customerId;
-    private int employeeId;
+    private UUID storeId;
+    private UUID customerId;
+    private UUID employeeId;
 
-    public Order(Map<Integer, Integer> articles, int storeId, int customerId, int employeeId) {
-        this.id = 12;
+    public Order(Map<Integer, Integer> articles, UUID storeId, UUID customerId, UUID employeeId) {
+        this.id = UUID.randomUUID();
         this.valid = false;
         this.articles = articles;
         this.date = Calendar.getInstance().getTime();
@@ -52,14 +52,14 @@ public final class Order {
         for (int i = 0; i < 10; i++) {
             articles.put(i, 5+i);
         }
-        return new Order(articles,12, 23, 69);
+        return new Order(articles,UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -87,27 +87,27 @@ public final class Order {
         this.date = date;
     }
 
-    public int getStoreId() {
+    public UUID getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(int storeId) {
+    public void setStoreId(UUID storeId) {
         this.storeId = storeId;
     }
 
-    public int getCustomerId() {
+    public UUID getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(UUID customerId) {
         this.customerId = customerId;
     }
 
-    public int getEmployeeId() {
+    public UUID getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(UUID employeeId) {
         this.employeeId = employeeId;
     }
 
