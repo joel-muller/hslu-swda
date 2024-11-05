@@ -18,14 +18,19 @@ package ch.hslu.swda.entities;
 import java.util.*;
 import java.util.Calendar;
 
+import dev.morphia.annotations.*;
+
 /**
  * Einfaches Datenmodell einer Bestellung.
  */
+
+@Entity("order")
 public final class Order {
 
-
+    @Id
     private int id;
     private boolean valid;
+    @Reference
     private Map<Integer, Integer> articles;
     private Date date;
     private int storeId;
