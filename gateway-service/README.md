@@ -49,3 +49,18 @@ curl -X POST http://localhost:8090/api/v1/orders \
   "employeeId": 0
 }'
 ```
+
+```json
+curl -X POST http://localhost:8090/api/v1/orders \
+-H "Content-Type: application/json" \
+-d '{
+  "articles": {
+    "12": 0,
+    "14": 0,
+    "18": 0
+  },
+  "storeId": "100e14fa-614d-4ba7-9a3c-6d70b360a18e",
+  "customerId": "1601ce09-a907-47ad-8665-7b4705796c69",
+  "employeeId": "f9e3d909-4c94-43e1-b972-2ad519ebcfb9"
+}'
+```
