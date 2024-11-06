@@ -44,14 +44,14 @@ public final class LogsMemory implements Logs {
     public List<LogEntry> findByFilter(LogFilter filter) {
         List<LogEntry> logList = logEntryMap.entrySet().stream()
                 .filter(e -> filter.getSource().isEmpty() || filter.getSource().equals(e.getValue().getSource()))
-                .filter(e -> filter.getUserId() == -1 || filter.getUserId() == e.getValue().getUserId())
+                .filter(e -> filter.getUserId().isEmpty() || UUID.fromString(filter.getUserId()).equals(e.getValue().getUserId()))
                 .filter(e -> filter.getEventType().isEmpty() || filter.getEventType().equals(e.getValue().getEventType()))
-                .filter(e -> filter.getObjUuid().isEmpty() || filter.getObjUuid().equals(e.getValue().getObjUuid()))
+                .filter(e -> filter.getObjUuid().isEmpty() || UUID.fromString(filter.getObjUuid()).equals(e.getValue().getObjUuid()))
                 .map(Map.Entry::getValue)
                 .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
                 .limit(filter.getAmount())
                 .collect(Collectors.toList());
-        LOG.info("Filtered log list retrieved");
+        LOG.info("Filtered log list of size " + logList.size() + " retrieved");
         return logList;
     }
 
@@ -68,9 +68,9 @@ public final class LogsMemory implements Logs {
     }
 
     @Override
-    public List<LogEntry> findByUserId(int userId, int amount) {
+    public List<LogEntry> findByUserId(UUID userId, int amount) {
         List<LogEntry> logList = logEntryMap.entrySet().stream()
-                .filter(e -> userId == e.getValue().getUserId())
+                .filter(e -> userId.equals(e.getValue().getUserId()))
                 .map(Map.Entry::getValue)
                 .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
                 .limit(amount)

@@ -11,7 +11,7 @@ public class LogEntry {
     private UUID id;
     private String source;
     private long timestamp;
-    private int userId;
+    private UUID userId;
     private String eventType;
     private UUID objUuid;
     private String message;
@@ -20,13 +20,13 @@ public class LogEntry {
         this.id = UUID.randomUUID();
         this.source = "";
         this.timestamp = Instant.now().getEpochSecond();
-        this.userId = 0;
+        this.userId = UUID.randomUUID();
         this.eventType = "";
         this.objUuid = UUID.randomUUID();
         this.message = "";
     }
 
-    public LogEntry(String source, long timestamp, int userId, String eventType, UUID objUuid, String message) {
+    public LogEntry(String source, long timestamp, UUID userId, String eventType, UUID objUuid, String message) {
         this.id = UUID.randomUUID();
         this.source = source;
         this.timestamp = timestamp;
@@ -48,7 +48,7 @@ public class LogEntry {
         return timestamp;
     }
 
-    public int getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 

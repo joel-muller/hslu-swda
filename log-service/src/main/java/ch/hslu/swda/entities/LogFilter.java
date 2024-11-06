@@ -1,11 +1,13 @@
 package ch.hslu.swda.entities;
 
+import java.util.UUID;
+
 /**
  * Holds various filter options to be used when filtering or sorting logs.
  */
 public class LogFilter {
     private String source;
-    private int userId;
+    private String userId;
     private String eventType;
     private String objUuid;
     private SortDirection direction;
@@ -16,7 +18,7 @@ public class LogFilter {
      */
     public LogFilter() {
         this.source = "";
-        this.userId = -1;
+        this.userId = "";
         this.eventType = "";
         this.objUuid = "";
         this.direction = SortDirection.DESC;
@@ -31,7 +33,7 @@ public class LogFilter {
      * @param objUuid
      * @param direction
      */
-    public LogFilter(String source, int userId, String eventType, String objUuid, SortDirection direction, int amount) {
+    public LogFilter(String source, String userId, String eventType, String objUuid, SortDirection direction, int amount) {
         this.source = source;
         this.userId = userId;
         this.eventType = eventType;
@@ -44,7 +46,7 @@ public class LogFilter {
         return source;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 

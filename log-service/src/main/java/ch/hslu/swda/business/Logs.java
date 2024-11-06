@@ -45,7 +45,7 @@ public interface Logs {
      * @param amount
      * @return List of log entries
      */
-    List<LogEntry> findByUserId(int userId, int amount);
+    List<LogEntry> findByUserId(UUID userId, int amount);
 
     /**
      * Returns a maximum amount of logs related to a service.
