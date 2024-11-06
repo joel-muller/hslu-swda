@@ -33,108 +33,108 @@ Prio Sprint 1: Order, customer Management, accounting
 ==== Store Management
 
 inventory.update (auch für das Hinzufügen neuer Artikel/Einträge in die Inventory-Datenbank)
-- store: String
-- articleId : int
-- minimuimQuantity: int
-- actualQuantity: int
+* store: String
+* articleId : int
+* minimuimQuantity: int
+* actualQuantity: int
 
 
 inventory.check
-- store: String
-- articleId : int
+* store: String
+* articleId : int
 
 
 ==== Article Registry
 
 article.create
-- name : String
-- price : int
-- description : String
+* name : String
+* price : int
+* description : String
 
 article.delete
-- id : Integer
+* id : Integer
 
 articles.checkValidity
-- orderId : int
-- Articles : Map <idArticle : Integer, count : Integer>
+* orderId : int
+* Articles : Map <idArticle : Integer, count : Integer>
 
 ==== Central Warehouse
 
 warehouse.order
-- articles : Map <idArticle : Integer, count : Integer>
+* articles : Map <idArticle : Integer, count : Integer>
 
 ==== Authentication & User Management
 
 ==== Logs
 
 logs.new
-- source : String
-- timestamp : long
-- userId : int
-- eventType: String
-- objUuid: UUID
-- message: String
+* source : String
+* timestamp : long
+* userId : int
+* eventType: String
+* objUuid: UUID
+* message: String
 
 logs.get
-(no Body)
+* id : String (optional)
 
 ==== Order
 
 order.create
-- id: Integer
-- articles: Map <idArticle : Integer, count : Integer>
-- date : Date
-- status: Enum
-- storeId: Integer
-- employeeId: Integer
-- customerId: Integer
+* id: Integer
+* articles: Map <idArticle : Integer, count : Integer>
+* date : Date
+* status: Enum
+* storeId: Integer
+* employeeId: Integer
+* customerId: Integer
 
 order.validate
-- oderId : int
-- validity : true
+* oderId : int
+* validity : true
 
 ==== Customer Management
 
 customer.create
-- id : Integer
-- firstName : String
-- lastName : String
+* id : Integer
+* firstName : String
+* lastName : String
 
 ==== Accounting
 
 confirmation.create
-- orderId : Integer
-- customerId : Integer
+* orderId : Integer
+* customerId : Integer
 
 === DB Entries
 
 Order (Order)
-- id: Integer
-- valid : boolean
-- articles: Map <idArticle : Integer, count : Integer>
-- date : Date
-- status: Enum
-- storeId: Integer
-- employeeId: Integer
-- customerId: Integer
+* id: Integer
+* valid : boolean
+* articles: Map <idArticle : Integer, count : Integer>
+* date : Date
+* status: Enum
+* storeId: Integer
+* employeeId: Integer
+* customerId: Integer
 vielleicht nach 24 stunden checken ob es noch invalied gibt und checkArticleValidity() ereut senden
 
 Customer (Customer Management)
-- id : Integer
-- firstName : String
-- lastName : String
+* id : Integer
+* firstName : String
+* lastName : String
 
 Article (Article Registry)
-- id : int
-- name : String
-- price : int
-- description : String
-- unregistered : boolean
+* id : int
+* name : String
+* price : int
+* description : String
+* unregistered : boolean
 
 Sortiment (Store Management)
-- articleId : int
-- actualCount : int
-- minCount : int
-- countAfterRefill : int
+* articleId : int
+* actualCount : int
+* minCount : int
+* countAfterRefill : int
 
 Store (Store Management)
