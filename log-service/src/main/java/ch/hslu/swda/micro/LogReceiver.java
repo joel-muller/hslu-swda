@@ -3,6 +3,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.Logs;
+import ch.hslu.swda.business.LogsDatabase;
 import ch.hslu.swda.business.LogsMemory;
 import ch.hslu.swda.entities.LogEntry;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,7 +21,7 @@ public class LogReceiver implements MessageReceiver {
     private final String exchangeName;
     private final BusConnector bus;
 
-    private final Logs logs = new LogsMemory();
+    private final Logs logs = new LogsDatabase();
 
     public LogReceiver(final String exchangeName, final BusConnector bus) {
         this.exchangeName = exchangeName;
