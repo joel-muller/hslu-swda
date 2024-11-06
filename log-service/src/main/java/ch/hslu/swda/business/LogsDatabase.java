@@ -4,6 +4,7 @@ import ch.hslu.swda.entities.LogEntry;
 import ch.hslu.swda.entities.LogFilter;
 
 import ch.hslu.swda.entities.SortDirection;
+import ch.hslu.swda.micro.LogRetriever;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClients;
@@ -13,6 +14,8 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import org.bson.UuidRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.UUID;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
 public class LogsDatabase implements Logs {
+    private static final Logger LOG = LoggerFactory.getLogger(LogsDatabase.class);
 
     private final Datastore datastore;
 
@@ -45,6 +49,7 @@ public class LogsDatabase implements Logs {
     @Override
     public boolean addLogEntry(LogEntry logEntry) {
         datastore.save(logEntry);
+        LOG.info("Log stored: " + logEntry);
         return false;
     }
 
@@ -138,6 +143,7 @@ public class LogsDatabase implements Logs {
                         .sort(Sort.descending("timestamp"))
                         .limit(amount))
                 .toList();
+        LOG.info("Log list of size " + logList.size() + " retrieved");
         return logList;
     }
 }
