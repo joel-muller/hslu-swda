@@ -6,6 +6,6 @@ import io.micronaut.serde.annotation.Serdeable;
 
 @Introspected
 @Serdeable
-public record LogEntry(UUID id, String source, long timestamp, int userId, String eventType, UUID objUuid, String message) {
+public record LogEntry(UUID id, String source, long timestamp, UUID userId, String eventType, UUID objUuid, String message) {
 
 }
