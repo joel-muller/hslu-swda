@@ -1,5 +1,8 @@
 package ch.hslu.swda.entities;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
@@ -7,7 +10,9 @@ import java.util.UUID;
 /**
  * Holds the data necessary for a traceable log.
  */
+@Entity("log_entries")
 public class LogEntry {
+    @Id
     private UUID id;
     private String source;
     private long timestamp;

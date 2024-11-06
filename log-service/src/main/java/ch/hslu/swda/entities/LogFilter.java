@@ -32,6 +32,7 @@ public class LogFilter {
      * @param eventType
      * @param objUuid
      * @param direction
+     * @param amount
      */
     public LogFilter(String source, String userId, String eventType, String objUuid, SortDirection direction, int amount) {
         this.source = source;
