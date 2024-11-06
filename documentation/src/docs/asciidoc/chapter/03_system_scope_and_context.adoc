@@ -70,13 +70,22 @@ warehouse.order
 logs.new
 * source : String
 * timestamp : long
-* userId : int
-* eventType: String
-* objUuid: UUID
-* message: String
+* userId : UUID
+* eventType : String
+* objUuid : UUID
+* message : String
 
 logs.get
-* id : String (optional)
+* id : UUID (optional)
+
+logs.filter
+* source : String
+* userId : String
+* eventType : String
+* objUuid : String
+* direction : String ("asc" or "desc")
+* amount : int
+UUIDs in a filter are currently String to do .isEmpty() checks rather than null
 
 ==== Order
 
