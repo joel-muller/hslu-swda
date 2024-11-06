@@ -12,6 +12,7 @@ services:
     image: $CICD_IMAGE_ID
     environment:
       - RMQ_HOST=bus
+      - MONGO_URI=mongodb://mongodb:27017
     networks:
       - bus
       # - ingress

@@ -25,7 +25,12 @@ public class LogsDatabase implements Logs {
     private final Datastore datastore;
 
     public LogsDatabase() {
-        MongoClientSettings settings = MongoClientSettings.builder().uuidRepresentation(UuidRepresentation.STANDARD).build();
+        String mongoUri = System.getenv().getOrDefault("MONGO_URI", "mongodb://localhost:27017");
+        ConnectionString connectionString = new ConnectionString(mongoUri);
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .uuidRepresentation(UuidRepresentation.STANDARD)
+                .build();
         datastore = Morphia.createDatastore(MongoClients.create(settings), "logs");
         datastore.getMapper().map(LogEntry.class);
         datastore.ensureIndexes();
