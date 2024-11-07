@@ -68,6 +68,8 @@ articles.checkValidity
 warehouse.order
 
 * articles : Map <idArticle : Integer, count : Integer>
+* storeId: Integer
+* customerOrderId: Integer
 
 ==== Authentication & User Management
 
@@ -142,7 +144,7 @@ Order (Order)
 * employeeId: Integer
 * customerId: Integer
 
-vielleicht nach 24 stunden checken ob es noch invalied gibt und checkArticleValidity() ereut senden
+vielleicht nach 24 stunden checken ob es noch invalid gibt und checkArticleValidity() ereut senden
 
 Customer (Customer Management)
 
