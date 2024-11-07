@@ -53,6 +53,7 @@ services:
     networks :
       - backbone
       - demo
+    restart: always
 
   mysql-viewer:
     image: adminer:latest
