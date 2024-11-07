@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 public class LogRetriever implements MessageReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(LogRetriever.class);
@@ -32,9 +33,20 @@ public class LogRetriever implements MessageReceiver {
         try {
             LOG.debug("Received get request with replyTo [{}]", replyTo);
             ObjectMapper mapper = new ObjectMapper();
-            List<LogEntry> list = logs.getRecent(100);
-            LOG.debug("Sending list of log entries with size [{}]", list.size());
-            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(list));
+            if (message.isEmpty()) {
+                List<LogEntry> list = logs.getRecent(100);
+                LOG.debug("Sending list of log entries with size [{}]", list.size());
+                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(list));
+            } else {
+                UUID logId = mapper.readValue(message, UUID.class);
+                LogEntry logEntry = logs.getById(logId);
+                if (logEntry != null) {
+                    LOG.debug("Sending log entry with id [{}]", logEntry.getId());
+                } else {
+                    LOG.debug("Log with id [{}] attempted to retrieve, does not exist", logId);
+                }
+                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(logEntry));
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
