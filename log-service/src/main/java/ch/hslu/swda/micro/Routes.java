@@ -22,6 +22,7 @@ public final class Routes {
 
     static final String LOGS_NEW = "logs.new";
     static final String LOGS_GET = "logs.get";
+    static final String LOGS_FILTER = "logs.filter";
 
     /**
      * No instance allowed.

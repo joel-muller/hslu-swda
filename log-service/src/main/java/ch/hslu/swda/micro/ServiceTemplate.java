@@ -51,6 +51,7 @@ public final class ServiceTemplate implements AutoCloseable {
         // start message receivers
         this.receiveLogs();
         this.retrieveLogs();
+        this.retrieveFilteredLogs();
     }
 
     private void receiveLogs() throws IOException {
@@ -61,6 +62,11 @@ public final class ServiceTemplate implements AutoCloseable {
     private void retrieveLogs() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.LOGS_GET);
         bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.LOGS_GET, Routes.LOGS_GET, new LogRetriever(exchangeName, bus));
+    }
+
+    private void retrieveFilteredLogs() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.LOGS_FILTER);
+        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.LOGS_FILTER, Routes.LOGS_FILTER, new LogFilterRetriever(exchangeName, bus));
     }
 
     /**
