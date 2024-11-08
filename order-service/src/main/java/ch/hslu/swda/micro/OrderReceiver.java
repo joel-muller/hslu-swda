@@ -17,6 +17,7 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
+import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.LogMessage;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -59,15 +61,22 @@ public final class OrderReceiver implements MessageReceiver {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode orderNode = mapper.readTree(message);
 
+            UUID orderId = UUID.randomUUID();
+
             String articlesString = orderNode.get("articles").toString();
-            Map<Integer, Integer> articles = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
+            Map<Integer, Integer> articlesMap = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
+            List<Article> articles = Article.createListArticle(orderId, articlesMap);
+            for (Article art : articles) {
+                this.database.storeArticle(art);
+                LOG.info(art.toString());
+            }
 
             UUID storeId = UUID.fromString(orderNode.get("storeId").asText());
             UUID customerId = UUID.fromString(orderNode.get("customerId").asText());
             UUID employeeId = UUID.fromString(orderNode.get("employeeId").asText());
 
 
-            Order order = new Order(articles, storeId, customerId, employeeId);
+            Order order = new Order(orderId, articles, storeId, customerId, employeeId);
 
             LOG.info("Following order received: [{}]", order.toString());
             service.log(new LogMessage(order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));

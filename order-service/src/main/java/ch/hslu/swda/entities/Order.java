@@ -26,32 +26,24 @@ import dev.morphia.annotations.*;
 
 @Entity("order")
 public final class Order {
-
     @Id
     private UUID id;
     private boolean valid;
-    private Map<Integer, Integer> articles;
+    @Reference
+    private List<Article> articles;
     private Date date;
     private UUID storeId;
     private UUID customerId;
     private UUID employeeId;
 
-    public Order(Map<Integer, Integer> articles, UUID storeId, UUID customerId, UUID employeeId) {
-        this.id = UUID.randomUUID();
+    public Order(UUID id, List<Article> articles, UUID storeId, UUID customerId, UUID employeeId) {
+        this.id = id;
         this.valid = false;
         this.articles = articles;
         this.date = Calendar.getInstance().getTime();
         this.storeId = storeId;
         this.customerId = customerId;
         this.employeeId = employeeId;
-    }
-
-    public static Order getExampleOrder() {
-        Map<Integer, Integer> articles = new HashMap<>();
-        for (int i = 0; i < 10; i++) {
-            articles.put(i, 5+i);
-        }
-        return new Order(articles,UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
     }
 
     public UUID getId() {
@@ -70,11 +62,11 @@ public final class Order {
         this.valid = valid;
     }
 
-    public Map<Integer, Integer> getArticles() {
+    public List<Article> getArticles() {
         return articles;
     }
 
-    public void setArticles(Map<Integer, Integer> articles) {
+    public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
 
@@ -135,7 +127,7 @@ public final class Order {
         return "Order{" +
                 "id=" + id +
                 ", valid=" + valid +
-                ", articles=" + articles +
+                ", articles=" + articles+
                 ", date=" + date +
                 ", storeId=" + storeId +
                 ", customerId=" + customerId +

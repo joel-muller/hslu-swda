@@ -1,5 +1,6 @@
 package ch.hslu.swda.micro;
 
+import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -37,6 +38,12 @@ public class DatabaseConnector {
     public boolean storeOrder(Order order) {
         datastore.save(order);
         LOG.info("Log stored: " + order);
+        return false;
+    }
+
+    public boolean storeArticle(Article article) {
+        datastore.save(article);
+        LOG.info("Log stored: " + article);
         return false;
     }
 
