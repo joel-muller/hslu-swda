@@ -24,9 +24,8 @@ public interface MessageReceiver {
      * Listener Methode für Messages.
      *
      * @param route   Route.
-     * @param replyTo ReplyTo Route.
-     * @param corrId  corrId.
      * @param message Message.
      */
-    void onMessageReceived(String route, String replyTo, String corrId, String message);
+
+    void onMessageReceived(String route, String message);
 }

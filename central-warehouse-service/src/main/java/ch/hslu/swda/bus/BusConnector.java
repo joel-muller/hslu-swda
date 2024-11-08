@@ -137,7 +137,7 @@ public final class BusConnector implements AutoCloseable {
         // add listener
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            receiver.onMessageReceived(route, delivery.getProperties().getReplyTo(), delivery.getProperties().getCorrelationId(), message);
+            receiver.onMessageReceived(route, message);
         };
         channelListen.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             // empty
