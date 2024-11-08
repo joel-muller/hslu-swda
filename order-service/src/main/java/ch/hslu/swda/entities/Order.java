@@ -30,7 +30,6 @@ public final class Order {
     @Id
     private UUID id;
     private boolean valid;
-    @Reference
     private Map<Integer, Integer> articles;
     private Date date;
     private UUID storeId;

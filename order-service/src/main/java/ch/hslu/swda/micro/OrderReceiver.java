@@ -36,11 +36,13 @@ public final class OrderReceiver implements MessageReceiver {
     private final String exchangeName;
     private final BusConnector bus;
     private final OrderService service;
+    private final DatabaseConnector database;
 
     public OrderReceiver(final String exchangeName, final BusConnector bus, final OrderService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
         this.service = service;
+        this.database = new DatabaseConnector();
     }
 
     /**
@@ -69,7 +71,8 @@ public final class OrderReceiver implements MessageReceiver {
 
             LOG.info("Following order received: [{}]", order.toString());
             service.log(new LogMessage(order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
-            // TBD safe order to the database
+
+            this.database.storeOrder(order);
 
             service.checkValidity(order);
             bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());
