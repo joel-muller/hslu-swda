@@ -59,7 +59,7 @@ public final class ValidityReceiver implements MessageReceiver {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(message);
             String articlesString = jsonNode.get("articles").toString();
-            UUID orderId = UUID.fromString(jsonNode.get("id").asText());
+            UUID orderId = UUID.fromString(jsonNode.get("orderId").asText());
             UUID employeeId = UUID.fromString(jsonNode.get("employeeId").asText());
             Map<Integer, Integer> articles = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             LOG.info("Order with the id [{}] received articles: [{}]", orderId, articles);
