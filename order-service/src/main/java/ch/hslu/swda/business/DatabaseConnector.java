@@ -1,4 +1,4 @@
-package ch.hslu.swda.micro;
+package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;

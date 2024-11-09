@@ -17,6 +17,7 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
+import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.LogMessage;
@@ -65,23 +66,21 @@ public final class OrderReceiver implements MessageReceiver {
 
             String articlesString = orderNode.get("articles").toString();
             Map<Integer, Integer> articlesMap = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
-            List<Article> articles = Article.createListArticle(orderId, articlesMap);
+            List<Article> articles = Article.createListArticle(articlesMap);
             for (Article art : articles) {
                 this.database.storeArticle(art);
-                LOG.info(art.toString());
             }
 
             UUID storeId = UUID.fromString(orderNode.get("storeId").asText());
             UUID customerId = UUID.fromString(orderNode.get("customerId").asText());
             UUID employeeId = UUID.fromString(orderNode.get("employeeId").asText());
 
-
             Order order = new Order(orderId, articles, storeId, customerId, employeeId);
 
-            LOG.info("Following order received: [{}]", order.toString());
-            service.log(new LogMessage(order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
-
             this.database.storeOrder(order);
+
+            LOG.info("Following order received and stored: [{}]", order.toString());
+            service.log(new LogMessage(order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
 
             service.checkValidity(order);
             bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());

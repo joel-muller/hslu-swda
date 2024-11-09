@@ -3,10 +3,7 @@ package ch.hslu.swda.entities;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Entity("articles")
 public class Article {
@@ -16,17 +13,17 @@ public class Article {
     private final int count;
     private boolean delivered;
 
-    public Article(final UUID orderId, final int articleId, final int count) {
-        this.orderId = orderId;
+    public Article(final int articleId, final int count) {
+        this.orderId = UUID.randomUUID();
         this.articleId = articleId;
         this.count = count;
         this.delivered = false;
     }
 
-    public static List<Article> createListArticle(UUID orderId, Map<Integer, Integer> map) {
+    public static List<Article> createListArticle(Map<Integer, Integer> map) {
         ArrayList<Article> list = new ArrayList<>();
         for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
-            list.add(new Article(orderId, pair.getKey(), pair.getValue()));
+            list.add(new Article(pair.getKey(), pair.getValue()));
         }
         return list;
     }
@@ -58,5 +55,17 @@ public class Article {
                 ", count=" + count +
                 ", delivered=" + delivered +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Article article)) return false;
+        return Objects.equals(orderId, article.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId);
     }
 }

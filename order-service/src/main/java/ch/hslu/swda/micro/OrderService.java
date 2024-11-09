@@ -19,6 +19,7 @@ import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Order;
+import ch.hslu.swda.entities.VerifyRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,7 @@ public final class OrderService implements AutoCloseable {
         LOG.info("Checking validity of order");
 
         ObjectMapper mapper = new ObjectMapper();
-        String data = mapper.writeValueAsString(order);
+        String data = mapper.writeValueAsString(VerifyRequest.createFromOrder(order));
 
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
         bus.talkAsync(exchangeName, Routes.CHECK_ORDER_VALIDITY, data);
