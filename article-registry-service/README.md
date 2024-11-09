@@ -22,3 +22,8 @@ Vorausgesetzt, der backbone läuft, kann der Service lokal vielfältig gestartet
   * `mvn docker:logs` - Anzeige der Logs
   * `mvn docker:stop` - Stoppen und löschen des Containers
 * Docker pur: `docker run --rm -it -e "RMQ_HOST=host.docker.internal" swda-24fs01/article-registry-service`
+
+
+## Source of Data
+
+[Book Database](https://www.kaggle.com/datasets/saurabhbagchi/books-dataset?resource=download)
