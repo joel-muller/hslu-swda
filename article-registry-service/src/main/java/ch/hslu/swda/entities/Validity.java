@@ -22,8 +22,8 @@ import java.util.UUID;
  */
 public final class Validity {
 
-    private UUID idOrder;
-    private boolean valid;
+    private final UUID idOrder;
+    private final boolean valid;
 
     public Validity(boolean valid, UUID idOrder) {
         this.valid = valid;
@@ -34,16 +34,8 @@ public final class Validity {
         return idOrder;
     }
 
-    public void setIdOrder(UUID idOrder) {
-        this.idOrder = idOrder;
-    }
-
     public boolean isValid() {
         return valid;
-    }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
     }
 
     /**
