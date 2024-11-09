@@ -67,9 +67,9 @@ public final class OrderReceiver implements MessageReceiver {
             String articlesString = orderNode.get("articles").toString();
             Map<Integer, Integer> articlesMap = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             List<Article> articles = Article.createListArticle(orderId, articlesMap);
-            for (Article art : articles) {
-                this.database.storeArticle(art);
-            }
+//            for (Article art : articles) {
+//                this.database.storeArticle(art);
+//            }
 
             UUID storeId = UUID.fromString(orderNode.get("storeId").asText());
             UUID customerId = UUID.fromString(orderNode.get("customerId").asText());

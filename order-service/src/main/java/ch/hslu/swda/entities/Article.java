@@ -6,18 +6,18 @@ import org.bson.types.ObjectId;
 
 import java.util.*;
 
-@Entity("articles")
+@Entity("article")
 public class Article {
-    @Id
-    private final UUID articleId;
-    private final UUID orderId;
+//    @Id
+//    private final UUID articleId;
+//    private final UUID orderId;
     private final int id;
     private final int count;
     private boolean delivered;
 
     public Article(final UUID orderId, final int id, final int count) {
-        this.orderId = orderId;
-        this.articleId = UUID.randomUUID();
+//        this.orderId = orderId;
+//        this.articleId = UUID.randomUUID();
         this.id = id;
         this.count = count;
         this.delivered = false;
@@ -35,9 +35,9 @@ public class Article {
         return id;
     }
 
-    public UUID getOrderId() {
-        return orderId;
-    }
+//    public UUID getOrderId() {
+//        return orderId;
+//    }
 
     public int getCount() {
         return count;
@@ -64,11 +64,11 @@ public class Article {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Article article)) return false;
-        return Objects.equals(orderId, article.orderId);
+        return Objects.equals(id, article.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId);
+        return Objects.hash(id, count, delivered);
     }
 }
