@@ -41,11 +41,11 @@ public final class OrderReceiver implements MessageReceiver {
     private final OrderService service;
     private final DatabaseConnector database;
 
-    public OrderReceiver(final String exchangeName, final BusConnector bus, final OrderService service) {
+    public OrderReceiver(final DatabaseConnector database, final String exchangeName, final BusConnector bus, final OrderService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
         this.service = service;
-        this.database = new DatabaseConnector();
+        this.database = database;
     }
 
     /**
@@ -66,7 +66,7 @@ public final class OrderReceiver implements MessageReceiver {
 
             String articlesString = orderNode.get("articles").toString();
             Map<Integer, Integer> articlesMap = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
-            List<Article> articles = Article.createListArticle(articlesMap);
+            List<Article> articles = Article.createListArticle(orderId, articlesMap);
             for (Article art : articles) {
                 this.database.storeArticle(art);
             }

@@ -35,16 +35,14 @@ public class DatabaseConnector {
         datastore.ensureIndexes();
     }
 
-    public boolean storeOrder(Order order) {
+    public void storeOrder(Order order) {
         datastore.save(order);
-        LOG.info("Log stored: " + order);
-        return false;
+        LOG.info("Order stored: " + order);
     }
 
-    public boolean storeArticle(Article article) {
+    public void storeArticle(Article article) {
         datastore.save(article);
-        LOG.info("Log stored: " + article);
-        return false;
+        LOG.info("Article stored: " + article);
     }
 
     public Order getById(UUID id) {

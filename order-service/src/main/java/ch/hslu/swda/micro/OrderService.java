@@ -17,6 +17,7 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.VerifyRequest;
@@ -36,6 +37,7 @@ public final class OrderService implements AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(OrderService.class);
     private final String exchangeName;
     private final BusConnector bus;
+    private final DatabaseConnector database;
 
     /**
      * @throws IOException      IO-Fehler.
@@ -51,6 +53,9 @@ public final class OrderService implements AutoCloseable {
         this.exchangeName = new RabbitMqConfig().getExchange();
         this.bus = new BusConnector();
         this.bus.connect();
+
+        // setup database
+        this.database = new DatabaseConnector();
 
         // start message receivers
         this.receiveOrderValidity();
@@ -80,13 +85,13 @@ public final class OrderService implements AutoCloseable {
 
     private void receiveOrderValidity() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ValidityReceiver(exchangeName, bus));
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ValidityReceiver(this.database, exchangeName, bus));
     }
 
 
     private void receiveOrder() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new OrderReceiver(exchangeName, bus, this));
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new OrderReceiver(this.database, exchangeName, bus, this));
 
     }
 

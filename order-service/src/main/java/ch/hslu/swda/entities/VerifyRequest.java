@@ -17,7 +17,7 @@ public class VerifyRequest {
         List<Article> list = order.getArticles();
         Map<Integer, Integer> articles = new HashMap<Integer, Integer>();
         for (Article art : list) {
-            articles.put(art.getArticleId(), art.getCount());
+            articles.put(art.getId(), art.getCount());
         }
         return new VerifyRequest(order.getId(), articles, order.getEmployeeId());
     }

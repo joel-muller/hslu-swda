@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.Calendar;
 
 import dev.morphia.annotations.*;
+import org.bson.types.ObjectId;
 
 /**
  * Einfaches Datenmodell einer Bestellung.
@@ -27,17 +28,17 @@ import dev.morphia.annotations.*;
 @Entity("order")
 public final class Order {
     @Id
-    private UUID id;
+    private final UUID id;
     private boolean valid;
-    @Reference
+    // Werde ich reaus nehmen
     private List<Article> articles;
     private Date date;
     private UUID storeId;
     private UUID customerId;
     private UUID employeeId;
 
-    public Order(UUID id, List<Article> articles, UUID storeId, UUID customerId, UUID employeeId) {
-        this.id = id;
+    public Order(UUID orderId, List<Article> articles, UUID storeId, UUID customerId, UUID employeeId) {
+        this.id = orderId;
         this.valid = false;
         this.articles = articles;
         this.date = Calendar.getInstance().getTime();
@@ -50,9 +51,6 @@ public final class Order {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public boolean isValid() {
         return valid;

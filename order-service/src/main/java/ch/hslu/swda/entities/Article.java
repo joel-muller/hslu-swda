@@ -2,34 +2,37 @@ package ch.hslu.swda.entities;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
 
 import java.util.*;
 
 @Entity("articles")
 public class Article {
     @Id
+    private final UUID articleId;
     private final UUID orderId;
-    private final int articleId;
+    private final int id;
     private final int count;
     private boolean delivered;
 
-    public Article(final int articleId, final int count) {
-        this.orderId = UUID.randomUUID();
-        this.articleId = articleId;
+    public Article(final UUID orderId, final int id, final int count) {
+        this.orderId = orderId;
+        this.articleId = UUID.randomUUID();
+        this.id = id;
         this.count = count;
         this.delivered = false;
     }
 
-    public static List<Article> createListArticle(Map<Integer, Integer> map) {
+    public static List<Article> createListArticle(UUID orderId, Map<Integer, Integer> map) {
         ArrayList<Article> list = new ArrayList<>();
         for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
-            list.add(new Article(pair.getKey(), pair.getValue()));
+            list.add(new Article(orderId, pair.getKey(), pair.getValue()));
         }
         return list;
     }
 
-    public int getArticleId() {
-        return articleId;
+    public int getId() {
+        return id;
     }
 
     public UUID getOrderId() {
@@ -51,7 +54,7 @@ public class Article {
     @Override
     public String toString() {
         return "Article{" +
-                "id=" + articleId +
+                "id=" + id +
                 ", count=" + count +
                 ", delivered=" + delivered +
                 '}';
