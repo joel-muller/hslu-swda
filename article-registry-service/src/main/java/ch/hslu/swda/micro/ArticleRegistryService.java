@@ -17,6 +17,7 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.business.ArticleHandler;
 import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Student;
 import ch.hslu.swda.entities.Validity;
@@ -37,6 +38,7 @@ public final class ArticleRegistryService implements AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(ArticleRegistryService.class);
     private final String exchangeName;
     private final BusConnector bus;
+    private final ArticleHandler articleHandler;
 
     /**
      * @throws IOException      IO-Fehler.
@@ -52,6 +54,9 @@ public final class ArticleRegistryService implements AutoCloseable {
         this.exchangeName = new RabbitMqConfig().getExchange();
         this.bus = new BusConnector();
         this.bus.connect();
+
+        // load the articles
+        this.articleHandler = new ArticleHandler();
 
         // start message receivers
         this.receiveValidityCheck();
@@ -79,7 +84,7 @@ public final class ArticleRegistryService implements AutoCloseable {
 
     private void receiveValidityCheck() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
-        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.CHECK_ORDER_VALIDITY, Routes.CHECK_ORDER_VALIDITY, new ValidityReceiver(exchangeName, bus, this));
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.CHECK_ORDER_VALIDITY, Routes.CHECK_ORDER_VALIDITY, new ValidityReceiver(this.articleHandler, exchangeName, bus, this));
     }
 
     /**

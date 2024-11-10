@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 
+import ch.hslu.swda.business.ArticleHandler;
 import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Validity;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -38,11 +39,13 @@ public final class ValidityReceiver implements MessageReceiver {
     private final String exchangeName;
     private final BusConnector bus;
     private final ArticleRegistryService service;
+    private final ArticleHandler handler;
 
-    public ValidityReceiver(final String exchangeName, final BusConnector bus, ArticleRegistryService service) {
+    public ValidityReceiver(ArticleHandler articleHandler, final String exchangeName, final BusConnector bus, ArticleRegistryService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
         this.service = service;
+        this.handler = articleHandler;
     }
 
     /**
@@ -64,9 +67,8 @@ public final class ValidityReceiver implements MessageReceiver {
             Map<Integer, Integer> articles = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             LOG.info("Order with the id [{}] received articles: [{}]", orderId, articles);
 
-            // TBD, Hier die artickel pruefen
 
-            Validity validity = new Validity(true, orderId);
+            Validity validity = new Validity(handler.checkArticles(articles), orderId);
 
             service.log(new LogMessage(employeeId, "validity.ckecked", "Order validity of order " + validity.toString()));
             service.sendValidity(validity);
