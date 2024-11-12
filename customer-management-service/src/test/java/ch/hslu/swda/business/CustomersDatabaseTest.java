@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CustomersDatabaseTest {
 
     @Container
-    private static GenericContainer<?> mongoContainer = new GenericContainer<>(DockerImageName.parse("mongo:5.0"))
+    private static GenericContainer<?> mongoContainer = new GenericContainer<>("cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/bitnami/mongodb:4.2.19")
             .withExposedPorts(27017);
 
     private static CustomersDatabase customers;
@@ -39,6 +39,18 @@ class CustomersDatabaseTest {
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .build();
         customers = new CustomersDatabase(settings);
+        Customer customer1 = new Customer(UUID.randomUUID(), "John", "Doe");
+        customerMap.put(customer1.getId(), customer1);
+        uuidList.add(customer1.getId());
+        Customer customer2 = new Customer(UUID.randomUUID(), "Dwayne", "Johnson");
+        customerMap.put(customer2.getId(), customer2);
+        uuidList.add(customer2.getId());
+        Customer customer3 = new Customer(UUID.randomUUID(), "Mary", "Smith");
+        customerMap.put(customer3.getId(), customer3);
+        uuidList.add(customer3.getId());
+        Customer customer4 = new Customer(UUID.randomUUID(), "Paul", "Johnson");
+        customerMap.put(customer4.getId(), customer4);
+        uuidList.add(customer4.getId());
     }
 
     @AfterAll
@@ -48,24 +60,13 @@ class CustomersDatabaseTest {
 
     @Test
     @Order(1)
-    void testAddCustomer() {
-        Customer customer1 = new Customer(UUID.randomUUID(), "John", "Doe");
-        customers.addCustomer(customer1);
-        customerMap.put(customer1.getId(), customer1);
-        uuidList.add(customer1.getId());
-        Customer customer2 = new Customer(UUID.randomUUID(), "Dwayne", "Johnson");
-        customers.addCustomer(customer2);
-        customerMap.put(customer2.getId(), customer2);
-        uuidList.add(customer2.getId());
-        Customer customer3 = new Customer(UUID.randomUUID(), "Mary", "Smith");
-        customers.addCustomer(customer3);
-        customerMap.put(customer3.getId(), customer3);
-        uuidList.add(customer3.getId());
-        Customer customer4 = new Customer(UUID.randomUUID(), "Paul", "Johnson");
-        customers.addCustomer(customer4);
-        customerMap.put(customer4.getId(), customer4);
-        uuidList.add(customer4.getId());
-        assertEquals(4, customers.getAll().size());
+    void testAddCustomers() {
+        customers.addCustomer(customerMap.get(uuidList.get(0)));
+        customers.addCustomer(customerMap.get(uuidList.get(1)));
+        customers.addCustomer(customerMap.get(uuidList.get(2)));
+        customers.addCustomer(customerMap.get(uuidList.get(3)));
+        List<Customer> list = customers.getAll();
+        assertEquals(4, list.size());
     }
 
     @Test

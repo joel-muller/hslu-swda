@@ -13,6 +13,12 @@ public class Customer {
     private String firstname;
     private String lastname;
 
+    public Customer() {
+        this.id = UUID.randomUUID();
+        this.firstname = "";
+        this.lastname = "";
+    }
+
     public Customer(UUID id, String firstname, String lastname) {
         this.id = id;
         this.firstname = firstname;
