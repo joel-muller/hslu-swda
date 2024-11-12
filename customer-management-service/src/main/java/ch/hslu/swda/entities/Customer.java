@@ -13,12 +13,32 @@ public class Customer {
     private String firstname;
     private String lastname;
 
+    /**
+     * Default constructor
+     */
     public Customer() {
         this.id = UUID.randomUUID();
         this.firstname = "";
         this.lastname = "";
     }
 
+    /**
+     * Constructor used on creation
+     * @param firstname
+     * @param lastname
+     */
+    public Customer(String firstname, String lastname) {
+        this.id = UUID.randomUUID();
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
+    /**
+     * Constructor used on retrieval
+     * @param id
+     * @param firstname
+     * @param lastname
+     */
     public Customer(UUID id, String firstname, String lastname) {
         this.id = id;
         this.firstname = firstname;

@@ -21,6 +21,7 @@ package ch.hslu.swda.micro;
 public final class Routes {
 
     static final String CUSTOMER_CREATE = "customer.create";
+    static final String CUSTOMER_GET = "customer.get";
 
     /**
      * No instance allowed.
