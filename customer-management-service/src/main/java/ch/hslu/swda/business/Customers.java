@@ -3,6 +3,7 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.entities.Customer;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Interface for storing customers.
@@ -21,7 +22,7 @@ public interface Customers {
      * @param id
      * @return Customer
      */
-    Customer getById(int id);
+    Customer getById(UUID id);
 
     /**
      * Returns a list of customers with the specified first name.
@@ -38,11 +39,17 @@ public interface Customers {
     List<Customer> findByLastname(String lastname);
 
     /**
+     * Returns a list of all customers.
+     * @return List of customers
+     */
+    List<Customer> getAll();
+
+    /**
      * Removes a customer from the storage.
      * @param id
      * @return true on success, false on failure
      */
-    boolean deleteCustomer(int id);
+    boolean deleteCustomer(UUID id);
 
     /**
      * Updates the first name of a customer.
@@ -50,7 +57,7 @@ public interface Customers {
      * @param firstname
      * @return true on success, false on failure.
      */
-    boolean updateFirstname(int id, String firstname);
+    boolean updateFirstname(UUID id, String firstname);
 
     /**
      * Updates the first name of a customer.
@@ -58,7 +65,7 @@ public interface Customers {
      * @param lastname
      * @return true on success, false on failure.
      */
-    boolean updateLastname(int id, String lastname);
+    boolean updateLastname(UUID id, String lastname);
 
     /**
      * Updates the first and last name of a customer.
@@ -67,5 +74,5 @@ public interface Customers {
      * @param lastname
      * @return true on success, false on failure.
      */
-    boolean updateCustomer(int id, String firstname, String lastname);
+    boolean updateCustomer(UUID id, String firstname, String lastname);
 }

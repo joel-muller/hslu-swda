@@ -1,19 +1,25 @@
 package ch.hslu.swda.entities;
 
-import java.util.Objects;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 
+import java.util.Objects;
+import java.util.UUID;
+
+@Entity("customers")
 public class Customer {
-    private int id;
+    @Id
+    private UUID id;
     private String firstname;
     private String lastname;
 
-    public Customer(int id, String firstname, String lastname) {
+    public Customer(UUID id, String firstname, String lastname) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -38,7 +44,7 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return id == customer.id;
+        return id.equals(customer.id);
     }
 
     @Override

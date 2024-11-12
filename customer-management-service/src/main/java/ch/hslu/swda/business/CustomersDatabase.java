@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
@@ -52,7 +53,7 @@ public class CustomersDatabase implements Customers {
     }
 
     @Override
-    public Customer getById(int id) {
+    public Customer getById(UUID id) {
         Customer customer = datastore.find(Customer.class)
                 .filter(eq("_id", id))
                 .first();
@@ -81,7 +82,16 @@ public class CustomersDatabase implements Customers {
     }
 
     @Override
-    public boolean deleteCustomer(int id) {
+    public List<Customer> getAll() {
+        List<Customer> customerList = datastore.find(Customer.class)
+                .iterator(new FindOptions())
+                .toList();
+        LOG.debug("List of size [{}] retrieved", customerList.size());
+        return customerList;
+    }
+
+    @Override
+    public boolean deleteCustomer(UUID id) {
         DeleteResult result = datastore.find(Customer.class)
                 .filter(eq("_id", id))
                 .delete(new DeleteOptions());
@@ -90,7 +100,7 @@ public class CustomersDatabase implements Customers {
     }
 
     @Override
-    public boolean updateFirstname(int id, String firstname) {
+    public boolean updateFirstname(UUID id, String firstname) {
         UpdateResult result = datastore.find(Customer.class)
                 .filter(eq("_id", id))
                 .update(UpdateOperators.set("firstname", firstname))
@@ -100,7 +110,7 @@ public class CustomersDatabase implements Customers {
     }
 
     @Override
-    public boolean updateLastname(int id, String lastname) {
+    public boolean updateLastname(UUID id, String lastname) {
         UpdateResult result = datastore.find(Customer.class)
                 .filter(eq("_id", id))
                 .update(UpdateOperators.set("lastname", lastname))
@@ -110,7 +120,7 @@ public class CustomersDatabase implements Customers {
     }
 
     @Override
-    public boolean updateCustomer(int id, String firstname, String lastname) {
+    public boolean updateCustomer(UUID id, String firstname, String lastname) {
         boolean updatedFirstname = updateFirstname(id, firstname);
         if (!updatedFirstname) {
             return false;
