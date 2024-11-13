@@ -52,6 +52,7 @@ public final class ServiceTemplate implements AutoCloseable {
 
         // start message receivers
         this.retrieveCustomers();
+        this.receiveCustomers();
     }
 
     /**
@@ -60,6 +61,11 @@ public final class ServiceTemplate implements AutoCloseable {
     @Override
     public void close() {
         bus.close();
+    }
+
+    private void receiveCustomers() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.CUSTOMER_CREATE);
+        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.CUSTOMER_CREATE, Routes.CUSTOMER_CREATE, new CustomerReceiver(exchangeName, bus));
     }
 
     private void retrieveCustomers() throws IOException {

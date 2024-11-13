@@ -35,7 +35,13 @@ public class CustomerReceiver implements MessageReceiver {
 
         try {
             Customer customer = mapper.readValue(message, typeRef);
-            customers.addCustomer(customer);
+            if (customer.getId() != null) {
+                customer = new Customer(customer.getFirstname(), customer.getLastname());
+                customers.addCustomer(customer);
+            } else {
+                customers.addCustomer(customer);
+            }
+            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(customer));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
