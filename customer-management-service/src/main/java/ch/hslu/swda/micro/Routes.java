@@ -22,6 +22,7 @@ public final class Routes {
 
     static final String CUSTOMER_CREATE = "customer.create";
     static final String CUSTOMER_GET = "customer.get";
+    static final String CUSTOMER_VALIDATE = "customer.validate";
 
     /**
      * No instance allowed.
