@@ -103,13 +103,13 @@ UUIDs in a filter are currently String to do .isEmpty() checks rather than null
 
 order.create
 
-* id: Integer
+* id: UUID
 * articles: Map <idArticle : Integer, count : Integer>
 * date : Date
 * status: Enum
 * storeId: Integer
-* employeeId: Integer
-* customerId: Integer
+* employeeId: UUID
+* customerId: UUID
 
 order.validate
 
@@ -120,9 +120,18 @@ order.validate
 
 customer.create
 
-* id : Integer
 * firstName : String
 * lastName : String
+
+customer.get
+
+* UUID (Optional)
+
+customer.validate
+
+* UUID
+
+(customer.validate soll einfach das UUID haben, keine Wrapper-Klasse)
 
 ==== Accounting
 
