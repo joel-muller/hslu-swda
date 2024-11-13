@@ -18,7 +18,6 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.entities.CentralWarehouseOrder;
-import ch.hslu.swda.stock.api.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,14 +33,13 @@ public final class CentralWarehouseOrderReceiver implements MessageReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(CentralWarehouseOrderReceiver.class);
     private final String exchangeName;
     private final BusConnector bus;
+    private final CentralWarehouseOrderManager orderManager;
 
-    private final Stock stock;
 
-
-    public CentralWarehouseOrderReceiver(final String exchangeName, final BusConnector bus,Stock stock) {
+    public CentralWarehouseOrderReceiver(final String exchangeName, final BusConnector bus,CentralWarehouseOrderManager orderManager) {
         this.exchangeName = exchangeName;
         this.bus = bus;
-        this.stock = stock;
+        this.orderManager = orderManager;
     }
 
     /**
@@ -61,17 +58,11 @@ public final class CentralWarehouseOrderReceiver implements MessageReceiver {
             articles= mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             storeId = UUID.fromString(orderNode.get("storeId").asText());
 
-            warehouseOrder = new CentralWarehouseOrder(storeId,articles,stock);
-
         }catch (IOException|IllegalArgumentException  e){
             LOG.error(e.getMessage(), e);
             return;
         }
         LOG.info("warehouseOrder correctly received. Start processing Order");
-        warehouseOrder.process();
-
-
-
-
+        orderManager.process(new CentralWarehouseOrder(storeId,articles));
     }
 }
