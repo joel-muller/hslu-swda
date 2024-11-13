@@ -5,12 +5,15 @@ import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.Customers;
 import ch.hslu.swda.business.CustomersDatabase;
 import ch.hslu.swda.entities.Customer;
+import ch.hslu.swda.entities.LogEntry;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.UUID;
 
 public class CustomerReceiver implements MessageReceiver {
 
@@ -41,7 +44,15 @@ public class CustomerReceiver implements MessageReceiver {
             } else {
                 customers.addCustomer(customer);
             }
+            String logMessage = "Customer " + customer.getFirstname() + " " + customer.getLastname() + " with id " + customer.getId() + " created.";
+            LogEntry log = new LogEntry("customer-management-service",
+                    Instant.now().getEpochSecond(),
+                    UUID.randomUUID(),
+                    "customer.create",
+                    customer.getId(),
+                    logMessage);
             bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(customer));
+            bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(log));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
