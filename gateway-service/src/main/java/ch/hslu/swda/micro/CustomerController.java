@@ -5,18 +5,17 @@ import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.model.customer.Customer;
 import ch.hslu.swda.model.log.LogEntry;
 import io.micronaut.core.type.Argument;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 import io.micronaut.serde.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -33,6 +32,11 @@ public class CustomerController {
     @Inject
     private ObjectMapper mapper;
 
+    /**
+     * Gets all customers.
+     * TODO: Filtering by firstname and lastname. This was not yet implemented due to a lack of time.
+     * @return
+     */
     @Get("/")
     public List<Customer> getCustomers() {
         try {
@@ -49,6 +53,32 @@ public class CustomerController {
         }
     }
 
+    /**
+     * Gets a customer by their UUID.
+     * @param id
+     * @return
+     */
+    @Get("/{id}")
+    public Customer getCustomerById(@PathVariable UUID id) {
+        try {
+            bus.connect();
+            String reply = bus.talkSync(exchangeName, "customer.get", mapper.writeValueAsString(id));
+            Customer customer = mapper.readValue(reply, Customer.class);
+            return customer;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Creates a new customer. The id property is overwritten on the service side.
+     * @param customer
+     * @return
+     */
     @Post("/")
     public Customer createCustomer(@Body Customer customer) {
         try {
@@ -57,6 +87,50 @@ public class CustomerController {
             LOG.info(reply);
             Customer receivedCustomer = mapper.readValue(reply, Customer.class);
             return receivedCustomer;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Updates a customer. The id property on the customer body is not used.
+     * @param id
+     * @param customer
+     * @return
+     */
+    @Put("/{id}")
+    public Boolean updateCustomer(@PathVariable UUID id, @Body Customer customer) {
+        try {
+            Customer reconstructedCustomer = new Customer(id, customer.firstname(), customer.lastname());
+            bus.connect();
+            String reply = bus.talkSync(exchangeName, "customer.update", mapper.writeValueAsString(reconstructedCustomer));
+            LOG.info(reply);
+            return mapper.readValue(reply, Boolean.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Deletes a customer.
+     * @param id
+     * @return
+     */
+    @Delete("/{id}")
+    public Boolean deleteCustomer(@PathVariable UUID id) {
+        try {
+            bus.connect();
+            String reply = bus.talkSync(exchangeName, "customer.delete", mapper.writeValueAsString(id));
+            LOG.info(reply);
+            return mapper.readValue(reply, Boolean.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
