@@ -29,12 +29,18 @@ public class CustomerRetriever implements MessageReceiver {
     @Override
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         try {
+
             LOG.debug("Received get request with replyTo [{}]", replyTo);
             ObjectMapper mapper = new ObjectMapper();
-            List<Customer> list = customers.getAll();
-            LOG.debug("Sending list of log entries with size [{}]", list.size());
-            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(list));
-
+            if (!message.isEmpty()) {
+                UUID uuid = mapper.readValue(message, UUID.class);
+                Customer customer = customers.getById(uuid);
+                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(customer));
+            } else {
+                List<Customer> list = customers.getAll();
+                LOG.debug("Sending list of log entries with size [{}]", list.size());
+                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(list));
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
