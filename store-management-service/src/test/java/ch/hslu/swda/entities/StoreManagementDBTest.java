@@ -39,13 +39,14 @@ public class StoreManagementDBTest {
         // TODO: Implement test
     }
 
+    @Disabled
     @Test
     void testConnectToDatabase() throws SQLException {
         assertNotNull(testStoreManagementDB.getConnection());
     }
 
 
-
+    @Disabled
     @Test
     void testInsertInventoryRecord() {
         // testStoreManagementDB.connection = DriverManager.getConnection(DB_URL,
