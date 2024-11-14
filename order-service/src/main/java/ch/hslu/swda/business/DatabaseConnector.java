@@ -40,11 +40,6 @@ public class DatabaseConnector {
         LOG.info("Order stored: " + order);
     }
 
-    public void storeArticle(Article article) {
-        datastore.save(article);
-        LOG.info("Article stored: " + article);
-    }
-
     public Order getById(UUID id) {
         Order order = datastore.find(Order.class)
                 .filter(eq("_id", id))

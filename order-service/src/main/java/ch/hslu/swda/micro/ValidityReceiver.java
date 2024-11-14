@@ -18,32 +18,26 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.DatabaseConnector;
-import ch.hslu.swda.entities.ModifyContext;
 import ch.hslu.swda.entities.ModifyValidity;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messages.VerifyResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public final class ValidityReceiver implements MessageReceiver {
 
     private static final Logger LOG = LoggerFactory.getLogger(ValidityReceiver.class);
-    private final String exchangeName;
-    private final BusConnector bus;
     private final DatabaseConnector database;
+    private final OrderService service;
 
 
-    public ValidityReceiver(final DatabaseConnector database, final String exchangeName, final BusConnector bus) {
-        this.exchangeName = exchangeName;
-        this.bus = bus;
+    public ValidityReceiver(final DatabaseConnector database, final OrderService service) {
         this.database = database;
+        this.service = service;
     }
 
     /**
@@ -55,9 +49,10 @@ public final class ValidityReceiver implements MessageReceiver {
             ObjectMapper mapper = new ObjectMapper();
             VerifyResponse response = mapper.readValue(message, VerifyResponse.class);
             Order order = database.getById(response.idOrder());
-            ModifyContext.modify(order, new ModifyValidity(response));
+            order.modify(new ModifyValidity(response, service));
+            database.storeOrder(order);
             LOG.info(order.toString());
-        } catch (JsonProcessingException e) {
+        } catch (InterruptedException | IOException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());
         }
 

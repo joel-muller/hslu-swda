@@ -19,7 +19,7 @@ import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.messages.LogMessage;
-import ch.hslu.swda.entities.Order;
+import ch.hslu.swda.messages.VerifyRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Beispielcode für Implementation eines Servcies mit RabbitMQ.
  */
-public final class OrderService implements AutoCloseable {
+public final class OrderService implements AutoCloseable, Service {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderService.class);
     private final String exchangeName;
@@ -61,17 +61,19 @@ public final class OrderService implements AutoCloseable {
         this.receiveOrder();
     }
 
-    public void checkValidity(Order order) throws IOException, InterruptedException {
+    @Override
+    public void checkValidity(VerifyRequest request) throws IOException, InterruptedException {
         LOG.info("Checking validity of order");
 
         ObjectMapper mapper = new ObjectMapper();
-        String data = mapper.writeValueAsString(order.getVerifyRequest());
+        String data = mapper.writeValueAsString(request);
 
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
         bus.talkAsync(exchangeName, Routes.CHECK_ORDER_VALIDITY, data);
 
     }
 
+    @Override
     public void log(LogMessage message) throws IOException, InterruptedException {
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(message);
@@ -84,7 +86,7 @@ public final class OrderService implements AutoCloseable {
 
     private void receiveOrderValidity() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ValidityReceiver(this.database, exchangeName, bus));
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ValidityReceiver(this.database, this));
     }
 
 

@@ -15,6 +15,7 @@
  */
 package ch.hslu.swda.entities;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.Calendar;
 
@@ -110,6 +111,10 @@ public final class Order {
 
     public StoreRequest getStoreRequest() {
         return new StoreRequest(getId(), createMapOfArticles(), getEmployeeId());
+    }
+
+    public void modify(Modifiable modifiable) throws IOException, InterruptedException{
+        modifiable.modify(this);
     }
 
     /**

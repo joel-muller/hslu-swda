@@ -79,7 +79,7 @@ public final class OrderReceiver implements MessageReceiver {
             LOG.info("Following order received and stored: [{}]", order.toString());
             service.log(new LogMessage(order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
 
-            service.checkValidity(order);
+            service.checkValidity(order.getVerifyRequest());
             bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());
         } catch (IOException | InterruptedException e) {
             LOG.error(e.getMessage(), e);
