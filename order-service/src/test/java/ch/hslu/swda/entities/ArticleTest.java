@@ -1,5 +1,7 @@
 package ch.hslu.swda.entities;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -9,67 +11,93 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArticleTest {
-    @Test
-    void createListArticle() {
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-        map.put(1, 4);
-        map.put(234, 4423);
-        List<Article> list = Article.createListArticle(map);
-        assertEquals(1, list.getFirst().getId());
-        assertEquals(234, list.get(1).getId());
+    private Article article;
+
+    @BeforeEach
+    void setUp() {
+        article = new Article(1, 10);
     }
 
     @Test
-    void getArticleId() {
-        int articleId = 6544;
-        int count = 556651;
-        Article article = new Article(articleId, count);
-        assertEquals(articleId, article.getId());
+    void getId() {
+        assertEquals(1, article.getId(), "getId should return the correct id value");
     }
 
     @Test
     void getCount() {
-        int articleId = 1339;
-        int count = 97556;
-        Article article = new Article(articleId, count);
-        assertEquals(count, article.getCount());
+        assertEquals(10, article.getCount(), "getCount should return the correct count value");
     }
 
     @Test
-    void isDeliveredAndSetDelivered() {
-        int articleId = 69;
-        int count = 444;
-        Article article = new Article(articleId, count);
-        assertFalse(article.isDelivered());
+    void isDelivered() {
+        assertFalse(article.isDelivered(), "Initially, delivered should be false");
+
         article.setDelivered(true);
-        assertTrue(article.isDelivered());
+        assertTrue(article.isDelivered(), "After setting delivered to true, isDelivered should return true");
+
+        article.setDelivered(false);
+        assertFalse(article.isDelivered(), "After setting delivered to false, isDelivered should return false");
+    }
+
+    @Test
+    void setDelivered() {
+        article.setDelivered(true);
+        assertTrue(article.isDelivered(), "setDelivered(true) should make isDelivered return true");
+
+        article.setDelivered(false);
+        assertFalse(article.isDelivered(), "setDelivered(false) should make isDelivered return false");
+    }
+
+    @Test
+    void createListArticle() {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 5);
+        map.put(2, 10);
+        map.put(3, 15);
+
+        List<Article> articles = Article.createListArticle(map);
+
+        assertEquals(3, articles.size(), "The list should contain three articles");
+        assertEquals(new Article(1, 5), articles.get(0), "The first article should have id 1 and count 5");
+        assertEquals(new Article(2, 10), articles.get(1), "The second article should have id 2 and count 10");
+        assertEquals(new Article(3, 15), articles.get(2), "The third article should have id 3 and count 15");
     }
 
     @Test
     void testToString() {
-        int articleId = 12;
-        int count = 333;
-        Article article = new Article(articleId, count);
-        assertEquals("Article{id=12, count=333, delivered=false}", article.toString());
+        String expectedString = "Article{id=1, count=10, delivered=false}";
+        assertEquals(expectedString, article.toString(), "toString should match the expected format for the article");
+
+        article.setDelivered(true);
+        String updatedString = "Article{id=1, count=10, delivered=true}";
+        assertEquals(updatedString, article.toString(), "toString should reflect the current delivered status");
     }
 
     @Test
-    void testEqualsAndHashcode() {
-        Article a1 = new Article(12, 44);
-        Article a2 = new Article(12, 44);
-        a1.setDelivered(true);
-        a2.setDelivered(true);
-        assertEquals(a1, a2);
+    void testEquals() {
+        Article sameArticle = new Article(1, 10);
+        Article differentArticle = new Article(2, 10);
+
+        assertEquals(article, sameArticle, "Two articles with the same id and count should be equal");
+        assertNotEquals(article, differentArticle, "Two articles with different ids should not be equal");
+
+        article.setDelivered(true);
+        assertNotEquals(article, sameArticle, "Articles with different delivered statuses should not be equal");
     }
 
     @Test
-    void testNotEqualsAndHashcode() {
-        Article a1 = new Article(12, 44);
-        Article a2 = new Article(122, 44);
-        a1.setDelivered(true);
-        a2.setDelivered(true);
-        assertNotEquals(a1, a2);
+    void testHashCode() {
+        Article sameArticle = new Article(1, 10);
+        assertEquals(article.hashCode(), sameArticle.hashCode(), "Articles with the same fields should have the same hash code");
+
+        article.setDelivered(true);
+        assertNotEquals(article.hashCode(), sameArticle.hashCode(), "Articles with different fields should have different hash codes");
     }
 
+    @Test
+    void testEqualsAndHashCode() {
+        EqualsVerifier.simple().forClass(State.class)
+                .verify();
+    }
 
 }

@@ -99,7 +99,7 @@ public final class Order {
         this.employeeId = employeeId;
     }
 
-    private Map<Integer, Integer> createMapOfArticles() {
+    protected Map<Integer, Integer> createMapOfArticles() {
         Map<Integer, Integer> articles = new HashMap<Integer, Integer>();
         for (Article art : this.articles) {
             articles.put(art.getId(), art.getCount());
