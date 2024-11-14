@@ -18,7 +18,10 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.DatabaseConnector;
+import ch.hslu.swda.entities.ModifyContext;
+import ch.hslu.swda.entities.ModifyValidity;
 import ch.hslu.swda.entities.Order;
+import ch.hslu.swda.messages.VerifyResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -50,16 +53,14 @@ public final class ValidityReceiver implements MessageReceiver {
     public void onMessageReceived(final String route, final String replyTo, final String corrId, final String message) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.readTree(message);
-            UUID orderId = UUID.fromString(jsonNode.get("idOrder").asText());
-            boolean valid = jsonNode.get("valid").asBoolean();
-            Order order = database.getById(orderId);
+            VerifyResponse response = mapper.readValue(message, VerifyResponse.class);
+            Order order = database.getById(response.idOrder());
+            ModifyContext.modify(order, new ModifyValidity(response));
             LOG.info(order.toString());
         } catch (JsonProcessingException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());
         }
 
-        // receive message and reply
         LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
         LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
         LOG.info("Received validity check: [{}]", message);

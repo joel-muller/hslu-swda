@@ -18,9 +18,8 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.DatabaseConnector;
-import ch.hslu.swda.entities.LogMessage;
+import ch.hslu.swda.messages.LogMessage;
 import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.entities.VerifyRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,7 @@ public final class OrderService implements AutoCloseable {
         LOG.info("Checking validity of order");
 
         ObjectMapper mapper = new ObjectMapper();
-        String data = mapper.writeValueAsString(VerifyRequest.createFromOrder(order));
+        String data = mapper.writeValueAsString(order.getVerifyRequest());
 
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
         bus.talkAsync(exchangeName, Routes.CHECK_ORDER_VALIDITY, data);
@@ -92,7 +91,6 @@ public final class OrderService implements AutoCloseable {
     private void receiveOrder() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER);
         bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new OrderReceiver(this.database, exchangeName, bus, this));
-
     }
 
 

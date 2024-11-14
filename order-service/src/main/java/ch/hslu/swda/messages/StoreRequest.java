@@ -1,25 +1,18 @@
-package ch.hslu.swda.entities;
+package ch.hslu.swda.messages;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
-public class VerifyRequest {
+public class StoreRequest {
     private final UUID orderId;
     private final UUID employeeId;
     private final Map<Integer, Integer> articles;
 
-    public VerifyRequest(UUID orderID, Map<Integer, Integer> articles, UUID employeeId) {
+    public StoreRequest(UUID orderID, Map<Integer, Integer> articles, UUID employeeId) {
         this.orderId = orderID;
         this.articles = articles;
         this.employeeId = employeeId;
-    }
-
-    public static VerifyRequest createFromOrder(Order order) {
-        List<Article> list = order.getArticles();
-        Map<Integer, Integer> articles = new HashMap<Integer, Integer>();
-        for (Article art : list) {
-            articles.put(art.getId(), art.getCount());
-        }
-        return new VerifyRequest(order.getId(), articles, order.getEmployeeId());
     }
 
     public UUID getOrderId() {
@@ -37,7 +30,7 @@ public class VerifyRequest {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof VerifyRequest that)) return false;
+        if (!(o instanceof StoreRequest that)) return false;
         return Objects.equals(orderId, that.orderId) && Objects.equals(articles, that.articles);
     }
 

@@ -1,4 +1,4 @@
-package ch.hslu.swda.entities;
+package ch.hslu.swda.messages;
 
 import org.junit.jupiter.api.Test;
 
@@ -69,4 +69,5 @@ class LogMessageTest {
         LogMessage message = new LogMessage(id, eventType, msg);
         assertEquals("LogMessage{message='Hello world'}", message.toString());
     }
+
 }

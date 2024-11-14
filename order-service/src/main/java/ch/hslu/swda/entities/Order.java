@@ -18,8 +18,9 @@ package ch.hslu.swda.entities;
 import java.util.*;
 import java.util.Calendar;
 
+import ch.hslu.swda.messages.StoreRequest;
+import ch.hslu.swda.messages.VerifyRequest;
 import dev.morphia.annotations.*;
-import org.bson.types.ObjectId;
 
 /**
  * Einfaches Datenmodell einer Bestellung.
@@ -29,7 +30,7 @@ import org.bson.types.ObjectId;
 public final class Order {
     @Id
     private final UUID id;
-    private boolean valid;
+    private State state;
     private List<Article> articles;
     private Date date;
     private UUID storeId;
@@ -38,7 +39,7 @@ public final class Order {
 
     public Order(UUID orderId, List<Article> articles, UUID storeId, UUID customerId, UUID employeeId) {
         this.id = orderId;
-        this.valid = false;
+        this.state = new State();
         this.articles = articles;
         this.date = Calendar.getInstance().getTime();
         this.storeId = storeId;
@@ -51,12 +52,8 @@ public final class Order {
     }
 
 
-    public boolean isValid() {
-        return valid;
-    }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    public State getState() {
+        return state;
     }
 
     public List<Article> getArticles() {
@@ -99,6 +96,22 @@ public final class Order {
         this.employeeId = employeeId;
     }
 
+    private Map<Integer, Integer> createMapOfArticles() {
+        Map<Integer, Integer> articles = new HashMap<Integer, Integer>();
+        for (Article art : this.articles) {
+            articles.put(art.getId(), art.getCount());
+        }
+        return articles;
+    }
+
+    public VerifyRequest getVerifyRequest() {
+        return new VerifyRequest(getId(), createMapOfArticles(), getEmployeeId());
+    }
+
+    public StoreRequest getStoreRequest() {
+        return new StoreRequest(getId(), createMapOfArticles(), getEmployeeId());
+    }
+
     /**
      * Orders mit identischer ID sind gleich. {@inheritDoc}.
      */
@@ -123,7 +136,7 @@ public final class Order {
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", valid=" + valid +
+                ", state=" + state +
                 ", articles=" + articles+
                 ", date=" + date +
                 ", storeId=" + storeId +

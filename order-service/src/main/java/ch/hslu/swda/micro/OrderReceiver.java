@@ -20,7 +20,7 @@ import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.entities.LogMessage;
+import ch.hslu.swda.messages.LogMessage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,9 +67,6 @@ public final class OrderReceiver implements MessageReceiver {
             String articlesString = orderNode.get("articles").toString();
             Map<Integer, Integer> articlesMap = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             List<Article> articles = Article.createListArticle(articlesMap);
-//            for (Article art : articles) {
-//                this.database.storeArticle(art);
-//            }
 
             UUID storeId = UUID.fromString(orderNode.get("storeId").asText());
             UUID customerId = UUID.fromString(orderNode.get("customerId").asText());

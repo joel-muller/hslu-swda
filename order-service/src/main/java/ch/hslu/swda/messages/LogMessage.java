@@ -1,4 +1,4 @@
-package ch.hslu.swda.entities;
+package ch.hslu.swda.messages;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -65,4 +65,6 @@ public class LogMessage {
                 "message='" + message + '\'' +
                 '}';
     }
+
+
 }
