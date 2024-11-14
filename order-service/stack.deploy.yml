@@ -11,6 +11,7 @@ services:
     image: $CICD_IMAGE_ID
     environment:
       - RMQ_HOST=bus
+      - MONGO_URI=mongodb://mongodb:27017
     networks:
       - bus
       # - ingress
@@ -22,3 +23,10 @@ services:
       #   - "traefik.http.services.${CICD_STACK_NAME}App.loadbalancer.server.port=8080"
       #   - 'traefik.http.routers.${CICD_STACK_NAME}App.entrypoints=websecure'
       #   - 'traefik.http.routers.${CICD_STACK_NAME}App.tls.certresolver=letsencrypt'
+  mongodb:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/bitnami/mongodb:4.2.19
+    restart: always
+    ports:
+      - '27019:27017'
+    networks:
+      - internal
