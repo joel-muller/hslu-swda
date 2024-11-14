@@ -54,7 +54,7 @@ public class CustomerDeleter implements MessageReceiver {
             bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(deleteSuccess));
             bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(logEntry));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOG.error(e.getMessage());
         }
     }
 }

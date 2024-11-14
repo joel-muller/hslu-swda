@@ -73,7 +73,7 @@ public class CustomerUpdater implements MessageReceiver {
             LOG.debug("Customer of id [{}] successfully updated.", receivedCustomer.getId());
             bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(logEntry));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOG.error(e.getMessage());
         }
     }
 }

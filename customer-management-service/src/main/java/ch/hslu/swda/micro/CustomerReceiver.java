@@ -54,7 +54,7 @@ public class CustomerReceiver implements MessageReceiver {
             bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(customer));
             bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(log));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOG.error(e.getMessage());
         }
 
     }

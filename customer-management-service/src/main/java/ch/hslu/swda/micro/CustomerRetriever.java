@@ -42,7 +42,7 @@ public class CustomerRetriever implements MessageReceiver {
                 bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(list));
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOG.error(e.getMessage());
         }
     }
 }
