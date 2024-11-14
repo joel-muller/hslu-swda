@@ -30,7 +30,6 @@ public final class Order {
     @Id
     private final UUID id;
     private boolean valid;
-    // Werde ich reaus nehmen
     private List<Article> articles;
     private Date date;
     private UUID storeId;

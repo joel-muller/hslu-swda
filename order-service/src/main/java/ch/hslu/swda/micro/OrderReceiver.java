@@ -66,7 +66,7 @@ public final class OrderReceiver implements MessageReceiver {
 
             String articlesString = orderNode.get("articles").toString();
             Map<Integer, Integer> articlesMap = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
-            List<Article> articles = Article.createListArticle(orderId, articlesMap);
+            List<Article> articles = Article.createListArticle(articlesMap);
 //            for (Article art : articles) {
 //                this.database.storeArticle(art);
 //            }
