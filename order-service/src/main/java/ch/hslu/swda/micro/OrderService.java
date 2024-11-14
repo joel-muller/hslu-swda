@@ -61,22 +61,22 @@ public final class OrderService implements AutoCloseable, Service {
     }
 
     @Override
-    public void checkValidity(VerifyRequest request) throws IOException, InterruptedException {
+    public void checkValidity(VerifyRequest request) throws IOException {
         sendMessageAsynchronous(request, Routes.CHECK_ORDER_VALIDITY);
     }
 
     @Override
-    public void log(LogMessage message) throws IOException, InterruptedException {
+    public void log(LogMessage message) throws IOException {
         sendMessageAsynchronous(message, Routes.LOG);
     }
 
     @Override
-    public void requestArticlesFromStore(StoreRequest request) throws IOException, InterruptedException {
+    public void requestArticlesFromStore(StoreRequest request) throws IOException {
         sendMessageAsynchronous(request, Routes.REQUEST_ARTICLES);
     }
 
     @Override
-    public void checkCustomerValidity(CustomerRequest request) throws IOException, InterruptedException {
+    public void checkCustomerValidity(CustomerRequest request) throws IOException {
         sendMessageAsynchronous(request, Routes.CHECK_CUSTOMER);
     }
 

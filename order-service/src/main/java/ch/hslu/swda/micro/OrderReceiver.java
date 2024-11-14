@@ -81,7 +81,7 @@ public final class OrderReceiver implements MessageReceiver {
 
             service.checkValidity(order.getVerifyRequest());
             bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
     }
