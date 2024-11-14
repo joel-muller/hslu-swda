@@ -31,7 +31,7 @@ public class ModifyValidity implements Modifiable {
                 order.getState().setCancelled(true);
                 service.log(new LogMessage(order.getEmployeeId(), "order.validate", "Order not validated " + order.toString()));
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             LOG.error("An error occurred while trying to call further actions after validity was arrived: {}", e.toString());
         }
 

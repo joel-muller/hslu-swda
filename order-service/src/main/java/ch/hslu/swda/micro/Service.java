@@ -8,8 +8,8 @@ import ch.hslu.swda.messages.VerifyRequest;
 import java.io.IOException;
 
 public interface Service {
-    public void checkValidity(VerifyRequest request) throws IOException, InterruptedException;
-    public void log(LogMessage message) throws IOException, InterruptedException;
-    public void requestArticlesFromStore(StoreRequest request) throws IOException, InterruptedException;
-    public void checkCustomerValidity(CustomerRequest request) throws IOException, InterruptedException;
+    void checkValidity(VerifyRequest request) throws IOException;
+    void log(LogMessage message) throws IOException;
+    void requestArticlesFromStore(StoreRequest request) throws IOException;
+    void checkCustomerValidity(CustomerRequest request) throws IOException;
 }
