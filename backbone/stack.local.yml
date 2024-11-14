@@ -50,9 +50,22 @@ services:
       MYSQL_DATABASE: store_management
     ports:
       - "3306:3306"
-    networks :
-      - backbone
-      - demo
+    networks:
+    - backbone
+    - demo
+
+      
+  db_test:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: store_management_test
+    ports:
+      - "3307:3306"
+    networks:
+    - backbone
+    - demo
+
 
   mysql-viewer:
     image: adminer:latest
