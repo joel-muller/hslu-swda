@@ -10,14 +10,18 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class InventoryCheckReceiver implements ch.hslu.swda.bus.MessageReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(InventoryCheckReceiver.class);
     private final String exchangeName;
     private final BusConnector bus;
     private StoreManagementDB db;
+    ObjectMapper mapper = new ObjectMapper();
 
     public InventoryCheckReceiver(final String exchangeName, final BusConnector bus, final StoreManagementDB db) {
         this.exchangeName = exchangeName;
@@ -28,26 +32,21 @@ public class InventoryCheckReceiver implements ch.hslu.swda.bus.MessageReceiver 
     @Override
     public void onMessageReceived(final String route, final String replyTo, final String corrId, final String message) {
         // log event
-        String threadName = Thread.currentThread().getName();
-        LOG.debug("[Thread: {}] Begin message processing", threadName);
+
         LOG.debug("Received message with routing [{}]", route);
 
-        // unpack received message data
-        ObjectMapper mapper = new ObjectMapper();
-        /* TypeReference<Order> typeRef = new TypeReference<>() {
-            // empty
-        }; */
         try {
             // process message data
+            ObjectMapper mapper = new ObjectMapper();
             Integer article = mapper.readValue(message, Integer.class);
-            db.checkArticleAvailabilityAsJson(article);
+            ArrayNode responseArrayNode = db.checkArticleAvailabilityAsJson(article);
+            String responseString = responseArrayNode.toString();
+            bus.talkAsync(exchangeName, replyTo, responseString); // asynchron beantworten
         } catch (IOException | SQLException e) {
             LOG.error(e.getMessage(), e);
         } finally {
-            LOG.debug("[Thread: {}] End message processing", threadName);
+            LOG.debug("[Ended message processing of inventory check request with message [{}]]", message);
         }
     }
 
-
-    
 }
