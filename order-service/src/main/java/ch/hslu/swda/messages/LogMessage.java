@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.time.Instant;
 
 
-public class LogMessage {
+public class LogMessage implements OutgoingMessage {
     private final String source;
     private final long timestamp;
     private final UUID userId;

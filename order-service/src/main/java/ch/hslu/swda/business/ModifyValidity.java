@@ -1,5 +1,6 @@
-package ch.hslu.swda.entities;
+package ch.hslu.swda.business;
 
+import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messages.LogMessage;
 import ch.hslu.swda.messages.VerifyResponse;
 import ch.hslu.swda.micro.OrderService;
@@ -20,8 +21,11 @@ public class ModifyValidity implements Modifiable {
         if (response.valid()) {
             order.getState().setValid(true);
             service.log(new LogMessage(order.getEmployeeId(), "order.validate", "Order Validated: " + order.toString()));
+            service.requestArticlesFromStore(order.getStoreRequest());
+            service.checkCustomerValidity(order.getCustomerRequest());
         } else {
             order.getState().setCancelled(true);
+            service.log(new LogMessage(order.getEmployeeId(), "order.validate", "Order not validated " + order.toString()));
         }
     }
 }

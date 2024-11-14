@@ -2,7 +2,7 @@ package ch.hslu.swda.messages;
 
 import java.util.*;
 
-public class VerifyRequest {
+public class VerifyRequest implements OutgoingMessage {
     private final UUID orderId;
     private final UUID employeeId;
     private final Map<Integer, Integer> articles;

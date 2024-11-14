@@ -18,8 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.DatabaseConnector;
-import ch.hslu.swda.messages.LogMessage;
-import ch.hslu.swda.messages.VerifyRequest;
+import ch.hslu.swda.messages.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,25 +62,29 @@ public final class OrderService implements AutoCloseable, Service {
 
     @Override
     public void checkValidity(VerifyRequest request) throws IOException, InterruptedException {
-        LOG.info("Checking validity of order");
-
-        ObjectMapper mapper = new ObjectMapper();
-        String data = mapper.writeValueAsString(request);
-
-        LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
-        bus.talkAsync(exchangeName, Routes.CHECK_ORDER_VALIDITY, data);
-
+        sendMessageAsynchronous(request, Routes.CHECK_ORDER_VALIDITY);
     }
 
     @Override
     public void log(LogMessage message) throws IOException, InterruptedException {
+        sendMessageAsynchronous(message, Routes.LOG);
+    }
+
+    @Override
+    public void requestArticlesFromStore(StoreRequest request) throws IOException, InterruptedException {
+        sendMessageAsynchronous(request, Routes.REQUEST_ARTICLES);
+    }
+
+    @Override
+    public void checkCustomerValidity(CustomerRequest request) throws IOException, InterruptedException {
+        sendMessageAsynchronous(request, Routes.CHECK_CUSTOMER);
+    }
+
+    public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(message);
-
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.LOG);
-        bus.talkAsync(exchangeName, Routes.LOG, data);
-
-        LOG.debug("Create log");
+        bus.talkAsync(exchangeName, route, data);
     }
 
     private void receiveOrderValidity() throws IOException {

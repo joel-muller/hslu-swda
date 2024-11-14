@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Calendar;
 
+import ch.hslu.swda.business.Modifiable;
+import ch.hslu.swda.messages.CustomerRequest;
 import ch.hslu.swda.messages.StoreRequest;
 import ch.hslu.swda.messages.VerifyRequest;
 import dev.morphia.annotations.*;
@@ -111,6 +113,10 @@ public final class Order {
 
     public StoreRequest getStoreRequest() {
         return new StoreRequest(getId(), createMapOfArticles(), getEmployeeId());
+    }
+
+    public CustomerRequest getCustomerRequest() {
+        return new CustomerRequest(getId(), getEmployeeId());
     }
 
     public void modify(Modifiable modifiable) throws IOException, InterruptedException{

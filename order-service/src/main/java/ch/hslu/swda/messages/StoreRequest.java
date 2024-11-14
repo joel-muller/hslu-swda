@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class StoreRequest {
+public class StoreRequest implements OutgoingMessage {
     private final UUID orderId;
     private final UUID employeeId;
     private final Map<Integer, Integer> articles;

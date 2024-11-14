@@ -15,13 +15,11 @@
  */
 package ch.hslu.swda.micro;
 
-import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.DatabaseConnector;
-import ch.hslu.swda.entities.ModifyValidity;
+import ch.hslu.swda.business.ModifyValidity;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messages.VerifyResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,14 +49,13 @@ public final class ValidityReceiver implements MessageReceiver {
             Order order = database.getById(response.idOrder());
             order.modify(new ModifyValidity(response, service));
             database.storeOrder(order);
-            LOG.info(order.toString());
+            LOG.info("Received validity check and order was updated: [{}]", message);
         } catch (InterruptedException | IOException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());
         }
 
         LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
         LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
-        LOG.info("Received validity check: [{}]", message);
     }
 
 }

@@ -20,12 +20,15 @@ package ch.hslu.swda.micro;
  */
 public final class Routes {
 
+    // Ingoing Mesages
     static final String RECEIVE_ORDER_VALIDITY = "order.receive-validity";
     static final String RECEIVE_ORDER = "order.receive";
 
-    //Imports, dont know yet if we can make this global over all services
+    // Outgoing Messages
     static final String CHECK_ORDER_VALIDITY = "articles.check-validity";
     static final String LOG = "logs.new";
+    static final String REQUEST_ARTICLES = "store.request-articles";
+    static final String CHECK_CUSTOMER = "customer.check-customer";
 
     /**
      * No instance allowed.
