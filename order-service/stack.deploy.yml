@@ -5,6 +5,7 @@ networks:
   bus:
     name: bus
     external: true
+  internal:
 
 services:
   app:
