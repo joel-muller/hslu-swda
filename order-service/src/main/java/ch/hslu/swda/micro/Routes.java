@@ -23,12 +23,13 @@ public final class Routes {
     // Ingoing Mesages
     static final String RECEIVE_ORDER_VALIDITY = "order.receive-validity";
     static final String RECEIVE_ORDER = "order.receive";
+    static final String CUSTOMER_RECEIVE_VALIDITY = "order.customer-validity";
 
     // Outgoing Messages
     static final String CHECK_ORDER_VALIDITY = "articles.check-validity";
     static final String LOG = "logs.new";
     static final String REQUEST_ARTICLES = "store.request-articles";
-    static final String CHECK_CUSTOMER = "customer.check-customer";
+    static final String CHECK_CUSTOMER = "customer.validate";
 
     /**
      * No instance allowed.
