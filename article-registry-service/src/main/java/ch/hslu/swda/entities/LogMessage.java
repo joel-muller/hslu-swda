@@ -62,12 +62,8 @@ public class LogMessage {
     @Override
     public String toString() {
         return "LogMessage{" +
-                ", srouce='" + source + '\'' +
-                ", timestamp=" + timestamp +
-                ", userId=" + userId +
-                ", eventType='" + eventType + '\'' +
-                ", objUuid=" + objUuid +
-                ", message='" + message + '\'' +
+                "message='" + message + '\'' +
                 '}';
     }
+
 }
