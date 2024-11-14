@@ -120,8 +120,8 @@ order.validate
 
 customer.create
 
-* firstName : String
-* lastName : String
+* firstname : String
+* lastname : String
 
 customer.get
 
@@ -131,14 +131,28 @@ customer.validate
 
 * UUID
 
-(customer.validate soll einfach das UUID haben, keine Wrapper-Klasse)
+customer.update
+
+* firstname : String (Optional)
+* lastname : String (Optional)
+
+customer.delete
+
+* UUID
+
+(customer.validate und customer.delete soll einfach das UUID haben, keine Wrapper-Klasse)
 
 ==== Accounting
 
 confirmation.create
 
-* orderId : Integer
-* customerId : Integer
+* orderId : UUID
+* customerId : UUID
+
+invoice.create
+
+* orderId : UUID
+* customerId : UUID
 
 === DB Entries
 
@@ -150,16 +164,16 @@ Order (Order)
 * date : Date
 * status: Enum
 * storeId: Integer
-* employeeId: Integer
-* customerId: Integer
+* employeeId: UUID
+* customerId: UUID
 
 vielleicht nach 24 stunden checken ob es noch invalid gibt und checkArticleValidity() ereut senden
 
 Customer (Customer Management)
 
-* id : Integer
-* firstName : String
-* lastName : String
+* id : UUID
+* firstname : String
+* lastname : String
 
 Article (Article Registry)
 
@@ -177,3 +191,15 @@ Sortiment (Store Management)
 * countAfterRefill : int
 
 Store (Store Management)
+
+* TBD
+
+LogEntry (Log)
+
+* id : UUID
+* source : String
+* timestamp : long
+* userId : UUID
+* eventType : String
+* objUuid : UUID
+* message : String
