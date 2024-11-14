@@ -15,6 +15,7 @@ services:
       - MONGO_URI=mongodb://mongodb:27017
     networks:
       - bus
+      - internal
       # - ingress
     deploy:
       replicas: 1
