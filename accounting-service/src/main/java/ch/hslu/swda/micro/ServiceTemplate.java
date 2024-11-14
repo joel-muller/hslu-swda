@@ -70,6 +70,6 @@ public final class ServiceTemplate implements AutoCloseable {
 
     private void createInvoices() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.INVOICE_CREATE);
-        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.INVOICE_CREATE, Routes.INVOICE_CREATE, new ConfirmationCreator(exchangeName, bus));
+        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.INVOICE_CREATE, Routes.INVOICE_CREATE, new InvoiceCreator(exchangeName, bus));
     }
 }
