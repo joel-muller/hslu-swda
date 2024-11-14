@@ -54,6 +54,8 @@ public final class ServiceTemplate implements AutoCloseable {
         this.retrieveCustomers();
         this.receiveCustomers();
         this.validateCustomers();
+        this.updateCustomers();
+        this.deleteCustomers();
     }
 
     /**
@@ -77,5 +79,15 @@ public final class ServiceTemplate implements AutoCloseable {
     private void validateCustomers() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.CUSTOMER_VALIDATE);
         bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.CUSTOMER_VALIDATE, Routes.CUSTOMER_VALIDATE, new CustomerValidator(exchangeName, bus));
+    }
+
+    private void updateCustomers() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.CUSTOMER_UPDATE);
+        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.CUSTOMER_UPDATE, Routes.CUSTOMER_UPDATE, new CustomerUpdater(exchangeName, bus));
+    }
+
+    private void deleteCustomers() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.CUSTOMER_DELETE);
+        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.CUSTOMER_DELETE, Routes.CUSTOMER_DELETE, new CustomerDeleter(exchangeName, bus));
     }
 }
