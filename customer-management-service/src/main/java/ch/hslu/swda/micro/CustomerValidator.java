@@ -5,6 +5,8 @@ import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.Customers;
 import ch.hslu.swda.business.CustomersDatabase;
 import ch.hslu.swda.entities.Customer;
+import ch.hslu.swda.entities.ValidityRequest;
+import ch.hslu.swda.entities.ValidityResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +33,14 @@ public class CustomerValidator implements MessageReceiver {
         try {
             LOG.debug("Received validity request with replyTo [{}]", replyTo);
             ObjectMapper mapper = new ObjectMapper();
-            UUID id = mapper.readValue(message, UUID.class);
-            Customer customer = customers.getById(id);
+            ValidityRequest request = mapper.readValue(message, ValidityRequest.class);
+            Customer customer = customers.getById(request.customerId());
             boolean retVal = customer != null;
-            LOG.debug("Customer of id [{}] existing: [{}]", id, retVal);
-            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(retVal));
+            LOG.debug("Customer of id [{}] existing: [{}]", request.customerId(), retVal);
+            ValidityResponse response = new ValidityResponse(request.customerId(), retVal);
+            bus.talkAsync(exchangeName, "order.customer-validity", mapper.writeValueAsString(response));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOG.error(e.getMessage());
         }
     }
 }
