@@ -22,11 +22,3 @@ services:
       #   - "traefik.http.services.${CICD_STACK_NAME}App.loadbalancer.server.port=8080"
       #   - 'traefik.http.routers.${CICD_STACK_NAME}App.entrypoints=websecure'
       #   - 'traefik.http.routers.${CICD_STACK_NAME}App.tls.certresolver=letsencrypt'
-
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: store_management
-    networks :
-      - bus
