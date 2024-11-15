@@ -116,10 +116,10 @@ public final class Order {
     }
 
     public CustomerRequest getCustomerRequest() {
-        return new CustomerRequest(getId(), getEmployeeId());
+        return new CustomerRequest(getCustomerId(), getEmployeeId(), getId());
     }
 
-    public void modify(Modifiable modifiable) throws IOException, InterruptedException{
+    public void modify(Modifiable modifiable) {
         modifiable.modify(this);
     }
 

@@ -50,7 +50,7 @@ public final class ValidityReceiver implements MessageReceiver {
             order.modify(new ModifyValidity(response, service));
             database.storeOrder(order);
             LOG.info("Received validity check and order was updated: [{}]", message);
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());
         }
 

@@ -77,7 +77,7 @@ public final class OrderReceiver implements MessageReceiver {
             this.database.storeOrder(order);
 
             LOG.info("Following order received and stored: [{}]", order.toString());
-            service.log(new LogMessage(order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
+            service.log(new LogMessage(orderId, order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
 
             service.checkValidity(order.getVerifyRequest());
             bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());

@@ -131,8 +131,9 @@ class OrderTest {
     void testGetCustomerRequest() {
         CustomerRequest customerRequest = order.getCustomerRequest();
         assertNotNull(customerRequest, "getCustomerRequest should return a non-null CustomerRequest");
-        assertEquals(order.getId(), customerRequest.customerId(), "CustomerRequest should contain the correct order ID");
+        assertEquals(order.getId(), customerRequest.orderId(), "CustomerRequest should contain the correct customer ID");
         assertEquals(order.getEmployeeId(), customerRequest.employeeId(), "CustomerRequest should contain the correct employee ID");
+        assertEquals(order.getCustomerId(), customerRequest.customerId(), "CustomerRequest should contain the correct order ID");
     }
 
 

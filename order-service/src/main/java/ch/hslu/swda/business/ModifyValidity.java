@@ -15,7 +15,7 @@ public class ModifyValidity implements Modifiable {
     private final VerifyResponse response;
     private final Service service;
 
-    public ModifyValidity(VerifyResponse response, OrderService service) {
+    public ModifyValidity(VerifyResponse response, Service service) {
         this.response = response;
         this.service = service;
     }
@@ -24,12 +24,12 @@ public class ModifyValidity implements Modifiable {
         try {
             if (response.valid()) {
                 order.getState().setValid(true);
-                service.log(new LogMessage(order.getEmployeeId(), "order.validate", "Order Validated: " + order.toString()));
+                service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.validate", "Order Validated, order id: " + order.getId().toString()));
                 service.requestArticlesFromStore(order.getStoreRequest());
                 service.checkCustomerValidity(order.getCustomerRequest());
             } else {
                 order.getState().setCancelled(true);
-                service.log(new LogMessage(order.getEmployeeId(), "order.validate", "Order not validated " + order.toString()));
+                service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.validate", "Order not validated, order id: " + order.getId().toString()));
             }
         } catch (IOException e) {
             LOG.error("An error occurred while trying to call further actions after validity was arrived: {}", e.toString());
