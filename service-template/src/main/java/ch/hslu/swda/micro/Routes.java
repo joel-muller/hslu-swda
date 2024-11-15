@@ -20,14 +20,11 @@ package ch.hslu.swda.micro;
  */
 public final class Routes {
 
-    
-    static final String STORE_STATUS = "store.status";
-    static final String INVENTORY_CHECK = "inventory.check";
-    static final String LOG = "logs.new";
-    static final String INVENTORY_UPDATE = "inventory.update";
-    static final String ORDER_FROM_CENTRAL_WAREHOUSE = "warehouse.order";
-
-
+    static final String STUDENT_REGISTER = "student.register";
+    static final String STATISTICS_TOP_MONTH = "statistics.top-month";
+    static final String STATISTICS_CHANGED = "statistics.changed";
+    static final String DEEP_THOUGHT_ASK = "deep-thought.ask";
+    static final String TEMPLATE_CHAT = "template.chat";
 
     /**
      * No instance allowed.
