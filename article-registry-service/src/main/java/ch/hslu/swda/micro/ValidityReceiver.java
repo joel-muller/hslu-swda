@@ -70,7 +70,7 @@ public final class ValidityReceiver implements MessageReceiver {
 
             Validity validity = new Validity(handler.checkArticles(articles), orderId);
 
-            service.log(new LogMessage(employeeId, "validity.ckecked", "Order validity of order " + validity.toString()));
+            service.log(new LogMessage(orderId, employeeId, "validity.ckecked", "Order validity of order " + validity.toString()));
             service.sendValidity(validity);
         } catch (IOException | InterruptedException e) {
             LOG.error(e.getMessage(), e);
