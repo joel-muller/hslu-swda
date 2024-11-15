@@ -132,6 +132,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.33</version>
+            </dependency>
+            <dependency>
                 <groupId>ch.hslu.swda</groupId>
                 <artifactId>swda_stock</artifactId>
                 <version>9.0.1</version>
@@ -233,6 +238,10 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
         <dependency>
             <groupId>ch.hslu.swda</groupId>
             <artifactId>swda_stock</artifactId>

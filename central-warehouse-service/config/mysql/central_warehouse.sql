@@ -19,12 +19,14 @@ CREATE TABLE `warehouse_order` (
 
 
 CREATE TABLE `warehouse_order_article` (
-                                           `warehouse_order` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                           `warehouse_order` int NOT NULL,
                                            `article` int NOT NULL,
                                            `count` int NOT NULL,
                                            `fulfilled` int NOT NULL,
                                            `next_delivery_date` DATE,
-                                           KEY `warehouse_order` (`warehouse_order`)
+                                           PRIMARY KEY (`warehouse_order`,`article`),
+                                           KEY `warehouse_order` (`warehouse_order`),
+                                           CONSTRAINT `warehouse_order_article_ibfk_2` FOREIGN KEY (`warehouse_order`) REFERENCES `warehouse_order` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 

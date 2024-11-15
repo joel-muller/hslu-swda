@@ -18,15 +18,16 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 
-import ch.hslu.swda.persistence.CentralWarehouseOrderPersistor;
-import ch.hslu.swda.persistence.DatabasePersistor;
+import ch.hslu.swda.persistence.MysqlDatabasePersistor;
 import ch.hslu.swda.stock.api.Stock;
 import ch.hslu.swda.stock.api.StockFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.concurrent.TimeoutException;
 
 
@@ -39,7 +40,7 @@ public final class CentralWarehouseService implements AutoCloseable {
     private final String exchangeName;
     private final BusConnector bus;
     private final Stock stock;
-    private final DatabasePersistor persistor;
+    private final MysqlDatabasePersistor persistor;
 
     private final CentralWarehouseOrderManager orderManager;
 
@@ -53,12 +54,33 @@ public final class CentralWarehouseService implements AutoCloseable {
         String threadName = Thread.currentThread().getName();
         LOG.debug("[Thread: {}] Service started", threadName);
 
+        //Get Database settings from env
+        final String DATABASEURL = System.getenv("DATABASEURL");
+        final String DATABASEPORT = System.getenv("DATABASEPORT");
+        final String DATABASEUSER = System.getenv("DATABASEUSER");
+        final String DATABASEPASSWORD = System.getenv("DATBASEPASSWORD");
+        final String DATABASENAME = System.getenv("DATABASENAME");
+
+        String jdbcUrl = "jdbc:mysql://"+DATABASEURL+":"+DATABASEPORT+"/"+DATABASENAME+"?serverTimezone=UTC";
+        Connection sqlConnection;
+        try{
+            LOG.debug("Try establishing database connection. url:"+ jdbcUrl+" user: "+DATABASEUSER);
+             sqlConnection = DriverManager.getConnection(jdbcUrl,DATABASEUSER,DATABASEPASSWORD);
+             LOG.info("Connected to Database");
+        }
+        catch (SQLException e){
+            LOG.info("Could not connect to Database");
+            throw new RuntimeException(e);
+
+        }
         // setup rabbitmq connection
         this.exchangeName = new RabbitMqConfig().getExchange();
         this.bus = new BusConnector();
         this.bus.connect();
+
+
         this.stock = StockFactory.getStock();
-        this.persistor = new DatabasePersistor();
+        this.persistor = new MysqlDatabasePersistor(sqlConnection);
         this.orderManager = new OrderManager(this.stock,this.persistor);
 
 

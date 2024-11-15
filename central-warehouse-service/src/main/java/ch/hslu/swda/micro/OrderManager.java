@@ -4,9 +4,12 @@ import ch.hslu.swda.entities.CentralWarehouseOrder;
 import ch.hslu.swda.entities.OrderArticle;
 import ch.hslu.swda.persistence.CentralWarehouseOrderPersistor;
 import ch.hslu.swda.stock.api.Stock;
+import ch.hslu.swda.stock.api.StockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class OrderManager  implements CentralWarehouseOrderManager{
@@ -23,13 +26,23 @@ public class OrderManager  implements CentralWarehouseOrderManager{
 
 
     public void process(CentralWarehouseOrder order){
-        persistor.save(order);
+        try {
+            persistor.save(order);
+        }catch (IOException e){
+            LOG.error("Saving order failed. "+e.getMessage());
+        }
+
         updateOrders();
     }
 
     public void updateOrders(){
-
-        List<CentralWarehouseOrder> openOrders = persistor.getAllOpen();
+        List<CentralWarehouseOrder> openOrders;
+        try{
+         openOrders = persistor.getAllOpen();
+        }catch (IOException e){
+            LOG.error("getting open Orders failed."+ e.getMessage());
+            return;
+        }
         for (CentralWarehouseOrder currOrder : openOrders) {
             List<OrderArticle> articles = currOrder.getArticles();
             for(OrderArticle currArticle : articles){
@@ -37,31 +50,47 @@ public class OrderManager  implements CentralWarehouseOrderManager{
                     continue;
                 updateArticle(currArticle);
             }
-            persistor.save(currOrder);
+            try {
+                persistor.save(currOrder);
+            }catch (IOException e){
+                LOG.error("Saving order failed. "+e.getMessage());
+            }
         }
     }
 
     private void updateArticle(OrderArticle article){
-        int articlesOutstanding = article.getCount()- article.getFulfilled();
-        int itemCount = stock.getItemCount(article.getId());
+        int id = article.getId();
+        int fulfilled = article.getFulfilled();
+        int count = article.getCount();
+
+        int articlesOutstanding = count- fulfilled;
+        int itemCount = stock.getItemCount(id);
 
         if (itemCount ==-1){
-            LOG.error("Article unknown. ArticleId: "+article.getId());
+            LOG.error("Article unknown. ArticleId: "+id);
             return;
         }
         if(itemCount==0) {
-            LOG.debug("No article with id: "+article.getId() + " in warehouse stock");
+            LOG.debug("No article with id: "+id + " in warehouse stock");
+            LocalDate nextDeliveryDate;
+            try {
+                nextDeliveryDate = stock.getItemDeliveryDate(id);
+            }catch (StockException e){
+                LOG.error(e.getMessage());
+                return;
+            }
+            article.setNextDeliveryDate(nextDeliveryDate);
             return;
         }
         int itemsToOrder = Math.min(itemCount, articlesOutstanding);
-        int itemsOrdered = stock.orderItem(article.getId(),itemsToOrder);
+        int itemsOrdered = stock.orderItem(id,itemsToOrder);
 
         if (itemsOrdered == -1){
-            LOG.error("Article unknown. ArticleId: "+article.getId());
+            LOG.error("Article unknown. ArticleId: "+id);
             return;
         }
         if(itemsOrdered != itemsToOrder) {
-            LOG.info("Could not order "+itemsToOrder+" of article "+article.getId()+". Actually ordered "+ itemsOrdered);
+            LOG.info("Could not order "+itemsToOrder+" of article "+id+". Actually ordered "+ itemsOrdered);
         }
 
         article.setFulfilled(article.getFulfilled()+Math.min(articlesOutstanding,itemsOrdered));

@@ -17,15 +17,15 @@ package ch.hslu.swda.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
+import javax.sound.midi.MidiMessage;
+import java.util.*;
 
 public final class CentralWarehouseOrder {
 
@@ -36,6 +36,10 @@ public final class CentralWarehouseOrder {
     @JsonProperty("articles")
     private List<OrderArticle> articles;
 
+    @JsonProperty("customerOrderId")
+    private UUID customerOrderId;
+    @JsonProperty("cancelled")
+    private boolean cancelled;
 
     private static final Logger LOG = LoggerFactory.getLogger(CentralWarehouseOrder.class);
 
@@ -46,10 +50,31 @@ public final class CentralWarehouseOrder {
     public CentralWarehouseOrder(UUID storeId, Map<Integer,Integer> articles) throws IllegalArgumentException  {
         this.id = UUID.randomUUID();
         this.storeId = storeId;
+        this.articles= new ArrayList<OrderArticle>();
+
         articles.forEach((k,v)->{
                 this.articles.add(new OrderArticle(k,v));
             });
     }
+
+    public CentralWarehouseOrder(UUID storeId, Map<Integer,Integer> articles, UUID customerOrderId) throws IllegalArgumentException  {
+        this.id = UUID.randomUUID();
+        this.storeId = storeId;
+        this.articles= new ArrayList<OrderArticle>();
+        articles.forEach((k,v)->{
+            this.articles.add(new OrderArticle(k,v));
+        });
+        this.customerOrderId = customerOrderId;
+    }
+
+    public CentralWarehouseOrder(UUID id, UUID storeId, UUID customerOrderId, boolean cancelled, List<OrderArticle> articles){
+        this.id = id;
+        this.storeId = storeId;
+        this.customerOrderId = customerOrderId;
+        this.cancelled = cancelled;
+        this.articles = articles;
+    }
+
 
     /**
      * @return the id
@@ -93,5 +118,20 @@ public final class CentralWarehouseOrder {
             LOG.error(e.getMessage(), e);
             return "{}";
         }
+    }
+
+    public UUID getStoreId() {
+        return this.storeId;
+    }
+    public UUID getCustomerOrderId(){
+        return this.customerOrderId;
+    }
+
+    public void cancelOrder(){
+        this.cancelled = true;
+    }
+
+    public boolean getCancelled(){
+        return this.cancelled;
     }
 }
