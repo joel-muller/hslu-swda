@@ -7,12 +7,14 @@ import java.util.UUID;
 public class StoreRequest implements OutgoingMessage {
     private final UUID orderId;
     private final UUID employeeId;
+    private final UUID storeId;
     private final Map<Integer, Integer> articles;
 
-    public StoreRequest(UUID orderID, Map<Integer, Integer> articles, UUID employeeId) {
+    public StoreRequest(UUID orderID, Map<Integer, Integer> articles, UUID employeeId, UUID storeId) {
         this.orderId = orderID;
         this.articles = articles;
         this.employeeId = employeeId;
+        this.storeId = storeId;
     }
 
     public UUID getOrderId() {

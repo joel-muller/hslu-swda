@@ -112,7 +112,7 @@ public final class Order {
     }
 
     public StoreRequest getStoreRequest() {
-        return new StoreRequest(getId(), createMapOfArticles(), getEmployeeId());
+        return new StoreRequest(getId(), createMapOfArticles(), getEmployeeId(), getStoreId());
     }
 
     public CustomerRequest getCustomerRequest() {

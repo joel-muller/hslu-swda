@@ -51,7 +51,7 @@ class ModifyValidityTest {
 
         ServiceMock service = new ServiceMock();
         order.modify(new ModifyValidity(new VerifyResponse(id, true), service));
-        assertEquals(new StoreRequest(id, articlesMap, employeeId), service.storeRequest);
+        assertEquals(new StoreRequest(id, articlesMap, employeeId, storeId), service.storeRequest);
     }
 
     @Test

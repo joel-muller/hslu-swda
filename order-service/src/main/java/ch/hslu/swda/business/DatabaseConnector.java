@@ -25,6 +25,7 @@ public class DatabaseConnector {
 
     public DatabaseConnector() {
         String mongoUri = System.getenv().getOrDefault("MONGO_URI", DATABASE_URI);
+        LOG.info("Mongo URI is: {}", mongoUri);
         ConnectionString connectionString = new ConnectionString(mongoUri);
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
