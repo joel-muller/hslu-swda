@@ -55,13 +55,19 @@ public final class CentralWarehouseService implements AutoCloseable {
         LOG.debug("[Thread: {}] Service started", threadName);
 
         //Get Database settings from env
-        final String DATABASEURL = System.getenv("DATABASEURL");
+        final String DATABASEHOST = System.getenv("DATABASEHOST");
+        LOG.info("READ DATABASEHOST: "+DATABASEHOST);
         final String DATABASEPORT = System.getenv("DATABASEPORT");
+        LOG.info("READ DATABASEPORT: "+DATABASEPORT);
+
         final String DATABASEUSER = System.getenv("DATABASEUSER");
-        final String DATABASEPASSWORD = System.getenv("DATBASEPASSWORD");
+        LOG.info("READ DATABASEUSER: "+DATABASEUSER);
+        final String DATABASEPASSWORD = System.getenv("DATABASEPASSWORD");
+        LOG.debug("READ DATABASEPASSWORD: "+DATABASEPASSWORD);
+
         final String DATABASENAME = System.getenv("DATABASENAME");
 
-        String jdbcUrl = "jdbc:mysql://"+DATABASEURL+":"+DATABASEPORT+"/"+DATABASENAME+"?serverTimezone=UTC";
+        String jdbcUrl = "jdbc:mysql://"+DATABASEHOST+":"+DATABASEPORT+"/"+DATABASENAME+"?serverTimezone=UTC";
         Connection sqlConnection;
         try{
             LOG.debug("Try establishing database connection. url:"+ jdbcUrl+" user: "+DATABASEUSER);

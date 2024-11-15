@@ -31,8 +31,8 @@ public class OrderManager  implements CentralWarehouseOrderManager{
         }catch (IOException e){
             LOG.error("Saving order failed. "+e.getMessage());
         }
-
         updateOrders();
+
     }
 
     public void updateOrders(){
@@ -43,6 +43,7 @@ public class OrderManager  implements CentralWarehouseOrderManager{
             LOG.error("getting open Orders failed."+ e.getMessage());
             return;
         }
+        if (openOrders==null) return;
         for (CentralWarehouseOrder currOrder : openOrders) {
             List<OrderArticle> articles = currOrder.getArticles();
             for(OrderArticle currArticle : articles){

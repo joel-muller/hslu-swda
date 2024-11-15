@@ -4,7 +4,11 @@ import ch.hslu.swda.entities.CentralWarehouseOrder;
 import ch.hslu.swda.entities.CentralWarehouseOrderJSONMapper;
 import ch.hslu.swda.entities.CentralWarehouseOrderMapper;
 import ch.hslu.swda.entities.OrderArticle;
+import ch.hslu.swda.micro.OrderManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -16,6 +20,7 @@ import java.util.*;
 
 public class MysqlDatabasePersistor implements CentralWarehouseOrderPersistor{
 private final Connection connection;
+private static final Logger LOG = LoggerFactory.getLogger(MysqlDatabasePersistor.class);
 
 private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrderJSONMapper();
 
@@ -24,11 +29,24 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
 
     }
     @Override
-    public void save(CentralWarehouseOrder order) {
+    public void save(CentralWarehouseOrder order) throws IOException{
+        try{
+        insertUpdateOrder(order);
 
+        List<OrderArticle> orderArticles = order.getArticles();
+        for(OrderArticle article :orderArticles){
+            insertUpdateArticle(1,article);
+        }
+
+        }catch (SQLException e){
+            LOG.error("Could not save order: "+ order.getId());
+            throw new IOException(e.getMessage());
+        }
+
+        LOG.info("saved order: "+ order.getId());
     }
 
-    private void insertUpdateArticle(Integer warehouseOrder, OrderArticle article)throws SQLException {
+    private void  insertUpdateArticle(Integer warehouseOrder, OrderArticle article)throws SQLException {
 
         String statement = """
             Insert into warehouse_order_article VALUES(?,?,?,?,?) ON DUPLICATE key update
@@ -42,13 +60,15 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
         preparedStatement.setInt(2,article.getId());
         preparedStatement.setInt(3,article.getCount());
         preparedStatement.setInt(4,article.getFulfilled());
-        preparedStatement.setDate(5,java.sql.Date.valueOf(article.getNextDeliveryDate()));
+        preparedStatement.setDate(5,article.getNextDeliveryDate()==null?null: java.sql.Date.valueOf(article.getNextDeliveryDate()));
 
         preparedStatement.executeUpdate();
 
 
+
+
     }
-    private void insertUpdateOrder(CentralWarehouseOrder order)throws SQLException{
+    private int insertUpdateOrder(CentralWarehouseOrder order)throws SQLException{
         String statement = """
             Insert into warehouse_order(uuid,store_id,customer_order_id,cancelled) VALUES(?,?,?,?) ON DUPLICATE key update
             cancelled = VALUES(cancelled)
@@ -56,10 +76,26 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1,order.getId().toString());
         preparedStatement.setString(2,order.getStoreId().toString());
-        preparedStatement.setString(3,order.getCustomerOrderId().toString());
+        preparedStatement.setString(3,order.getCustomerOrderId()==null?null:order.getCustomerOrderId().toString());
         preparedStatement.setBoolean(4,order.getCancelled());
 
         preparedStatement.executeUpdate();
+
+        // Fetch the ID of the inserted or updated row
+        String idQuery = """
+        SELECT id FROM warehouse_order
+        WHERE uuid = ?;
+        """;
+        PreparedStatement idStatement = connection.prepareStatement(idQuery);
+        idStatement.setString(1,order.getId().toString() );
+
+        try (ResultSet resultSet = idStatement.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            } else {
+                throw new SQLException("Failed to fetch ID for the given warehouse order and article.");
+            }
+        }
 
     }
 
@@ -67,7 +103,7 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
     public CentralWarehouseOrder getById(UUID id) throws IOException{
 
         String statement = """
-            SELECT JSON_OBJECT(wo.uuid,'storeId',
+            SELECT JSON_OBJECT('id',wo.uuid,'storeId',
             wo.store_id,'customerOrderId',
             wo.customer_order_id,'cancelled',IF(wo.cancelled = 1, TRUE, FALSE),
             'articles',JSON_ARRAYAGG(JSON_OBJECT('articleId',woa.article,
@@ -104,8 +140,35 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
     }
 
     @Override
-    public List<CentralWarehouseOrder> getAllOpen() {
-        return null;
+    public List<CentralWarehouseOrder> getAllOpen() throws IOException {
+        List<CentralWarehouseOrder> list = new ArrayList<CentralWarehouseOrder>();
+        String statement = """
+            SELECT JSON_OBJECT('id',wo.uuid,'storeId',
+            wo.store_id,'customerOrderId',
+            wo.customer_order_id,'cancelled',IF(wo.cancelled = 1, TRUE, FALSE),
+            'articles',JSON_ARRAYAGG(JSON_OBJECT('articleId',woa.article,
+            'count',woa.count,
+            'fulfilled',woa.fulfilled,
+            'nextDeliveryDate',woa.next_delivery_date))) as CentralWarehouseOrder
+            from warehouse_order wo
+                left join warehouse_order_article woa on wo.id = woa.warehouse_order
+                where wo.id in (SELECT distinct wo2.id from warehouse_order wo2 
+                                join warehouse_order_article woa2 on wo2.id = woa2.warehouse_order
+                                where woa2.fulfilled<woa2.count and wo2.cancelled = FALSE)
+                GROUP BY wo.id;
+            ;""";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(statement);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                list.add(mapper.toCentralWarehouseOrder(rs.getString("CentralWarehouseOrder")));
+            }
+            return list;
+
+        }catch(SQLException e){
+            throw new IOException(e.getMessage());
+        }
     }
 
     @Override
