@@ -23,7 +23,6 @@ import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.hslu.swda.entities.StoreManagementDB;
 
 /**
  * Demo für Applikationsstart.
@@ -41,29 +40,35 @@ public final class Application {
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeat.class);
         private StoreManagementService service;
 
-        HeartBeat() throws SQLException {
+        HeartBeat()  {
             try {
                 this.service = new StoreManagementService();
-            } catch (IOException | TimeoutException e) {
+            } catch (IOException | TimeoutException | SQLException e) {
                 LOG.error(e.getMessage(), e);
             }
         }
 
         @Override
         public void run() {
-/*             try { */
+            try {
                 // service.registerStudent();
                 // service.askAboutUniverse();
                 LOG.info("Heartbeat...");
+                //service.db.insertInventoryRecord(1, 1, 10, 10);
+                service.db.insertInventoryRecord(2, 1, 10, 70);
+                service.db.insertInventoryRecord(3, 1, 10, 1);
+                service.db.insertInventoryRecord(4, 1, 10, 7);
 
-                //service.db.insertInventoryRecord(1, 5, 7, 20);
-                //db.viewInventoryTable();
+                LOG.info("Retrieving article availability...");
+                service.provideArticleAvailability();
+
+                //service.db.viewInventoryTable();
 /*             } catch (IOException | InterruptedException e) {
                 LOG.error(e.getMessage(), e); */
-/*             } catch () {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 LOG.error(e.getMessage(), e);
-            } */
+            }
         }
     }
 
@@ -79,7 +84,7 @@ public final class Application {
      * @param args not used.
      * @throws SQLException 
      */
-    public static void main(final String[] args) throws InterruptedException, SQLException {
+    public static void main(final String[] args) throws InterruptedException {
         final long startTime = System.currentTimeMillis();
         LOG.info("Service starting...");
         if (!"OFF".equals(System.getenv("RABBIT"))) {
