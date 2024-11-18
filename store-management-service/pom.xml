@@ -128,6 +128,9 @@
         <micrometer.version>4.8.1</micrometer.version>
         <rabbitmq.version>5.22.0</rabbitmq.version>
         <testcontainers.version>1.20.2</testcontainers.version>
+
+        <mongodb-driver-sync.version>4.5.1</mongodb-driver-sync.version>
+        <morphia-core.version>2.2.6</morphia-core.version>
     </properties>
 
     <dependencyManagement>
@@ -230,6 +233,20 @@
                 <version>${testcontainers.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-sync</artifactId>
+                <version>${mongodb-driver-sync.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>dev.morphia.morphia</groupId>
+                <artifactId>morphia-core</artifactId>
+                <version>${morphia-core.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -302,6 +319,17 @@
             <version>9.1.0</version>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.morphia.morphia</groupId>
+            <artifactId>morphia-core</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

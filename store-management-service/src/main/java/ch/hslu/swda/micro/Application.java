@@ -50,25 +50,7 @@ public final class Application {
 
         @Override
         public void run() {
-            try {
-                // service.registerStudent();
-                // service.askAboutUniverse();
-                LOG.info("Heartbeat...");
-                //service.db.insertInventoryRecord(1, 1, 10, 10);
-                service.db.insertInventoryRecord(2, 1, 10, 70);
-                service.db.insertInventoryRecord(3, 1, 10, 1);
-                service.db.insertInventoryRecord(4, 1, 10, 7);
-
-                LOG.info("Retrieving article availability...");
-                service.provideArticleAvailability();
-
-                //service.db.viewInventoryTable();
-/*             } catch (IOException | InterruptedException e) {
-                LOG.error(e.getMessage(), e); */
-            } catch (SQLException e) {
-                e.printStackTrace();
-                LOG.error(e.getMessage(), e);
-            }
+            LOG.debug("Heartbeat");
         }
     }
 
@@ -78,12 +60,6 @@ public final class Application {
     private Application() {
     }
 
-    /**
-     * main-Methode. Startet einen Timer für den HeartBeat.
-     *
-     * @param args not used.
-     * @throws SQLException 
-     */
     public static void main(final String[] args) throws InterruptedException {
         final long startTime = System.currentTimeMillis();
         LOG.info("Service starting...");

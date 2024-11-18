@@ -1,49 +1,44 @@
 package ch.hslu.swda.entities;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+@Entity("store")
 public class Store {
-    private Long id;
-    private String name;
-    private String address;
+    @Id
+    private final UUID id;
+    private List<ArticleStore> articleList;
 
-    public Store() {
-    }
-
-    public Store(Long id, String name, String address) {
+    public Store(UUID id, List<ArticleStore> articleList) {
         this.id = id;
-        this.name = name;
-        this.address = address;
+        this.articleList = articleList;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public List<ArticleStore> getArticleList() {
+        return articleList;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setArticleList(List<ArticleStore> articleList) {
+        this.articleList = articleList;
     }
 
     @Override
-    public String toString() {
-        return "Store{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Store store)) return false;
+        return Objects.equals(id, store.id) && Objects.equals(articleList, store.articleList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, articleList);
     }
 }

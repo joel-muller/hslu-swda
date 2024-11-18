@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * Copyright 2024 Roland Gisler, HSLU Informatik, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,14 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
--->
-<configuration scan="false" scanPeriod="30 seconds">
-    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%white%d{YYYY-MM-dd HH:mm:ss.SSS} [%highlight(%-5level)] %cyan(%logger{20}) - %msg %n</pattern>
-        </encoder>
-    </appender>
-    <root level="INFO">
-        <appender-ref ref="Console" />
-    </root>
-</configuration>
+ */
+
+/**
+ * Domain Entities.
+ */
+package ch.hslu.swda.messages;
+

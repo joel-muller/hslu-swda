@@ -1,11 +1,11 @@
-package ch.hslu.swda.entities;
+package ch.hslu.swda.messages;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
-import java.time.Instant;
 
 
-public class LogMessage {
+public class LogMessage implements OutgoingMessage {
     private final String source;
     private final long timestamp;
     private final UUID userId;
@@ -13,12 +13,12 @@ public class LogMessage {
     private final UUID objUuid;
     private final String message;
 
-    public LogMessage(UUID userId, String eventType, String message) {
-        this.source = "store_management.service";
+    public LogMessage(UUID orderId, UUID userId, String eventType, String message) {
+        this.source = "store-management.service";
         this.timestamp = Instant.now().getEpochSecond();
         this.userId = userId;
         this.eventType = eventType;
-        this.objUuid = UUID.randomUUID();
+        this.objUuid = orderId;
         this.message = message;
     }
 
@@ -49,25 +49,21 @@ public class LogMessage {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LogMessage that = (LogMessage) o;
-        return Objects.equals(objUuid, that.objUuid);
+        if (!(o instanceof LogMessage that)) return false;
+        return Objects.equals(source, that.source) && Objects.equals(userId, that.userId) && Objects.equals(eventType, that.eventType) && Objects.equals(objUuid, that.objUuid) && Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(objUuid);
+        return Objects.hash(source, userId, eventType, objUuid, message);
     }
 
     @Override
     public String toString() {
         return "LogMessage{" +
-                ", srouce='" + source + '\'' +
-                ", timestamp=" + timestamp +
-                ", userId=" + userId +
-                ", eventType='" + eventType + '\'' +
-                ", objUuid=" + objUuid +
-                ", message='" + message + '\'' +
+                "message='" + message + '\'' +
                 '}';
     }
+
+
 }

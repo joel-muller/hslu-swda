@@ -27,6 +27,10 @@ public final class Routes {
     static final String INVENTORY_UPDATE = "inventory.update";
     static final String ORDER_FROM_CENTRAL_WAREHOUSE = "warehouse.order";
 
+    // Ingoing Mesasges
+    static final String REQUEST_ARTICLES = "store.request-articles";
+
+    // Outgoing Messages
 
 
     /**
