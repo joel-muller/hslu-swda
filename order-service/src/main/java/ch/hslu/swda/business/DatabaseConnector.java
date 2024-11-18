@@ -33,18 +33,20 @@ public class DatabaseConnector {
                 .build();
         datastore = Morphia.createDatastore(MongoClients.create(settings), DATABASE_NAME);
         datastore.getMapper().map(Order.class);
+        datastore.getMapper().map(Article.class);
         datastore.ensureIndexes();
     }
 
     public void storeOrder(Order order) {
+        LOG.info("Order stored {}", order.toString());
         datastore.save(order);
-        LOG.info("Order stored: " + order);
     }
 
     public Order getById(UUID id) {
         Order order = datastore.find(Order.class)
                 .filter(eq("_id", id))
                 .first();
+        LOG.info("Order restored {}", order.toString());
         return order;
     }
 }

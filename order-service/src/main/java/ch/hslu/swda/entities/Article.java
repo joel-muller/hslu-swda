@@ -8,6 +8,7 @@ import java.util.*;
 
 @Entity("article")
 public class Article {
+    @Id
     private final int id;
     private final int count;
     private boolean delivered;

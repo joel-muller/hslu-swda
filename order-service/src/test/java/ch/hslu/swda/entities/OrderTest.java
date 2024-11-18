@@ -125,6 +125,7 @@ class OrderTest {
         assertNotNull(storeRequest, "getStoreRequest should return a non-null StoreRequest");
         assertEquals(order.getId(), storeRequest.getOrderId(), "StoreRequest should contain the correct order ID");
         assertEquals(order.getEmployeeId(), storeRequest.getEmployeeId(), "StoreRequest should contain the correct employee ID");
+        assertEquals(order.getArticles().size(), storeRequest.getArticles().size(), "Not all articles where given with the store request");
     }
 
     @Test

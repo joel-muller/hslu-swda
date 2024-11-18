@@ -29,6 +29,10 @@ public class StoreRequest implements OutgoingMessage {
         return employeeId;
     }
 
+    public UUID getStoreId() {
+        return storeId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -43,8 +47,10 @@ public class StoreRequest implements OutgoingMessage {
 
     @Override
     public String toString() {
-        return "VerifyRequest{" +
-                "orderID=" + orderId +
+        return "StoreRequest{" +
+                "orderId=" + orderId +
+                ", employeeId=" + employeeId +
+                ", storeId=" + storeId +
                 ", articles=" + articles +
                 '}';
     }
