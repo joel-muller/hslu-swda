@@ -1,5 +1,6 @@
 package ch.hslu.swda.entities;
 
+import ch.hslu.swda.business.StoreModifiable;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 

@@ -49,4 +49,6 @@ public class DatabaseConnector {
                 .first();
         return order;
     }
+
+    // TBD the same for stores
 }
