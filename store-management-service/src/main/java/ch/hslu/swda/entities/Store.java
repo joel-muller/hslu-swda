@@ -10,12 +10,21 @@ import java.util.UUID;
 @Entity("store")
 public class Store {
     @Id
-    private final UUID id;
+    private UUID id;
     private List<ArticleStore> articleList;
 
     public Store(UUID id, List<ArticleStore> articleList) {
         this.id = id;
         this.articleList = articleList;
+    }
+
+    public Store() {
+        this.id = null;
+        this.articleList = null;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public UUID getId() {
@@ -28,6 +37,10 @@ public class Store {
 
     public void setArticleList(List<ArticleStore> articleList) {
         this.articleList = articleList;
+    }
+
+    public void modify(StoreModifiable modifiable) {
+        modifiable.modify(this);
     }
 
     @Override

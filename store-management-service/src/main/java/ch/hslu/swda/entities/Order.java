@@ -11,12 +11,17 @@ import java.util.UUID;
 @Entity("order")
 public class Order {
     @Id
-    private final UUID id;
+    private UUID id;
     private List<ArticleOrdered> articleOrderedList;
 
     public Order(UUID id, List<ArticleOrdered> articleOrderedList) {
         this.id = id;
         this.articleOrderedList = articleOrderedList;
+    }
+
+    public Order() {
+        this.id = null;
+        this.articleOrderedList = null;
     }
 
     public static Order createFromOrderRequest(OrderRequest request) {
@@ -28,12 +33,20 @@ public class Order {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public List<ArticleOrdered> getArticleOrderedList() {
         return articleOrderedList;
     }
 
     public void setArticleOrderedList(List<ArticleOrdered> articleOrderedList) {
         this.articleOrderedList = articleOrderedList;
+    }
+
+    public void modify(OrderModifiable modifiable) {
+        modifiable.modify(this);
     }
 
     @Override

@@ -9,13 +9,19 @@ import java.util.Objects;
 
 @Entity("articleOrdered")
 public class ArticleOrdered {
-    private final int id;
-    private final int count;
+    private int id;
+    private int count;
     private boolean ready;
 
     public ArticleOrdered(final int id, final int count) {
         this.id = id;
         this.count = count;
+        this.ready = false;
+    }
+
+    public ArticleOrdered() {
+        this.id = -1;
+        this.count = -1;
         this.ready = false;
     }
 
@@ -25,6 +31,14 @@ public class ArticleOrdered {
             list.add(new ArticleOrdered(pair.getKey(), pair.getValue()));
         }
         return list;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public int getId() {

@@ -9,12 +9,17 @@ import java.util.Objects;
 
 @Entity("articleStore")
 public class ArticleStore {
-    private final int id;
+    private int id;
     private int count;
 
     public ArticleStore(final int id, final int count) {
         this.id = id;
         this.count = count;
+    }
+
+    public ArticleStore() {
+        this.id = -1;
+        this.count = -1;
     }
 
     public static List<ArticleStore> createListArticle(Map<Integer, Integer> map) {
@@ -27,6 +32,10 @@ public class ArticleStore {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getCount() {
