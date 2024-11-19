@@ -32,7 +32,7 @@ import dev.morphia.annotations.*;
 @Entity("order")
 public final class Order {
     @Id
-    private final UUID id;
+    private UUID id;
     private State state;
     private List<Article> articles;
     private Date date;
@@ -50,10 +50,27 @@ public final class Order {
         this.employeeId = employeeId;
     }
 
+    public Order() {
+        this.id = UUID.randomUUID();
+        this.state = new State();
+        this.articles = new ArrayList<>();
+        this.date = Calendar.getInstance().getTime();
+        this.storeId = UUID.randomUUID();
+        this.customerId = UUID.randomUUID();
+        this.employeeId = UUID.randomUUID();
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public UUID getId() {
         return id;
     }
-
 
     public State getState() {
         return state;

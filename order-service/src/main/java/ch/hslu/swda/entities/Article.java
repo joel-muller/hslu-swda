@@ -19,6 +19,12 @@ public class Article {
         this.delivered = false;
     }
 
+    public Article() {
+        this.id = 0;
+        this.count = 0;
+        this.delivered = false;
+    }
+
     public static List<Article> createListArticle(Map<Integer, Integer> map) {
         ArrayList<Article> list = new ArrayList<>();
         for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
