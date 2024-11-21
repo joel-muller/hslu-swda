@@ -33,6 +33,5 @@ public class OrderReceiver implements MessageReceiver {
         } catch (IOException e) {
             LOG.error("Error occurred while storing the order data data: {}", e.getMessage());
         }
-
     }
 }
