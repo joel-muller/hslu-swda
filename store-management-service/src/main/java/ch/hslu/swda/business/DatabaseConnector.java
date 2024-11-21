@@ -50,5 +50,15 @@ public class DatabaseConnector {
         return order;
     }
 
-    // TBD the same for stores
+    public void saveStoreObject(Store store) {
+        datastore.save(store);
+        LOG.info("Store object stored in the database: " + store);
+    }
+
+    public Store getStoreById(UUID id) {
+        Store store = datastore.find(Store.class)
+                .filter(eq("_id", id))
+                .first();
+        return store;
+    }
 }

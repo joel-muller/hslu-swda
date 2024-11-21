@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Represents an article in the context of a store.
+ * This class is annotated with @Entity to indicate that it is a JPA entity.
+ * It contains information about the article's ID and count.
+ */
 @Entity("articleStore")
 public class ArticleStore {
     private int id;
