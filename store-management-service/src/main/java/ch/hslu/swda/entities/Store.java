@@ -12,13 +12,17 @@ import java.util.UUID;
 public class Store {
     @Id
     private UUID id;
-    private List<ArticleStore> articleList;
+    private List<StoreArticle> articleList;
 
-    public Store(UUID id, List<ArticleStore> articleList) {
+    public Store(UUID id, List<StoreArticle> articleList) {
         this.id = id;
         this.articleList = articleList;
     }
 
+    /**
+     * Default constructor for the Store class - required for Morphia to work properly.
+     * Initializes the store with null values for id and articleList.
+     */
     public Store() {
         this.id = null;
         this.articleList = null;
@@ -32,11 +36,11 @@ public class Store {
         return id;
     }
 
-    public List<ArticleStore> getArticleList() {
+    public List<StoreArticle> getArticleList() {
         return articleList;
     }
 
-    public void setArticleList(List<ArticleStore> articleList) {
+    public void setArticleList(List<StoreArticle> articleList) {
         this.articleList = articleList;
     }
 
