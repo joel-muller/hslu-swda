@@ -5,6 +5,7 @@ networks:
   bus:
     name: bus
     external: true
+  internal:
 
 services:
   app:
@@ -31,10 +32,3 @@ services:
       - '27019:27017'
     networks:
       - internal
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: store_management
-    networks :
-      - bus
