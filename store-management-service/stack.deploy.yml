@@ -29,6 +29,6 @@ services:
     image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/bitnami/mongodb:4.2.19
     restart: always
     ports:
-      - '27019:27017'
+      - '27020:27017'
     networks:
       - internal
