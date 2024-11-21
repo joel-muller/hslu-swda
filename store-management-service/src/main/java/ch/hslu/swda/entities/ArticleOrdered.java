@@ -7,6 +7,42 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Represents an article in the context of an order.
+ * This entity contains information about the article's ID, count, and readiness status.
+ * It provides methods to create a list of ordered articles from a map, as well as getters and setters for its fields.
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * Map<Integer, Integer> map = new HashMap<>();
+ * map.put(1, 10);
+ * map.put(2, 20);
+ * List<ArticleOrdered> articles = ArticleOrdered.createListArticle(map);
+ * }
+ * </pre>
+ * 
+ * <p>Attributes:</p>
+ * <ul>
+ *   <li>id - The unique identifier of the article.</li>
+ *   <li>count - The number of articles ordered.</li>
+ *   <li>ready - The readiness status of the article.</li>
+ * </ul>
+ * 
+ * <p>Methods:</p>
+ * <ul>
+ *   <li>{@code createListArticle(Map<Integer, Integer> map)} - Creates a list of ArticleOrdered objects from a map.</li>
+ *   <li>{@code setId(int id)} - Sets the ID of the article.</li>
+ *   <li>{@code setCount(int count)} - Sets the count of the article.</li>
+ *   <li>{@code getId()} - Gets the ID of the article.</li>
+ *   <li>{@code getCount()} - Gets the count of the article.</li>
+ *   <li>{@code isReady()} - Checks if the article is ready.</li>
+ *   <li>{@code setReady(boolean ready)} - Sets the readiness status of the article.</li>
+ *   <li>{@code toString()} - Returns a string representation of the article.</li>
+ *   <li>{@code equals(Object o)} - Checks if this article is equal to another object.</li>
+ *   <li>{@code hashCode()} - Returns the hash code of the article.</li>
+ * </ul>
+ */
 @Entity("articleOrdered")
 public class ArticleOrdered {
     private int id;
