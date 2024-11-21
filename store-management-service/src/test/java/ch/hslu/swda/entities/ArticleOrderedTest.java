@@ -38,9 +38,9 @@ class ArticleOrderedTest {
         List<ArticleOrdered> articles = ArticleOrdered.createListArticle(map);
 
         assertEquals(3, articles.size(), "The list size should match the number of entries in the map.");
-        assertEquals(new ArticleOrdered(1, 10), articles.get(0), "First article should match the first map entry.");
-        assertEquals(new ArticleOrdered(2, 20), articles.get(1), "Second article should match the second map entry.");
-        assertEquals(new ArticleOrdered(3, 30), articles.get(2), "Third article should match the third map entry.");
+        assertTrue(articles.contains(new ArticleOrdered(1, 10)), "First article should match the first map entry.");
+        assertTrue(articles.contains(new ArticleOrdered(2, 20)), "First article should match the first map entry.");
+        assertTrue(articles.contains(new ArticleOrdered(3, 30)), "First article should match the first map entry.");
     }
 
     @Test

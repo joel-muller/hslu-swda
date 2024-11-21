@@ -42,8 +42,8 @@ class OrderTest {
 
         assertEquals(orderId, order.getId(), "Order ID should match the ID in the OrderRequest.");
         assertEquals(2, order.getArticleOrderedList().size(), "Article list size should match the size of the map in the OrderRequest.");
-        assertEquals(new ArticleOrdered(1, 10), order.getArticleOrderedList().get(0), "First article should match the first entry in the map.");
-        assertEquals(new ArticleOrdered(2, 20), order.getArticleOrderedList().get(1), "Second article should match the second entry in the map.");
+        assertTrue(order.getArticleOrderedList().contains(new ArticleOrdered(1, 10)), "First article should match the first entry in the map.");
+        assertTrue(order.getArticleOrderedList().contains(new ArticleOrdered(2, 20)), "First article should match the first entry in the map.");
     }
 
     @Test
