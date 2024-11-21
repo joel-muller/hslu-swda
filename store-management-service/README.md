@@ -24,7 +24,7 @@ Vorausgesetzt, der backbone läuft, kann der Service lokal vielfältig gestartet
 * Docker pur: `docker run --rm -it -e "RMQ_HOST=host.docker.internal" swda-24fs01/store-management-service`
 
 ## TO Do
--[] Make gaweway to store management (CRUD from stores (no delete))
--[] Integration to order
+-[] Make gateway to store management (CRUD from stores (no delete)) - Order Microservice als Vorbild - Céline
+-[] Integration to order - Joel
 -[] Integration to central warehouse
--[] Setup service with random stores
+-[] Setup service with random stores (übers Gateway - generate store, generate default stores) - Céline
