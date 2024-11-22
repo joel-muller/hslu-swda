@@ -1,0 +1,21 @@
+version: '3.5'
+
+networks:
+  central_warehouse:
+    name: central_warehouse
+  g02-backbone_backbone:
+    name: g02-backbone_backbone
+    external: true
+
+services:
+  db1:
+    image: mysql:latest
+    restart: always
+    networks:
+      - central_warehouse
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /var/lib/mysql
+      - ./config/mysql/central_warehouse.sql:/docker-entrypoint-initdb.d/central_warehouse.sql
+

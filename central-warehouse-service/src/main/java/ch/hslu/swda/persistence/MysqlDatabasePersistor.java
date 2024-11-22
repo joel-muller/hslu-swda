@@ -33,9 +33,10 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
         try{
         insertUpdateOrder(order);
 
+
         List<OrderArticle> orderArticles = order.getArticles();
         for(OrderArticle article :orderArticles){
-            insertUpdateArticle(1,article);
+            insertUpdateArticle(order.getId(),article);
         }
 
         }catch (SQLException e){
@@ -46,29 +47,42 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
         LOG.info("saved order: "+ order.getId());
     }
 
-    private void  insertUpdateArticle(Integer warehouseOrder, OrderArticle article)throws SQLException {
+    private void insertUpdateArticle(UUID warehouseOrder, OrderArticle article) throws SQLException {
+        // Step 1: Retrieve the `id` from `warehouse_order`
+        String getIdQuery = "SELECT id FROM warehouse_order WHERE uuid = ? LIMIT 1;";
+        try (PreparedStatement getIdStatement = connection.prepareStatement(getIdQuery)) {
+            getIdStatement.setString(1, warehouseOrder.toString());
+            ResultSet resultSet = getIdStatement.executeQuery();
 
-        String statement = """
-            Insert into warehouse_order_article VALUES(?,?,?,?,?) ON DUPLICATE key update
-            count = VALUES(count),
-            fulfilled= VALUES(fulfilled),
-            next_delivery_date = VALUES(next_delivery_date)
-            ;""";
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
 
-        PreparedStatement preparedStatement = connection.prepareStatement(statement);
-        preparedStatement.setInt(1,warehouseOrder);
-        preparedStatement.setInt(2,article.getId());
-        preparedStatement.setInt(3,article.getCount());
-        preparedStatement.setInt(4,article.getFulfilled());
-        preparedStatement.setDate(5,article.getNextDeliveryDate()==null?null: java.sql.Date.valueOf(article.getNextDeliveryDate()));
+                // Step 2: Perform the insert or update operation
+                String insertUpdateQuery = """
+                INSERT INTO warehouse_order_article (warehouse_order, article, count, fulfilled, next_delivery_date)
+                VALUES (?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                    count = VALUES(count),
+                    fulfilled = VALUES(fulfilled),
+                    next_delivery_date = VALUES(next_delivery_date);
+                """;
 
-        preparedStatement.executeUpdate();
+                try (PreparedStatement insertUpdateStatement = connection.prepareStatement(insertUpdateQuery)) {
+                    insertUpdateStatement.setInt(1, id);
+                    insertUpdateStatement.setInt(2, article.getId());
+                    insertUpdateStatement.setInt(3, article.getCount());
+                    insertUpdateStatement.setInt(4, article.getFulfilled());
+                    insertUpdateStatement.setDate(5,
+                            article.getNextDeliveryDate() == null ? null : java.sql.Date.valueOf(article.getNextDeliveryDate()));
 
-
-
-
+                    insertUpdateStatement.executeUpdate();
+                }
+            } else {
+                throw new SQLException("Warehouse order ID not found for UUID: " + warehouseOrder);
+            }
+        }
     }
-    private int insertUpdateOrder(CentralWarehouseOrder order)throws SQLException{
+    private void insertUpdateOrder(CentralWarehouseOrder order)throws SQLException{
         String statement = """
             Insert into warehouse_order(uuid,store_id,customer_order_id,cancelled) VALUES(?,?,?,?) ON DUPLICATE key update
             cancelled = VALUES(cancelled)
@@ -80,22 +94,6 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
         preparedStatement.setBoolean(4,order.getCancelled());
 
         preparedStatement.executeUpdate();
-
-        // Fetch the ID of the inserted or updated row
-        String idQuery = """
-        SELECT id FROM warehouse_order
-        WHERE uuid = ?;
-        """;
-        PreparedStatement idStatement = connection.prepareStatement(idQuery);
-        idStatement.setString(1,order.getId().toString() );
-
-        try (ResultSet resultSet = idStatement.executeQuery()) {
-            if (resultSet.next()) {
-                return resultSet.getInt("id");
-            } else {
-                throw new SQLException("Failed to fetch ID for the given warehouse order and article.");
-            }
-        }
 
     }
 
@@ -152,7 +150,7 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
             'nextDeliveryDate',woa.next_delivery_date))) as CentralWarehouseOrder
             from warehouse_order wo
                 left join warehouse_order_article woa on wo.id = woa.warehouse_order
-                where wo.id in (SELECT distinct wo2.id from warehouse_order wo2 
+                where wo.id in (SELECT distinct wo2.id from warehouse_order wo2
                                 join warehouse_order_article woa2 on wo2.id = woa2.warehouse_order
                                 where woa2.fulfilled<woa2.count and wo2.cancelled = FALSE)
                 GROUP BY wo.id;

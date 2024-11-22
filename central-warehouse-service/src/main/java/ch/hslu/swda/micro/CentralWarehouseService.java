@@ -70,6 +70,7 @@ public final class CentralWarehouseService implements AutoCloseable {
         String jdbcUrl = "jdbc:mysql://"+DATABASEHOST+":"+DATABASEPORT+"/"+DATABASENAME+"?serverTimezone=UTC";
         Connection sqlConnection;
         try{
+
             LOG.debug("Try establishing database connection. url:"+ jdbcUrl+" user: "+DATABASEUSER);
              sqlConnection = DriverManager.getConnection(jdbcUrl,DATABASEUSER,DATABASEPASSWORD);
              LOG.info("Connected to Database");
@@ -88,6 +89,7 @@ public final class CentralWarehouseService implements AutoCloseable {
         this.stock = StockFactory.getStock();
         this.persistor = new MysqlDatabasePersistor(sqlConnection);
         this.orderManager = new OrderManager(this.stock,this.persistor);
+
 
 
         //read saved orders with items date < now()
