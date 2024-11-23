@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.concurrent.TimeoutException;
@@ -56,6 +55,7 @@ public final class StoreManagementService implements AutoCloseable, Service {
         this.database = new DatabaseConnector();
 
         this.receiveOrder();
+        this.receiveStoreCreationRequest();
     }
 
     @Override
@@ -72,7 +72,8 @@ public final class StoreManagementService implements AutoCloseable, Service {
 
     private void receiveOrder() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.REQUEST_ARTICLES);
-        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.REQUEST_ARTICLES, Routes.REQUEST_ARTICLES, new OrderReceiver(this.database, this));
+        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.REQUEST_ARTICLES, Routes.REQUEST_ARTICLES,
+                new OrderReceiver(this.database, this));
     }
 
     /**
@@ -81,5 +82,11 @@ public final class StoreManagementService implements AutoCloseable, Service {
     @Override
     public void close() throws SQLException {
         bus.close();
+    }
+
+    private void receiveStoreCreationRequest() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.STORE_CREATION);
+        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_CREATION, Routes.STORE_CREATION,
+                new StoreCreationReciever(this.database, this));
     }
 }

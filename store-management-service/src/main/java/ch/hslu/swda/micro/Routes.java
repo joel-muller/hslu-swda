@@ -22,6 +22,7 @@ public final class Routes {
 
     
     static final String STORE_STATUS = "store.status";
+    static final String STORE_CREATION = "store.create";
     static final String INVENTORY_CHECK = "inventory.check";
     static final String LOG = "logs.new";
     static final String INVENTORY_UPDATE = "inventory.update";
