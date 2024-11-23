@@ -18,7 +18,6 @@ public class StoreCreationReciever implements MessageReceiver {
     private final StoreManagementService service;
 
     public StoreCreationReciever(final DatabaseConnector database, final StoreManagementService service) {
-        //TODO Methode kopiert von OrderReciever, muss noch angepasst werden
         this.database = database;
         this.service = service;
     }
