@@ -19,12 +19,13 @@ public class Store {
         this.articleList = articleList;
     }
 
+
     /**
-     * Default constructor for the Store class - required for Morphia to work properly.
-     * Initializes the store with null values for id and articleList.
+     * Default constructor for the Store class - required for Morphia to work properly..
+     * Initializes the store with a unique identifier and sets the article list to null.
      */
     public Store() {
-        this.id = null;
+        this.id = UUID.randomUUID();
         this.articleList = null;
     }
 
