@@ -15,8 +15,30 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+
 /**
- * Controller for retrieving Store Management requests.
+ * StoreManagementController is a REST controller that handles HTTP POST requests
+ * for creating new store entries. It communicates with a message bus to send
+ * store creation requests and logs the responses.
+ * 
+ * Annotations:
+ * - @Tag: Specifies the name of the tag for this controller.
+ * - @Controller: Maps HTTP requests to handler methods of this controller.
+ * 
+ * Dependencies:
+ * - Logger: Used for logging information.
+ * - RabbitMqConfig: Provides configuration for RabbitMQ exchange.
+ * - BusConnector: Manages the connection and communication with the message bus.
+ * - ObjectMapper: Used for converting Java objects to JSON and vice versa.
+ * 
+ * Methods:
+ * - receive(Store store): Handles HTTP POST requests to create a new store. UUID for the store is not required as it will be assigned automatically.
+ *   Connects to the message bus, sends the store creation request, and logs the response.
+ * 
+ * Exceptions:
+ * - IOException: Thrown if an I/O error occurs during communication with the message bus.
+ * - TimeoutException: Thrown if a timeout occurs while waiting for a response from the message bus.
+ * - InterruptedException: Thrown if the thread is interrupted while waiting for a response from the message bus.
  */
 @Tag(name = "StoreManagement")
 
