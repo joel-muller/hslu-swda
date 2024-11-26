@@ -35,7 +35,7 @@ public class MysqlDatabasePersistorTest {
             = new GenericContainer<>(DockerImageName.parse(IMAGE))
             .withExposedPorts(3306)
             .withCopyFileToContainer(MountableFile.forHostPath("./config/mysql/central_warehouse.sql"),"/docker-entrypoint-initdb.d/central_warehouse.sql")
-            .withStartupTimeout(Duration.ofSeconds(20))
+            .withStartupTimeout(Duration.ofSeconds(60))
             .withEnv("MYSQL_ROOT_PASSWORD", "root");
 
     void init(){
