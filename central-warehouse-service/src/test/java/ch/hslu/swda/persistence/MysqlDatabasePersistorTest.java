@@ -39,6 +39,7 @@ public class MysqlDatabasePersistorTest {
             .withEnv("MYSQL_ROOT_PASSWORD", "root");
 
     void init(){
+        LOG.info("current working Directory: "+ System.getProperty("user.dir"));
         container.start();
         LOG.info("exposed Port: "+container.getMappedPort(3306).toString());
         String jdbcUrl = "jdbc:mysql://localhost:"+ container.getMappedPort(3306) +"/central_warehouse?serverTimezone=UTC";
