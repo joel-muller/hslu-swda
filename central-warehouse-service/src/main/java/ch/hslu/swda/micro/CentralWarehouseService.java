@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.util.Timer;
 import java.util.concurrent.TimeoutException;
 
 
@@ -69,17 +71,32 @@ public final class CentralWarehouseService implements AutoCloseable {
 
         String jdbcUrl = "jdbc:mysql://"+DATABASEHOST+":"+DATABASEPORT+"/"+DATABASENAME+"?serverTimezone=UTC";
         Connection sqlConnection;
-        try{
 
-            LOG.debug("Try establishing database connection. url:"+ jdbcUrl+" user: "+DATABASEUSER);
-             sqlConnection = DriverManager.getConnection(jdbcUrl,DATABASEUSER,DATABASEPASSWORD);
-             LOG.info("Connected to Database");
-        }
-        catch (SQLException e){
-            LOG.info("Could not connect to Database");
-            throw new RuntimeException(e);
+        int retryCount = 0;
+        int delaySeconds = 5;
 
+        while(true) {
+            try {
+
+                LOG.debug("Try establishing database connection. url:" + jdbcUrl + " user: " + DATABASEUSER);
+                sqlConnection = DriverManager.getConnection(jdbcUrl, DATABASEUSER, DATABASEPASSWORD);
+                LOG.info("Connected to Database");
+                break;
+            } catch (SQLException e) {
+                retryCount++;
+                LOG.error("Attempt {} - Could not connect to Database: {}", retryCount, e.getMessage());
+                LOG.info("Retrying in {} seconds...", delaySeconds);
+                    try {
+                        Thread.sleep(Duration.ofSeconds(delaySeconds).toMillis());
+                    } catch (InterruptedException ie) {
+                        LOG.error("Retry sleep interrupted: {}", ie.getMessage());
+                        Thread.currentThread().interrupt();
+                        throw new RuntimeException("Failed to establish a database connection after " + retryCount + " attempts.");
+
+                    }
+            }
         }
+
         // setup rabbitmq connection
         this.exchangeName = new RabbitMqConfig().getExchange();
         this.bus = new BusConnector();
@@ -96,12 +113,14 @@ public final class CentralWarehouseService implements AutoCloseable {
 
         //try process orders
         this.receiveCentralWarehouseOrders();
+
+        LOG.info("started receiving orders asynchronously");
+
     }
 
     private void receiveCentralWarehouseOrders() throws IOException{
         LOG.debug("Starting listening for messages with routing [{}]", Routes.WAREHOUSE_REGISTER);
         bus.listenFor(exchangeName,"CentralWarehouseService <- "+ Routes.WAREHOUSE_REGISTER,Routes.WAREHOUSE_REGISTER,new CentralWarehouseOrderReceiver(exchangeName,bus, orderManager));
-
     }
     /**
      * @see AutoCloseable#close()

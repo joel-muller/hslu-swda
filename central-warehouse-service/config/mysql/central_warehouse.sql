@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS`warehouse_order` (
                                    `id` int NOT NULL AUTO_INCREMENT,
                                    `uuid` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
                                    `store_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                                   `customer_order_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                   `customer_order_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
                                    `cancelled` bit NOT NULL DEFAULT 0,
                                    PRIMARY KEY (`id`),
                                    UNIQUE KEY `uid` (`uuid`)

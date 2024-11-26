@@ -3,9 +3,7 @@ version: '3.5'
 networks:
   central_warehouse:
     name: central_warehouse
-  g02-backbone_backbone:
-    name: g02-backbone_backbone
-    external: true
+
 
 services:
   db1:
@@ -19,3 +17,16 @@ services:
       - /var/lib/mysql
       - ./config/mysql/central_warehouse.sql:/docker-entrypoint-initdb.d/central_warehouse.sql
 
+  central_warehouse:
+    image: swda-24hs/central-warehouse-service:latest
+    restart: always
+    networks:
+      - central_warehouse
+
+    environment:
+      DATABASEUSER: swda
+      DATABASEPASSWORD: swda
+      DATABASEHOST: db1
+      DATABASEPORT: 3306
+      DATABASENAME: central_warehouse
+      RMQ_HOST: host.docker.internal

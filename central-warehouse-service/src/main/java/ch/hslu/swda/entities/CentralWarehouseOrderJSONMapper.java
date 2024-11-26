@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CentralWarehouseOrderJSONMapper implements CentralWarehouseOrderMapper<String>{
@@ -58,7 +59,7 @@ public class CentralWarehouseOrderJSONMapper implements CentralWarehouseOrderMap
             JsonNode root = mapper.readTree(in);
             UUID id = UUID.fromString(root.get("id").asText());
             UUID storeId = UUID.fromString(root.get("storeId").asText());
-            UUID customerOrderId = UUID.fromString(root.get("customerOrderId").asText());
+            UUID customerOrderId = Objects.equals(root.get("customerOrderId").asText(), "null") ?null:UUID.fromString(root.get("customerOrderId").asText());
             boolean cancelled = root.get("cancelled").asBoolean();
             ArrayList<OrderArticle> articles = new ArrayList<OrderArticle>();
 

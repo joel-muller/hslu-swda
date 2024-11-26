@@ -5,12 +5,16 @@ import ch.hslu.swda.entities.OrderArticle;
 import ch.hslu.swda.persistence.CentralWarehouseOrderPersistor;
 import ch.hslu.swda.stock.api.Stock;
 import ch.hslu.swda.stock.api.StockException;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeoutException;
 
 public class OrderManager  implements CentralWarehouseOrderManager{
 
@@ -22,6 +26,27 @@ public class OrderManager  implements CentralWarehouseOrderManager{
     public OrderManager(Stock stock, CentralWarehouseOrderPersistor persistor){
         this.stock = stock;
         this.persistor = persistor;
+
+        //schedule a order update at least each day
+        final Timer timer = new Timer();
+        timer.schedule(new OrderUpdate(this), 0, 1000*3600*24);
+    }
+
+    private static final class OrderUpdate extends TimerTask {
+
+        private static final Logger LOG = LoggerFactory.getLogger(OrderUpdate.class);
+        private final OrderManager orderManager;
+        OrderUpdate(OrderManager orderManager) {
+            this.orderManager = orderManager;
+        }
+
+        @Override
+        public void run() {
+            LOG.info("update regular update Orders task");
+            this.orderManager.updateOrders();
+            LOG.info("regular update Orders task completed");
+
+        }
     }
 
 
