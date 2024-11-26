@@ -39,10 +39,11 @@ public class MysqlDatabasePersistorTest {
             .withEnv("MYSQL_ROOT_PASSWORD", "root");
 
     void init(){
-        LOG.info("current working Directory: "+ System.getProperty("user.dir"));
         container.start();
         LOG.info("exposed Port: "+container.getMappedPort(3306).toString());
-        String jdbcUrl = "jdbc:mysql://docker:"+ container.getMappedPort(3306) +"/central_warehouse?serverTimezone=UTC";
+        String host = System.getenv("BUILD_SERVER") != null ? "docker" : "localhost";
+        String jdbcUrl = "jdbc:mysql://"+host+":"+ container.getMappedPort(3306) +"/central_warehouse?serverTimezone=UTC";
+        LOG.info("jdbcURL: "+jdbcUrl);
         Connection sqlConnection;
         try{
 
