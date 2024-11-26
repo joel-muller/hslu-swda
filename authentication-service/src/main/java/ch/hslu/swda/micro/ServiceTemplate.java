@@ -17,12 +17,11 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ch.hslu.swda.business.AuthDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
 
@@ -60,5 +59,12 @@ public final class ServiceTemplate implements AutoCloseable {
     @Override
     public void close() {
         bus.close();
+    }
+
+    public void setupRightsAndRoles() {
+        AuthDatabase db = new AuthDatabase();
+        if (db.getAllRights().size() == 0 && db.getAllRoles().size() == 0) {
+            db.setupStorage();
+        }
     }
 }

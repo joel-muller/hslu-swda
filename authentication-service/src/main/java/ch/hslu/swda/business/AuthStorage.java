@@ -1,5 +1,6 @@
 package ch.hslu.swda.business;
 
+import ch.hslu.swda.entities.SystemRights;
 import ch.hslu.swda.entities.User;
 import ch.hslu.swda.entities.UserRole;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
 /**
  * Interface for storing/interacting with Users
  */
-public interface Users {
+public interface AuthStorage {
 
     /**
      * Stores a user.
@@ -23,20 +24,20 @@ public interface Users {
      * @param id
      * @return User
      */
-    User getById(UUID id);
+    User getUserById(UUID id);
 
     /**
      * Returns a user based on their username.
      * @param username
      * @return User
      */
-    User getByUsername(String username);
+    User getUserByUsername(String username);
 
     /**
      * Returns a list of all users.
      * @return List of users.
      */
-    List<User> getAll();
+    List<User> getAllUsers();
 
     /**
      * Deletes a user from the storage.
@@ -66,7 +67,7 @@ public interface Users {
      * @param role
      * @return true on success, false on failure
      */
-    boolean updateUserRole(UUID id, UserRole role);
+    boolean updateUsersUserRole(UUID id, UserRole role);
 
     /**
      * Updates multiple properties of a user.
@@ -77,4 +78,44 @@ public interface Users {
      * @return
      */
     boolean updateUser(UUID id, String username, String passwordHash, UserRole role);
+
+    /**
+     * Retrieves a system rights set based on a UUID.
+     * @return {@code SystemRights}
+     */
+    SystemRights getRightsById(UUID id);
+
+    /**
+     * Retrieves a system rights set based on a name.
+     * If multiple have the same name, the first one is returned.
+     * @param name
+     * @return {@code SystemRights}
+     */
+    SystemRights getRightsByName(String name);
+
+    /**
+     * Retrieves all system rights sets.
+     * @return List of {@code SystemRights}
+     */
+    List<SystemRights> getAllRights();
+
+    /**
+     * Retrieves a user role based on a UUID.
+     * @return {@code UserRole}
+     */
+    UserRole getRoleById(UUID id);
+
+    /**
+     * Retrieves a user role based on a name.
+     * If multiple have the same name, the first one is returned.
+     * @param name
+     * @return {@code UserRole}
+     */
+    UserRole getRoleByName(String name);
+
+    /**
+     * Retrieves all user roles.
+     * @return List of {@code UserRole}
+     */
+    List<UserRole> getAllRoles();
 }
