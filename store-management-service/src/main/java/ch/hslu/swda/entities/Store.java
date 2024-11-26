@@ -1,9 +1,10 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.business.StoreModifiable;
+import ch.hslu.swda.business.Modifiable;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -18,7 +19,6 @@ public class Store {
         this.id = id;
         this.articleList = articleList;
     }
-
 
     /**
      * Default constructor for the Store class - required for Morphia to work properly..
@@ -45,7 +45,23 @@ public class Store {
         this.articleList = articleList;
     }
 
-    public void modify(StoreModifiable modifiable) {
+    public StoreArticle getArticle(int id) {
+        for (StoreArticle article : this.articleList) {
+            if (article.getId() == id) {
+                return article;
+            }
+        }
+        return null;
+    }
+
+    public static Store createExampleStore(UUID id) {
+        List<StoreArticle> articles = new ArrayList<StoreArticle>();
+        articles.add(new StoreArticle(14, 200, 5, 5));
+        articles.add(new StoreArticle(12, 200, 3, 3));
+        return new Store(id, articles);
+    }
+
+    public void modify(Modifiable modifiable) {
         modifiable.modify(this);
     }
 

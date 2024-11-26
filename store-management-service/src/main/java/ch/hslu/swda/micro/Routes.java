@@ -32,6 +32,7 @@ public final class Routes {
     static final String REQUEST_ARTICLES = "store.request-articles";
 
     // Outgoing Messages
+    static final String ORDER_UPDATE = "order.update";
 
 
     /**

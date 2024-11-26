@@ -1,6 +1,7 @@
 package ch.hslu.swda.entities;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ import java.util.Objects;
  */
 @Entity("StoreArticle")
 public class StoreArticle {
+    @Id
     private int id;
     private int actualQuantity;
     private int minimumQuantity;
@@ -88,6 +90,10 @@ public class StoreArticle {
     public void setActualQuantity(int count) {
         this.actualQuantity = count;
     }
+
+    public void decrementQuantity(int count) { this.actualQuantity -= count; }
+
+    public void incrementQuantity(int count) { this.actualQuantity += count; }
 
     @Override
     public String toString() {

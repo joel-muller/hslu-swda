@@ -19,6 +19,7 @@ import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.messages.LogMessage;
+import ch.hslu.swda.messages.OrderUpdate;
 import ch.hslu.swda.messages.OutgoingMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,13 @@ public final class StoreManagementService implements AutoCloseable, Service {
     public void log(LogMessage message) throws IOException {
         sendMessageAsynchronous(message, Routes.LOG);
     }
+
+    @Override
+    public void sendOrderUpdate(OrderUpdate update) throws IOException {
+        LOG.info("Order update for the order {} sent", update.id());
+        sendMessageAsynchronous(update, Routes.ORDER_UPDATE);
+    }
+
 
     public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {
         ObjectMapper mapper = new ObjectMapper();

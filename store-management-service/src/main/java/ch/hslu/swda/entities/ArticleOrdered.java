@@ -1,6 +1,7 @@
 package ch.hslu.swda.entities;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ import java.util.Objects;
  */
 @Entity("articleOrdered")
 public class ArticleOrdered {
+    @Id
     private int id;
     private int count;
     private boolean ready;

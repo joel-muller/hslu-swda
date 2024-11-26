@@ -13,8 +13,9 @@ class OrderTest {
     @Test
     void testConstructorAndGetters() {
         UUID orderId = UUID.randomUUID();
+        UUID storeId = UUID.randomUUID();
         List<ArticleOrdered> articles = List.of(new ArticleOrdered(1, 10), new ArticleOrdered(2, 20));
-        Order order = new Order(orderId, articles);
+        Order order = new Order(orderId, storeId, articles);
 
         assertEquals(orderId, order.getId(), "Order ID should match the value set in the constructor.");
         assertEquals(articles, order.getArticleOrderedList(), "Articles list should match the value set in the constructor.");
@@ -23,10 +24,11 @@ class OrderTest {
     @Test
     void testSetArticleOrderedList() {
         UUID orderId = UUID.randomUUID();
+        UUID storeId = UUID.randomUUID();
         List<ArticleOrdered> initialArticles = List.of(new ArticleOrdered(1, 10));
         List<ArticleOrdered> newArticles = List.of(new ArticleOrdered(2, 20), new ArticleOrdered(3, 30));
 
-        Order order = new Order(orderId, initialArticles);
+        Order order = new Order(orderId, storeId, initialArticles);
         order.setArticleOrderedList(newArticles);
 
         assertEquals(newArticles, order.getArticleOrderedList(), "The updated articles list should match the new value set.");
@@ -49,11 +51,12 @@ class OrderTest {
     @Test
     void testEqualsAndHashCode() {
         UUID orderId = UUID.randomUUID();
+        UUID storeId = UUID.randomUUID();
         List<ArticleOrdered> articles = List.of(new ArticleOrdered(1, 10), new ArticleOrdered(2, 20));
 
-        Order order1 = new Order(orderId, articles);
-        Order order2 = new Order(orderId, articles);
-        Order order3 = new Order(UUID.randomUUID(), articles);
+        Order order1 = new Order(orderId, storeId, articles);
+        Order order2 = new Order(orderId, storeId, articles);
+        Order order3 = new Order(UUID.randomUUID(), storeId, articles);
 
         assertEquals(order1, order2, "Orders with the same ID and articles list should be equal.");
         assertNotEquals(order1, order3, "Orders with different IDs should not be equal.");

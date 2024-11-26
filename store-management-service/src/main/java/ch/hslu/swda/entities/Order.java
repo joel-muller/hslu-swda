@@ -1,7 +1,7 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.business.OrderModifiable;
 import ch.hslu.swda.messages.OrderRequest;
+import ch.hslu.swda.messages.OrderUpdate;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
@@ -13,21 +13,24 @@ import java.util.UUID;
 public class Order {
     @Id
     private UUID id;
+    private UUID storeId;
     private List<ArticleOrdered> articleOrderedList;
 
-    public Order(UUID id, List<ArticleOrdered> articleOrderedList) {
+    public Order(UUID id, UUID storeId, List<ArticleOrdered> articleOrderedList) {
         this.id = id;
+        this.storeId = storeId;
         this.articleOrderedList = articleOrderedList;
     }
 
     public Order() {
-        this.id = null;
+        this.id = UUID.randomUUID();
+        this.storeId = UUID.randomUUID();
         this.articleOrderedList = null;
     }
 
     public static Order createFromOrderRequest(OrderRequest request) {
         List<ArticleOrdered> articleOrdered = ArticleOrdered.createListArticle(request.articles());
-        return new Order(request.orderId(), articleOrdered);
+        return new Order(request.orderId(), request.storeId(), articleOrdered);
     }
 
     public UUID getId() {
@@ -38,6 +41,14 @@ public class Order {
         this.id = id;
     }
 
+    public UUID getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(UUID storeId) {
+        this.storeId = storeId;
+    }
+
     public List<ArticleOrdered> getArticleOrderedList() {
         return articleOrderedList;
     }
@@ -46,19 +57,28 @@ public class Order {
         this.articleOrderedList = articleOrderedList;
     }
 
-    public void modify(OrderModifiable modifiable) {
-        modifiable.modify(this);
+    public OrderUpdate generateOrderUpdate() {
+        return null;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Order order)) return false;
-        return Objects.equals(id, order.id) && Objects.equals(articleOrderedList, order.articleOrderedList);
+        return Objects.equals(id, order.id) && Objects.equals(storeId, order.storeId) && Objects.equals(articleOrderedList, order.articleOrderedList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, articleOrderedList);
+        return Objects.hash(id, storeId, articleOrderedList);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", storeId=" + storeId +
+                ", articleOrderedList=" + articleOrderedList +
+                '}';
     }
 }
