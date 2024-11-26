@@ -32,6 +32,7 @@ services:
     networks:
       - central_warehouse
     environment:
+      MYSQL_ROOT_PASSWORD: root
     volumes:
       - /var/lib/mysql
       - ./config/mysql/central_warehouse.sql:/docker-entrypoint-initdb.d/central_warehouse.sql
