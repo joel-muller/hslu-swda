@@ -41,8 +41,7 @@ public class MysqlDatabasePersistorTest {
     void init(){
         container.start();
         LOG.info("exposed Port: "+container.getMappedPort(3306).toString());
-        String host = System.getenv("BUILD_SERVER") != null ? "docker" : "localhost";
-        String jdbcUrl = "jdbc:mysql://"+host+":"+ container.getMappedPort(3306) +"/central_warehouse?serverTimezone=UTC";
+        String jdbcUrl = "jdbc:mysql://"+container.getHost()+":"+ container.getMappedPort(3306) +"/central_warehouse?serverTimezone=UTC";
         LOG.info("jdbcURL: "+jdbcUrl);
         Connection sqlConnection;
         try{
