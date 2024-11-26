@@ -37,4 +37,16 @@ public class UserRole {
         this.name = name;
         this.rights = rights;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<SystemRights> getRights() {
+        return rights;
+    }
 }

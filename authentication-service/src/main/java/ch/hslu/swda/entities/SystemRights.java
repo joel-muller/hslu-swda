@@ -13,32 +13,30 @@ public class SystemRights {
     @Id
     private UUID id;
     private String name;
-    private int bitmask;
 
     public SystemRights() {
         this.id = UUID.randomUUID();
         this.name = "";
-        this.bitmask = 0b0000;
     }
 
-    public SystemRights(String name, int bitmask) {
-        if (bitmask > 0b1111 || bitmask < 0) {
-            throw new IllegalArgumentException("Bitmask is invalid");
-        }
+    public SystemRights(String name) {
         this.id = UUID.randomUUID();
         this.name = name;
-        this.bitmask = bitmask;
     }
 
-    public SystemRights(UUID id, String name, int bitmask) {
-        if (bitmask > 0b1111 || bitmask < 0) {
-            throw new IllegalArgumentException("Bitmask is invalid");
-        }
+    public SystemRights(UUID id, String name) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         this.id = id;
         this.name = name;
-        this.bitmask = bitmask;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }
