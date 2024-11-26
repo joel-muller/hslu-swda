@@ -58,6 +58,7 @@ public final class OrderService implements AutoCloseable, Service {
         // start message receivers
         this.receiveOrderValidity();
         this.receiveOrder();
+        this.receiveOrderUpdate();
     }
 
     @Override
@@ -96,6 +97,11 @@ public final class OrderService implements AutoCloseable, Service {
     private void receiveOrder() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER);
         bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new OrderReceiver(this.database, exchangeName, bus, this));
+    }
+
+    private void receiveOrderUpdate() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.ORDER_UPDATE);
+        bus.listenFor(exchangeName, "OrderService <- " + Routes.ORDER_UPDATE, Routes.ORDER_UPDATE, new OrderUpdateReceiver(this.database, this));
     }
 
 

@@ -24,6 +24,7 @@ public final class Routes {
     static final String RECEIVE_ORDER_VALIDITY = "order.receive-validity";
     static final String RECEIVE_ORDER = "order.receive";
     static final String CUSTOMER_RECEIVE_VALIDITY = "order.customer-validity";
+    static final String ORDER_UPDATE = "order.update";
 
     // Outgoing Messages
     static final String CHECK_ORDER_VALIDITY = "articles.check-validity";

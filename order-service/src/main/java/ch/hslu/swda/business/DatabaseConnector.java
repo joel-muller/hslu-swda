@@ -38,7 +38,7 @@ public class DatabaseConnector {
     }
 
     public void storeOrder(Order order) {
-        LOG.info("Order stored {}", order.toString());
+//        LOG.info("Order stored {}", order.toString());
         datastore.save(order);
     }
 
@@ -46,7 +46,7 @@ public class DatabaseConnector {
         Order order = datastore.find(Order.class)
                 .filter(eq("_id", id))
                 .first();
-        LOG.info("Order restored {}", order.toString());
+//        LOG.info("Order restored {}", order.toString());
         return order;
     }
 }
