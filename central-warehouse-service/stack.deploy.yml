@@ -7,7 +7,7 @@ networks:
     external: true
 
   central_warehouse:
-    name:central_warehouse
+    name: central_warehouse
 
 services:
   app:
