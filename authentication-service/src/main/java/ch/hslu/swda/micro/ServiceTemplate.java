@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.AuthDatabase;
+import ch.hslu.swda.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public final class ServiceTemplate implements AutoCloseable {
         this.bus.connect();
 
         // start message receivers
-
+        this.setupRightsAndRoles();
     }
 
     /**

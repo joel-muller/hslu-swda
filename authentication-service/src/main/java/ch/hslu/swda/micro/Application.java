@@ -48,7 +48,7 @@ public final class Application {
 
         @Override
         public void run() {
-            service.setupRightsAndRoles();
+
         }
     }
 

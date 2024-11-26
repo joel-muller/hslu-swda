@@ -6,9 +6,13 @@ import ch.hslu.swda.entities.UserRole;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
+import dev.morphia.DeleteOptions;
 import dev.morphia.Morphia;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.experimental.updates.UpdateOperators;
 import org.bson.UuidRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +35,7 @@ public class AuthDatabase implements AuthStorage {
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .build();
         datastore = Morphia.createDatastore(MongoClients.create(settings), "auth_db");
-        datastore.getMapper().map(SystemRights.class);
+        datastore.getMapper().map(SystemRights.class, UserRole.class, User.class);
         datastore.ensureIndexes();
         if (getAllRights().size() == 0 && getAllRoles().size() == 0) {
             setupStorage();
@@ -40,47 +44,92 @@ public class AuthDatabase implements AuthStorage {
 
     @Override
     public boolean addUser(User user) {
-        return false;
+        LOG.debug("Storing user [{}]", user);
+        datastore.save(user);
+        return true;
     }
 
     @Override
     public User getUserById(UUID id) {
-        return null;
+        User user = datastore.find(User.class)
+                .filter(eq("_id", id))
+                .first();
+        LOG.debug("User with id [{}] retrieved", id);
+        return user;
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return null;
+        User user = datastore.find(User.class)
+                .filter(eq("username", username))
+                .first();
+        LOG.debug("User with username [{}] retrieved", username);
+        return user;
     }
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        List<User> userList = datastore.find(User.class)
+                .iterator(new FindOptions())
+                .toList();
+        LOG.debug("User list of size [{}] retrieved", userList.size());
+        return userList;
     }
 
     @Override
     public boolean deleteUser(UUID id) {
-        return false;
+        User user = getUserById(id);
+        DeleteResult result = datastore.find(User.class)
+                .filter(eq("_id", id))
+                .delete(new DeleteOptions());
+        if (user != null) {
+            LOG.info("User of id [{}] and username [{}] was deleted", id, user.getUsername());
+        }
+        LOG.info("User of id [{}] was attempted to be deleted", id);
+        return result.wasAcknowledged();
     }
 
     @Override
     public boolean updateUsername(UUID id, String username) {
-        return false;
+        UpdateResult result = datastore.find(User.class)
+                .filter(eq("_id", id))
+                .update(UpdateOperators.set("username", username))
+                .execute();
+        LOG.debug("Username of user with id [{}] was updated to [{}]", id, username);
+        return result.wasAcknowledged();
     }
 
     @Override
     public boolean updatePasswordHash(UUID id, String passwordHash) {
-        return false;
+        UpdateResult result = datastore.find(User.class)
+                .filter(eq("_id", id))
+                .update(UpdateOperators.set("passwordHash", passwordHash))
+                .execute();
+        LOG.debug("Password was updated for user with id [{}]", id);
+        return result.wasAcknowledged();
     }
 
     @Override
-    public boolean updateUsersUserRole(UUID id, UserRole role) {
-        return false;
+    public boolean updateUserRole(UUID id, UserRole role) {
+        UpdateResult result = datastore.find(User.class)
+                .filter(eq("_id", id))
+                .update(UpdateOperators.set("role", role))
+                .execute();
+        LOG.debug("Role of user with id [{}] was updated to [{}]", id, role);
+        return result.wasAcknowledged();
     }
 
     @Override
     public boolean updateUser(UUID id, String username, String passwordHash, UserRole role) {
-        return false;
+        boolean updatedUsername = updateUsername(id, username);
+        if (!updatedUsername) {
+            return false;
+        }
+        boolean updatedPasswordHash = updatePasswordHash(id, passwordHash);
+        if (!updatedPasswordHash) {
+            return false;
+        }
+        return updateUserRole(id, role);
     }
 
     @Override

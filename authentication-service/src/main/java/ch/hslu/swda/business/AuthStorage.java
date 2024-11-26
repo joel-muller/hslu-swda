@@ -67,7 +67,7 @@ public interface AuthStorage {
      * @param role
      * @return true on success, false on failure
      */
-    boolean updateUsersUserRole(UUID id, UserRole role);
+    boolean updateUserRole(UUID id, UserRole role);
 
     /**
      * Updates multiple properties of a user.
