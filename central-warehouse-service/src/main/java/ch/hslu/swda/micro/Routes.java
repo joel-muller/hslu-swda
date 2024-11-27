@@ -24,6 +24,8 @@ public final class Routes {
     /**
      * No instance allowed.
      */
+
+    static final String LOG = "logs.new";
     private Routes() {
     }
 }

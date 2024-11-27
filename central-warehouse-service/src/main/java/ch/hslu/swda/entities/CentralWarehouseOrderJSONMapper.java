@@ -64,7 +64,7 @@ public class CentralWarehouseOrderJSONMapper implements CentralWarehouseOrderMap
             ArrayList<OrderArticle> articles = new ArrayList<OrderArticle>();
 
             for(JsonNode node : root.get("articles")){
-                LOG.info(node.asText());
+                LOG.debug(node.asText());
                 int articleId = node.get("articleId").asInt();
                 int count = node.get("count").asInt();
                 int fulfilled = node.get("fulfilled").asInt();

@@ -31,14 +31,10 @@ import java.util.UUID;
 public final class CentralWarehouseOrderReceiver implements MessageReceiver {
 
     private static final Logger LOG = LoggerFactory.getLogger(CentralWarehouseOrderReceiver.class);
-    private final String exchangeName;
-    private final BusConnector bus;
     private final CentralWarehouseOrderManager orderManager;
 
 
-    public CentralWarehouseOrderReceiver(final String exchangeName, final BusConnector bus,CentralWarehouseOrderManager orderManager) {
-        this.exchangeName = exchangeName;
-        this.bus = bus;
+    public CentralWarehouseOrderReceiver(CentralWarehouseOrderManager orderManager) {
         this.orderManager = orderManager;
     }
 
@@ -50,19 +46,20 @@ public final class CentralWarehouseOrderReceiver implements MessageReceiver {
         ObjectMapper mapper = new ObjectMapper();
         Map<Integer, Integer> articles;
         UUID storeId;
+        UUID customerOrderId;
         CentralWarehouseOrder warehouseOrder;
         try {
             JsonNode orderNode = mapper.readTree(message);
-
             String articlesString = orderNode.get("articles").toString();
             articles= mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             storeId = UUID.fromString(orderNode.get("storeId").asText());
+            customerOrderId = orderNode.get("orderId").asText()==null?null:UUID.fromString(orderNode.get("orderId").asText());
 
         }catch (IOException|IllegalArgumentException  e){
             LOG.error(e.getMessage(), e);
             return;
         }
-        LOG.info("warehouseOrder correctly received. Start processing Order");
-        orderManager.process(new CentralWarehouseOrder(storeId,articles));
+        LOG.info("warehouseOrder {} from store {} correctly received. Start processing Order",customerOrderId,storeId);
+        orderManager.process(new CentralWarehouseOrder(storeId,articles,customerOrderId));
     }
 }

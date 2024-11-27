@@ -50,7 +50,7 @@ public final class CentralWarehouseOrder {
     public CentralWarehouseOrder(UUID storeId, Map<Integer,Integer> articles) throws IllegalArgumentException  {
         this.id = UUID.randomUUID();
         this.storeId = storeId;
-        this.articles= new ArrayList<OrderArticle>();
+        this.articles= new ArrayList<>();
 
         articles.forEach((k,v)->{
                 this.articles.add(new OrderArticle(k,v));
@@ -60,7 +60,7 @@ public final class CentralWarehouseOrder {
     public CentralWarehouseOrder(UUID storeId, Map<Integer,Integer> articles, UUID customerOrderId) throws IllegalArgumentException  {
         this.id = UUID.randomUUID();
         this.storeId = storeId;
-        this.articles= new ArrayList<OrderArticle>();
+        this.articles= new ArrayList<>();
         articles.forEach((k,v)->{
             this.articles.add(new OrderArticle(k,v));
         });
@@ -84,6 +84,14 @@ public final class CentralWarehouseOrder {
     }
     public List<OrderArticle> getArticles(){
         return this.articles;
+    }
+    public OrderArticle getArticleById(int articleId){
+        for (OrderArticle article : articles) {
+            if (article.getId() == articleId) {
+                return article;
+            }
+        }
+        return null; // Return null if no article matches
     }
 
     /**
@@ -133,5 +141,12 @@ public final class CentralWarehouseOrder {
 
     public boolean getCancelled(){
         return this.cancelled;
+    }
+
+    public boolean isComplete() {
+        for(OrderArticle article: articles){
+            if (article.getFulfilled()<article.getCount()) return false;
+        }
+        return true;
     }
 }

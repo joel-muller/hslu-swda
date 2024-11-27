@@ -29,7 +29,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.Timer;
 import java.util.concurrent.TimeoutException;
 
 
@@ -98,21 +97,21 @@ public final class CentralWarehouseService implements AutoCloseable {
         }
 
         // setup rabbitmq connection
-        this.exchangeName = new RabbitMqConfig().getExchange();
-        this.bus = new BusConnector();
-        this.bus.connect();
+        exchangeName = new RabbitMqConfig().getExchange();
+        bus = new BusConnector();
+        bus.connect();
 
 
-        this.stock = StockFactory.getStock();
-        this.persistor = new MysqlDatabasePersistor(sqlConnection);
-        this.orderManager = new OrderManager(this.stock,this.persistor);
+        stock = StockFactory.getStock();
+        persistor = new MysqlDatabasePersistor(sqlConnection);
+        orderManager = new OrderManager(this.stock,this.persistor, new LogMessageSender(bus,exchangeName,Routes.LOG));
 
 
 
         //read saved orders with items date < now()
 
         //try process orders
-        this.receiveCentralWarehouseOrders();
+        receiveCentralWarehouseOrders();
 
         LOG.info("started receiving orders asynchronously");
 
@@ -120,7 +119,7 @@ public final class CentralWarehouseService implements AutoCloseable {
 
     private void receiveCentralWarehouseOrders() throws IOException{
         LOG.debug("Starting listening for messages with routing [{}]", Routes.WAREHOUSE_REGISTER);
-        bus.listenFor(exchangeName,"CentralWarehouseService <- "+ Routes.WAREHOUSE_REGISTER,Routes.WAREHOUSE_REGISTER,new CentralWarehouseOrderReceiver(exchangeName,bus, orderManager));
+        bus.listenFor(exchangeName,"CentralWarehouseService <- "+ Routes.WAREHOUSE_REGISTER,Routes.WAREHOUSE_REGISTER,new CentralWarehouseOrderReceiver(orderManager));
     }
     /**
      * @see AutoCloseable#close()
