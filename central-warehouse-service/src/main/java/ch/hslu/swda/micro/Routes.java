@@ -20,7 +20,7 @@ package ch.hslu.swda.micro;
  */
 public final class Routes {
 
-    static final String WAREHOUSE_REGISTER = "warehouse.order";
+    static final String WAREHOUSE_REGISTER = "central-warehouse.request";
     /**
      * No instance allowed.
      */
