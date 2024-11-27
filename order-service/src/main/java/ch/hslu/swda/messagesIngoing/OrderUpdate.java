@@ -1,4 +1,4 @@
-package ch.hslu.swda.messages;
+package ch.hslu.swda.messagesIngoing;
 
 import java.util.List;
 import java.util.UUID;

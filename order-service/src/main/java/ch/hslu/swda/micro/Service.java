@@ -1,9 +1,8 @@
 package ch.hslu.swda.micro;
 
-import ch.hslu.swda.messages.*;
+import ch.hslu.swda.messagesOutgoing.*;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public interface Service {
     void checkValidity(VerifyRequest request) throws IOException;

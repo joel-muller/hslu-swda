@@ -1,6 +1,6 @@
 package ch.hslu.swda.business;
 
-import ch.hslu.swda.messages.*;
+import ch.hslu.swda.messagesOutgoing.*;
 import ch.hslu.swda.micro.Service;
 
 import java.io.IOException;

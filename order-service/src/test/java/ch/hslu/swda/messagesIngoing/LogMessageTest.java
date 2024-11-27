@@ -1,6 +1,6 @@
-package ch.hslu.swda.messages;
+package ch.hslu.swda.messagesIngoing;
 
-import ch.hslu.swda.entities.State;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 

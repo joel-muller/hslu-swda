@@ -4,7 +4,7 @@ import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.business.Modifiable;
 import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.messages.IngoingMessage;
+import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

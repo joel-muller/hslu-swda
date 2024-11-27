@@ -20,7 +20,7 @@ import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.messages.LogMessage;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

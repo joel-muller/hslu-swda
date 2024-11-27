@@ -1,4 +1,4 @@
-package ch.hslu.swda.messages;
+package ch.hslu.swda.messagesIngoing;
 
 import org.junit.jupiter.api.Test;
 

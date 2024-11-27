@@ -4,8 +4,10 @@ import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 
 import ch.hslu.swda.entities.State;
-import ch.hslu.swda.messages.*;
-import ch.hslu.swda.micro.Service;
+import ch.hslu.swda.messagesIngoing.*;
+import ch.hslu.swda.messagesOutgoing.CustomerRequest;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
+import ch.hslu.swda.messagesOutgoing.StoreRequest;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

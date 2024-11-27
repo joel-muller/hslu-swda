@@ -1,11 +1,10 @@
 package ch.hslu.swda.business;
 
-import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.State;
-import ch.hslu.swda.messages.IngoingMessage;
-import ch.hslu.swda.messages.OrderReady;
-import ch.hslu.swda.messages.OrderUpdate;
+import ch.hslu.swda.messagesIngoing.IngoingMessage;
+import ch.hslu.swda.messagesOutgoing.OrderReady;
+import ch.hslu.swda.messagesIngoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +31,9 @@ public class UpdateOrder implements Modifiable {
             if (order.allArticlesDelivered()) {
                 State state = order.getState();
                 state.setArticlesReady(true);
+
+                //remove following line only for testing
+                state.setCustomerReady(true);
             }
             if (order.getState().isReady()) {
                 service.sendOrderReadyToStore(new OrderReady(order.getId(), order.getStoreId()));

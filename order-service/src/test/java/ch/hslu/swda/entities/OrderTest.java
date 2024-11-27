@@ -2,12 +2,9 @@ package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import ch.hslu.swda.business.Modifiable;
-import ch.hslu.swda.messages.CustomerRequest;
-import ch.hslu.swda.messages.StoreRequest;
-import ch.hslu.swda.messages.VerifyRequest;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
+import ch.hslu.swda.messagesOutgoing.CustomerRequest;
+import ch.hslu.swda.messagesOutgoing.StoreRequest;
+import ch.hslu.swda.messagesOutgoing.VerifyRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

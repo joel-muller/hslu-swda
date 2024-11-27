@@ -15,15 +15,14 @@
  */
 package ch.hslu.swda.entities;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.Calendar;
 
 import ch.hslu.swda.business.Modifiable;
-import ch.hslu.swda.messages.CustomerRequest;
-import ch.hslu.swda.messages.IngoingMessage;
-import ch.hslu.swda.messages.StoreRequest;
-import ch.hslu.swda.messages.VerifyRequest;
+import ch.hslu.swda.messagesOutgoing.CustomerRequest;
+import ch.hslu.swda.messagesIngoing.IngoingMessage;
+import ch.hslu.swda.messagesOutgoing.StoreRequest;
+import ch.hslu.swda.messagesOutgoing.VerifyRequest;
 import ch.hslu.swda.micro.Service;
 import dev.morphia.annotations.*;
 
