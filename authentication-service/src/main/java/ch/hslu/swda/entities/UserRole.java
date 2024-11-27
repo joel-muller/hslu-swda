@@ -18,18 +18,32 @@ public class UserRole {
     private String name;
     private List<SystemRights> rights;
 
+    /**
+     * Default constructor
+     */
     public UserRole() {
         this.id = UUID.randomUUID();
         this.name = "";
         this.rights = Collections.emptyList();
     }
 
+    /**
+     * Constructor to be used to add new user roles
+     * @param name
+     * @param rights
+     */
     public UserRole(String name, List<SystemRights> rights) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.rights = rights;
     }
 
+    /**
+     * General constructor
+     * @param id
+     * @param name
+     * @param rights
+     */
     public UserRole(UUID id, String name, List<SystemRights> rights) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");

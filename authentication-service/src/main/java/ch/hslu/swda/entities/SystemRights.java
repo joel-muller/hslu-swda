@@ -15,16 +15,28 @@ public class SystemRights {
     private UUID id;
     private String name;
 
+    /**
+     * Default constructor
+     */
     public SystemRights() {
         this.id = UUID.randomUUID();
         this.name = "";
     }
 
+    /**
+     * Constructor to be used to add new system rights
+     * @param name
+     */
     public SystemRights(String name) {
         this.id = UUID.randomUUID();
         this.name = name;
     }
 
+    /**
+     * General constructor
+     * @param id
+     * @param name
+     */
     public SystemRights(UUID id, String name) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");

@@ -17,6 +17,9 @@ public class User {
     private String passwordHash;
     private UserRole role;
 
+    /**
+     * Default constructor
+     */
     public User() {
         this.id = UUID.randomUUID();
         this.username = "";
@@ -24,6 +27,12 @@ public class User {
         this.role = null;
     }
 
+    /**
+     * Constructor to be used to add new users
+     * @param username
+     * @param passwordHash
+     * @param role
+     */
     public User(String username, String passwordHash, UserRole role) {
         this.id = UUID.randomUUID();
         this.username = username;
@@ -31,6 +40,13 @@ public class User {
         this.role = role;
     }
 
+    /**
+     * General constructor
+     * @param id
+     * @param username
+     * @param passwordHash
+     * @param role
+     */
     public User(UUID id, String username, String passwordHash, UserRole role) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -67,6 +83,15 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    /**
+     * Method to remove hash before returning user to API.
+     * @param user
+     * @return User without passwordHash
+     */
+    public static User removeHashForReturn(User user) {
+        return new User(user.getId(), user.getUsername(), null, user.getRole());
     }
 
     @Override

@@ -50,8 +50,11 @@ public final class ServiceTemplate implements AutoCloseable {
         this.bus = new BusConnector();
         this.bus.connect();
 
-        // start message receivers
+        // setup db
         this.setupRightsAndRoles();
+
+        // start message receivers
+
     }
 
     /**
@@ -67,5 +70,10 @@ public final class ServiceTemplate implements AutoCloseable {
         if (db.getAllRights().size() == 0 && db.getAllRoles().size() == 0) {
             db.setupStorage();
         }
+    }
+
+    private void receiveUsers() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.USER_CREATE);
+        bus.listenFor(exchangeName, "AuthService <- " + Routes.USER_CREATE, Routes.USER_CREATE, new UserReceiver(exchangeName, bus));
     }
 }
