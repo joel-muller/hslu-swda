@@ -6,30 +6,7 @@ import java.util.UUID;
 /**
  * Message structure used for either updating or creating a user.
  */
-public class UserUpsert implements IngoingMessage {
-    private final String username;
-    private final String password;
-    private final String role;
-    private final UUID employeeId;
-
-    public UserUpsert(String username, String password, String role, UUID employeeId) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.employeeId = employeeId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getRole() {
-        return role;
-    }
+public record UserUpsert(String username, String password, String role, UUID employeeId) implements IngoingMessage {
 
     @Override
     public boolean equals(Object o) {
