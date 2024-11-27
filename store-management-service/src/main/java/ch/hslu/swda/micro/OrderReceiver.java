@@ -29,18 +29,15 @@ public class OrderReceiver implements MessageReceiver {
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            LOG.info(message);
             OrderRequest request = mapper.readValue(message, OrderRequest.class);
-            Order order = Order.createFromOrderRequest(request);
-            Store store = database.getStoreById(order.getStoreId());
+            Store store = database.getStoreById(request.storeId());
             if (store == null) {
-                store = Store.createExampleStore(order.getStoreId());
-                store.modify(new ProcessOrderStore(this.service, order));
+                store = Store.createExampleStore(request.storeId());
+                store.modify(new ProcessOrderStore(this.service, this.database, request));
                 //service.sendOrderUpdate(new OrderUpdate(order.getId(), new ArrayList<Integer>(), false));
             } else {
-                store.modify(new ProcessOrderStore(this.service, order));
+                store.modify(new ProcessOrderStore(this.service, this.database, request));
             }
-            database.storeOrder(order);
             database.saveStoreObject(store);
             LOG.info("Order with the id {} stored", request.orderId());
         } catch (IOException e) {

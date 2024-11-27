@@ -25,14 +25,16 @@ public final class Routes {
     static final String STORE_CREATION = "store.create";
     static final String INVENTORY_CHECK = "inventory.check";
     static final String LOG = "logs.new";
-    static final String INVENTORY_UPDATE = "inventory.update";
     static final String ORDER_FROM_CENTRAL_WAREHOUSE = "warehouse.order";
 
     // Ingoing Mesasges
     static final String REQUEST_ARTICLES = "store.request-articles";
+    static final String INVENTORY_UPDATE = "store.inventory-update";
+    static final String ORDER_READY = "store.order-ready";
 
     // Outgoing Messages
     static final String ORDER_UPDATE = "order.update";
+    static final String INVENTORY_REQUEST = "central-warehouse.request";
 
 
     /**

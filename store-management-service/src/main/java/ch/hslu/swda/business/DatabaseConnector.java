@@ -11,6 +11,8 @@ import org.bson.UuidRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
@@ -60,5 +62,17 @@ public class DatabaseConnector {
                 .filter(eq("_id", id))
                 .first();
         return store;
+    }
+
+    public List<Order> getOrdersForStore(Store store) {
+        List<Order> orders = new ArrayList<>();
+        List<UUID> orderIds = store.getOpenOrders();
+        for (UUID id : orderIds) {
+            Order order = datastore.find(Order.class)
+                    .filter(eq("_id", id))
+                    .first();
+            orders.add(order);
+        }
+        return orders;
     }
 }

@@ -4,6 +4,7 @@ import ch.hslu.swda.entities.ArticleOrdered;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.Store;
 import ch.hslu.swda.entities.StoreArticle;
+import ch.hslu.swda.messages.OrderRequest;
 import ch.hslu.swda.messages.OrderUpdate;
 import ch.hslu.swda.micro.Service;
 import org.slf4j.Logger;
@@ -16,16 +17,19 @@ import java.util.List;
 public class ProcessOrderStore implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(ProcessOrderStore.class);
     private final Service service;
-    private final Order order;
+    private final DatabaseConnector databaseConnector;
+    private final OrderRequest request;
 
-    public ProcessOrderStore(Service service, Order order) {
+    public ProcessOrderStore(Service service, DatabaseConnector databaseConnector, OrderRequest request) {
         this.service = service;
-        this.order = order;
+        this.databaseConnector = databaseConnector;
+        this.request = request;
     }
 
     @Override
     public void modify(Store store) {
         try {
+            Order order = Order.createFromOrderRequest(request);
             List<ArticleOrdered> articlesOrdered = order.getArticleOrderedList();
             List<Integer> articleValidated = new ArrayList<>();
             for (ArticleOrdered article : articlesOrdered) {
@@ -47,8 +51,8 @@ public class ProcessOrderStore implements Modifiable {
             }
             if (!articleValidated.isEmpty()) {
                 service.sendOrderUpdate(new OrderUpdate(order.getId(), articleValidated, true));
-                LOG.info("I am here size of list is {}", articleValidated.size());
             }
+            databaseConnector.storeOrder(order);
         } catch (IOException e) {
             LOG.error("Exception occurred while trying to update the order {}", e.getMessage());
         }

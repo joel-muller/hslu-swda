@@ -15,11 +15,13 @@ public class Order {
     private UUID id;
     private UUID storeId;
     private List<ArticleOrdered> articleOrderedList;
+    private boolean finished;
 
-    public Order(UUID id, UUID storeId, List<ArticleOrdered> articleOrderedList) {
+    public Order(UUID id, UUID storeId, List<ArticleOrdered> articleOrderedList, boolean finished) {
         this.id = id;
         this.storeId = storeId;
         this.articleOrderedList = articleOrderedList;
+        this.finished = finished;
     }
 
     public Order() {
@@ -30,7 +32,7 @@ public class Order {
 
     public static Order createFromOrderRequest(OrderRequest request) {
         List<ArticleOrdered> articleOrdered = ArticleOrdered.createListArticle(request.articles());
-        return new Order(request.orderId(), request.storeId(), articleOrdered);
+        return new Order(request.orderId(), request.storeId(), articleOrdered, false);
     }
 
     public UUID getId() {
@@ -49,6 +51,14 @@ public class Order {
         this.storeId = storeId;
     }
 
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
     public List<ArticleOrdered> getArticleOrderedList() {
         return articleOrderedList;
     }
@@ -65,12 +75,12 @@ public class Order {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Order order)) return false;
-        return Objects.equals(id, order.id) && Objects.equals(storeId, order.storeId) && Objects.equals(articleOrderedList, order.articleOrderedList);
+        return finished == order.finished && Objects.equals(id, order.id) && Objects.equals(storeId, order.storeId) && Objects.equals(articleOrderedList, order.articleOrderedList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, storeId, articleOrderedList);
+        return Objects.hash(id, storeId, articleOrderedList, finished);
     }
 
     @Override
@@ -79,6 +89,7 @@ public class Order {
                 "id=" + id +
                 ", storeId=" + storeId +
                 ", articleOrderedList=" + articleOrderedList +
+                ", finished=" + finished +
                 '}';
     }
 }

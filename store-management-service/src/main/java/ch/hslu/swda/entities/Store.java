@@ -14,10 +14,12 @@ public class Store {
     @Id
     private UUID id;
     private List<StoreArticle> articleList;
+    private List<UUID> openOrders;
 
-    public Store(UUID id, List<StoreArticle> articleList) {
+    public Store(UUID id, List<StoreArticle> articleList, List<UUID> openOrders) {
         this.id = id;
         this.articleList = articleList;
+        this.openOrders = openOrders;
     }
 
     /**
@@ -45,6 +47,14 @@ public class Store {
         this.articleList = articleList;
     }
 
+    public List<UUID> getOpenOrders() {
+        return openOrders;
+    }
+
+    public void setOpenOrders(List<UUID> openOrders) {
+        this.openOrders = openOrders;
+    }
+
     public StoreArticle getArticle(int id) {
         for (StoreArticle article : this.articleList) {
             if (article.getId() == id) {
@@ -58,7 +68,8 @@ public class Store {
         List<StoreArticle> articles = new ArrayList<StoreArticle>();
         articles.add(new StoreArticle(14, 200, 5, 5));
         articles.add(new StoreArticle(12, 200, 3, 3));
-        return new Store(id, articles);
+        articles.add(new StoreArticle(18, 200, 2, 3));
+        return new Store(id, articles, new ArrayList<UUID>());
     }
 
     public void modify(Modifiable modifiable) {

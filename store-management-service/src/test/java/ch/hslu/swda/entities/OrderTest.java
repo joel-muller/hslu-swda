@@ -15,7 +15,7 @@ class OrderTest {
         UUID orderId = UUID.randomUUID();
         UUID storeId = UUID.randomUUID();
         List<ArticleOrdered> articles = List.of(new ArticleOrdered(1, 10), new ArticleOrdered(2, 20));
-        Order order = new Order(orderId, storeId, articles);
+        Order order = new Order(orderId, storeId, articles, false);
 
         assertEquals(orderId, order.getId(), "Order ID should match the value set in the constructor.");
         assertEquals(articles, order.getArticleOrderedList(), "Articles list should match the value set in the constructor.");
@@ -28,7 +28,7 @@ class OrderTest {
         List<ArticleOrdered> initialArticles = List.of(new ArticleOrdered(1, 10));
         List<ArticleOrdered> newArticles = List.of(new ArticleOrdered(2, 20), new ArticleOrdered(3, 30));
 
-        Order order = new Order(orderId, storeId, initialArticles);
+        Order order = new Order(orderId, storeId, initialArticles, false);
         order.setArticleOrderedList(newArticles);
 
         assertEquals(newArticles, order.getArticleOrderedList(), "The updated articles list should match the new value set.");
@@ -54,9 +54,9 @@ class OrderTest {
         UUID storeId = UUID.randomUUID();
         List<ArticleOrdered> articles = List.of(new ArticleOrdered(1, 10), new ArticleOrdered(2, 20));
 
-        Order order1 = new Order(orderId, storeId, articles);
-        Order order2 = new Order(orderId, storeId, articles);
-        Order order3 = new Order(UUID.randomUUID(), storeId, articles);
+        Order order1 = new Order(orderId, storeId, articles, false);
+        Order order2 = new Order(orderId, storeId, articles, false);
+        Order order3 = new Order(UUID.randomUUID(), storeId, articles, false);
 
         assertEquals(order1, order2, "Orders with the same ID and articles list should be equal.");
         assertNotEquals(order1, order3, "Orders with different IDs should not be equal.");

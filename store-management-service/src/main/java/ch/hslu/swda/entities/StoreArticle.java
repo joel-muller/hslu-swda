@@ -37,8 +37,8 @@ import java.util.Objects;
  *   <li>{@link #setActualQuantity(int)} - Sets the actual quantity of the article.</li>
  *   <li>{@link #getMinimumQuantity()} - Gets the minimum quantity of the article.</li>
  *   <li>{@link #setMinimumQuantity(int)} - Sets the minimum quantity of the article.</li>
- *   <li>{@link #getReservedQuantity()} - Gets the reserved quantity of the article.</li>
- *   <li>{@link #setReservedQuantity(int)} - Sets the reserved quantity of the article.</li>
+ *   <li>{@link #getRefillCount()} - Gets the reserved quantity of the article.</li>
+ *   <li>{@link #setRefillCount(int)} - Sets the reserved quantity of the article.</li>
  *   <li>{@link #toString()} - Returns a string representation of the article.</li>
  *   <li>{@link #equals(Object)} - Checks if this article is equal to another object.</li>
  *   <li>{@link #hashCode()} - Returns the hash code for this article.</li>
@@ -50,21 +50,21 @@ public class StoreArticle {
     private int id;
     private int actualQuantity;
     private int minimumQuantity;
-    private int reservedQuantity;
+    private int refillCount;
 
 
     public StoreArticle(final int id, final int actualQuantity, final int minimumQuantity, final int reservedQuantity) {
         this.id = id;
         this.actualQuantity = actualQuantity;
         this.minimumQuantity = minimumQuantity;
-        this.reservedQuantity = reservedQuantity;
+        this.refillCount = reservedQuantity;
     }
 
     public StoreArticle() {
         this.id = -1;
         this.actualQuantity = -1;
         this.minimumQuantity = -1;
-        this.reservedQuantity = -1;
+        this.refillCount = -1;
     }
 
     public static List<StoreArticle> createArticleList(Map<Integer, Integer> map) {
@@ -123,11 +123,11 @@ public class StoreArticle {
         this.minimumQuantity = minimumQuantity;
     }
 
-    public int getReservedQuantity() {
-        return reservedQuantity;
+    public int getRefillCount() {
+        return refillCount;
     }
 
-    public void setReservedQuantity(int reservedQuantity) {
-        this.reservedQuantity = reservedQuantity;
+    public void setRefillCount(int refillCount) {
+        this.refillCount = refillCount;
     }
 }

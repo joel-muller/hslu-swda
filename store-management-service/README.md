@@ -25,6 +25,6 @@ Vorausgesetzt, der backbone läuft, kann der Service lokal vielfältig gestartet
 
 ## TO Do
 -[] Make gateway to store management (CRUD from stores (no delete)) - Order Microservice als Vorbild - Céline
--[] Integration to order - Joel
+-[x] Integration to order - Joel
 -[] Integration to central warehouse
 -[] Setup service with random stores (übers Gateway - generate store, generate default stores) - Céline

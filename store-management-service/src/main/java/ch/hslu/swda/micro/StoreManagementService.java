@@ -97,4 +97,10 @@ public final class StoreManagementService implements AutoCloseable, Service {
         bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_CREATION, Routes.STORE_CREATION,
                 new StoreCreationReciever(this.database, this));
     }
+
+    private void receiveOrderReady() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.ORDER_READY);
+        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.ORDER_READY, Routes.ORDER_READY,
+                new OrderReadyReceiver(this.database, this));
+    }
 }
