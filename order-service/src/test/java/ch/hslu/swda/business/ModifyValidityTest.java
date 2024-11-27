@@ -28,7 +28,8 @@ class ModifyValidityTest {
         Order order = new Order(id, articles, storeId, customerId, employeeId);
 
         ServiceMock service = new ServiceMock();
-        order.modify(new ModifyValidity(new VerifyResponse(id, true), service));
+        VerifyResponse response = new VerifyResponse(id, true);
+        order.modify(new ModifyValidity(), response, service);
 
         State state = new State();
         state.setValid(true);
@@ -50,7 +51,8 @@ class ModifyValidityTest {
         Order order = new Order(id, articles, storeId, customerId, employeeId);
 
         ServiceMock service = new ServiceMock();
-        order.modify(new ModifyValidity(new VerifyResponse(id, true), service));
+        VerifyResponse response = new VerifyResponse(id, true);
+        order.modify(new ModifyValidity(), response, service);
         assertEquals(new StoreRequest(id, articlesMap, employeeId, storeId), service.storeRequest);
     }
 
@@ -69,7 +71,8 @@ class ModifyValidityTest {
         Order order = new Order(id, articles, storeId, customerId, employeeId);
 
         ServiceMock service = new ServiceMock();
-        order.modify(new ModifyValidity(new VerifyResponse(id, true), service));
+        VerifyResponse response = new VerifyResponse(id, true);
+        order.modify(new ModifyValidity(), response, service);
         assertEquals(new CustomerRequest(customerId, employeeId, id), service.customerRequest);
     }
 
@@ -88,7 +91,8 @@ class ModifyValidityTest {
         Order order = new Order(id, articles, storeId, customerId, employeeId);
 
         ServiceMock service = new ServiceMock();
-        order.modify(new ModifyValidity(new VerifyResponse(id, true), service));
+        VerifyResponse response = new VerifyResponse(id, true);
+        order.modify(new ModifyValidity(), response, service);
         assertEquals(new LogMessage(id, employeeId, "order.validate", "Order Validated, order id: " + id.toString()), service.logMessage);
     }
 
@@ -108,7 +112,8 @@ class ModifyValidityTest {
         Order order = new Order(id, articles, storeId, customerId, employeeId);
 
         ServiceMock service = new ServiceMock();
-        order.modify(new ModifyValidity(new VerifyResponse(id, false), service));
+        VerifyResponse response = new VerifyResponse(id, false);
+        order.modify(new ModifyValidity(), response, service);
 
         State state = new State();
         state.setCancelled(true);
@@ -131,7 +136,8 @@ class ModifyValidityTest {
         Order order = new Order(id, articles, storeId, customerId, employeeId);
 
         ServiceMock service = new ServiceMock();
-        order.modify(new ModifyValidity(new VerifyResponse(id, false), service));
+        VerifyResponse response = new VerifyResponse(id, false);
+        order.modify(new ModifyValidity(), response, service);
         assertNull(service.storeRequest);
     }
 
@@ -150,7 +156,8 @@ class ModifyValidityTest {
         Order order = new Order(id, articles, storeId, customerId, employeeId);
 
         ServiceMock service = new ServiceMock();
-        order.modify(new ModifyValidity(new VerifyResponse(id, false), service));
+        VerifyResponse response = new VerifyResponse(id, false);
+        order.modify(new ModifyValidity(), response, service);
         assertNull(service.customerRequest);
     }
 
@@ -169,7 +176,8 @@ class ModifyValidityTest {
         Order order = new Order(id, articles, storeId, customerId, employeeId);
 
         ServiceMock service = new ServiceMock();
-        order.modify(new ModifyValidity(new VerifyResponse(id, false), service));
+        VerifyResponse response = new VerifyResponse(id, false);
+        order.modify(new ModifyValidity(), response, service);
         assertEquals(new LogMessage(id, employeeId, "order.validate", "Order not validated, order id: " + id.toString()), service.logMessage);
     }
 

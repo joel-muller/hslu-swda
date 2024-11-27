@@ -21,8 +21,10 @@ import java.util.Calendar;
 
 import ch.hslu.swda.business.Modifiable;
 import ch.hslu.swda.messages.CustomerRequest;
+import ch.hslu.swda.messages.IngoingMessage;
 import ch.hslu.swda.messages.StoreRequest;
 import ch.hslu.swda.messages.VerifyRequest;
+import ch.hslu.swda.micro.Service;
 import dev.morphia.annotations.*;
 
 /**
@@ -154,8 +156,8 @@ public final class Order {
         return new CustomerRequest(getCustomerId(), getEmployeeId(), getId());
     }
 
-    public void modify(Modifiable modifiable) {
-        modifiable.modify(this);
+    public void modify(Modifiable modifiable, IngoingMessage response, Service service) {
+        modifiable.modify(this, response, service);
     }
 
     /**

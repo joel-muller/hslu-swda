@@ -3,6 +3,7 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.State;
+import ch.hslu.swda.messages.IngoingMessage;
 import ch.hslu.swda.messages.OrderReady;
 import ch.hslu.swda.messages.OrderUpdate;
 import ch.hslu.swda.micro.Service;
@@ -14,22 +15,17 @@ import java.util.List;
 
 public class UpdateOrder implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(UpdateOrder.class);
-    private final OrderUpdate update;
-    private final Service service;
-
-    public UpdateOrder(OrderUpdate update, Service service) {
-        this.update = update;
-        this.service = service;
-    }
 
     @Override
-    public void modify(Order order) {
+    public void modify(Order order, IngoingMessage responseRaw, Service service) {
+        OrderUpdate update = (OrderUpdate) responseRaw;
+        LOG.info("Order update did go in to the order service {}", update.toString());
         try {
             if (!update.valid()) {
                 order.getState().setCancelled(true);
                 return;
             }
-            List<Integer> readyOrders = this.update.articles();
+            List<Integer> readyOrders = update.articles();
             for (int article : readyOrders) {
                 order.setArticleInStore(article);
             }

@@ -16,8 +16,12 @@
 package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
+import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.DatabaseConnector;
+import ch.hslu.swda.business.ModifyValidity;
+import ch.hslu.swda.business.UpdateCustomer;
+import ch.hslu.swda.business.UpdateOrder;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messages.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.channels.Channel;
 import java.util.concurrent.TimeoutException;
 
 
@@ -56,10 +61,10 @@ public final class OrderService implements AutoCloseable, Service {
         // setup database
         this.database = new DatabaseConnector();
 
-        // start message receivers
-        this.receiveOrderValidity();
-        this.receiveOrder();
-        this.receiveOrderUpdate();
+        this.generalReceiver(Routes.RECEIVE_ORDER_VALIDITY, new Receiver<>(this.database, new ModifyValidity(), VerifyResponse.class, this));
+        this.generalReceiver(Routes.RECEIVE_ORDER, new OrderReceiver(this.database, exchangeName, bus, this));
+        this.generalReceiver(Routes.ORDER_UPDATE, new Receiver<>(this.database, new UpdateOrder(), OrderUpdate.class, this));
+        this.generalReceiver(Routes.CUSTOMER_RECEIVE_VALIDITY, new Receiver<>(this.database, new UpdateCustomer(), CustomerResponse.class, this));
     }
 
     @Override
@@ -94,22 +99,11 @@ public final class OrderService implements AutoCloseable, Service {
         bus.talkAsync(exchangeName, route, data);
     }
 
-    private void receiveOrderValidity() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER_VALIDITY, Routes.RECEIVE_ORDER_VALIDITY, new ValidityReceiver(this.database, this));
+
+    private void generalReceiver(String channel, MessageReceiver receiver) throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", channel);
+        bus.listenFor(exchangeName, "OrderService <- " + channel, channel, receiver);
     }
-
-
-    private void receiveOrder() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.RECEIVE_ORDER);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.RECEIVE_ORDER, Routes.RECEIVE_ORDER, new OrderReceiver(this.database, exchangeName, bus, this));
-    }
-
-    private void receiveOrderUpdate() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.ORDER_UPDATE);
-        bus.listenFor(exchangeName, "OrderService <- " + Routes.ORDER_UPDATE, Routes.ORDER_UPDATE, new OrderUpdateReceiver(this.database, this));
-    }
-
 
 
     /**

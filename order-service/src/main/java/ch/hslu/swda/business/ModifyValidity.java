@@ -1,6 +1,7 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.Order;
+import ch.hslu.swda.messages.IngoingMessage;
 import ch.hslu.swda.messages.LogMessage;
 import ch.hslu.swda.messages.VerifyResponse;
 import ch.hslu.swda.micro.OrderService;
@@ -12,24 +13,21 @@ import java.io.IOException;
 
 public class ModifyValidity implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(ModifyValidity.class);
-    private final VerifyResponse response;
-    private final Service service;
 
-    public ModifyValidity(VerifyResponse response, Service service) {
-        this.response = response;
-        this.service = service;
-    }
     @Override
-    public void modify(Order order) {
+    public void modify(Order order, IngoingMessage responseRaw, Service service) {
         try {
+            VerifyResponse response = (VerifyResponse) responseRaw;
             if (response.valid()) {
                 order.getState().setValid(true);
                 service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.validate", "Order Validated, order id: " + order.getId().toString()));
                 service.requestArticlesFromStore(order.getStoreRequest());
                 service.checkCustomerValidity(order.getCustomerRequest());
+                LOG.info("Received Validity check oder with the id {} is Valid", order.getId());
             } else {
                 order.getState().setCancelled(true);
                 service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.validate", "Order not validated, order id: " + order.getId().toString()));
+                LOG.info("Received Validity check oder with the id {} is not Valid", order.getId());
             }
         } catch (IOException e) {
             LOG.error("An error occurred while trying to call further actions after validity was arrived: {}", e.toString());
