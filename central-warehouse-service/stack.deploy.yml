@@ -39,8 +39,6 @@ services:
       - central_warehouse
     environment:
       MYSQL_ROOT_PASSWORD: root
-    deploy:
-      replicas: 1
     volumes:
-      - /var/lib/mysql
+      #- /var/lib/mysql
       - ./config/mysql/central_warehouse.sql:/docker-entrypoint-initdb.d/central_warehouse.sql
