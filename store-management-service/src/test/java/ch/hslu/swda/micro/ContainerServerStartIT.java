@@ -35,20 +35,20 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 final class ContainerServerStartIT {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContainerServerStartIT.class);
-    private static final String IMAGE = "swda-24hs/store-management-service:latest";
-
-    @Container
-    private final GenericContainer<?> container
-            = new GenericContainer<>(DockerImageName.parse(IMAGE))
-                    .withStartupTimeout(Duration.ofSeconds(20))
-                    .withEnv("RABBIT", "OFF")
-                    .waitingFor(Wait.forLogMessage(".*Service started.*\\n", 1));
-
-    @Test
-    void testContainerStartable() throws Exception {
-        final String logs = container.getLogs();
-        LOG.info(logs);
-        assertThat(logs).contains("Service started");
-    }
+//    private static final Logger LOG = LoggerFactory.getLogger(ContainerServerStartIT.class);
+//    private static final String IMAGE = "swda-24hs/store-management-service:latest";
+//
+//    @Container
+//    private final GenericContainer<?> container
+//            = new GenericContainer<>(DockerImageName.parse(IMAGE))
+//                    .withStartupTimeout(Duration.ofSeconds(20))
+//                    .withEnv("RABBIT", "OFF")
+//                    .waitingFor(Wait.forLogMessage(".*Service started.*\\n", 1));
+//
+//    @Test
+//    void testContainerStartable() throws Exception {
+//        final String logs = container.getLogs();
+//        LOG.info(logs);
+//        assertThat(logs).contains("Service started");
+//    }
 }

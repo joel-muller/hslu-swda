@@ -1,84 +1,43 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.business.Modifiable;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.micro.Service;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity("store")
 public class Store {
-    @Id
-    private UUID id;
+    final private UUID id;
     private List<StoreArticle> articleList;
-    private List<UUID> openOrders;
+    private List<Order> openOrders;
 
-    public Store(UUID id, List<StoreArticle> articleList, List<UUID> openOrders) {
+    public Store(final UUID id, List<StoreArticle> articleList, List<Order> openOrders) {
         this.id = id;
         this.articleList = articleList;
         this.openOrders = openOrders;
-    }
-
-    /**
-     * Default constructor for the Store class - required for Morphia to work properly..
-     * Initializes the store with a unique identifier and sets the article list to null.
-     */
-    public Store() {
-        this.id = UUID.randomUUID();
-        this.articleList = null;
-        this.openOrders = null;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public List<StoreArticle> getArticleList() {
         return articleList;
     }
 
-    public void setArticleList(List<StoreArticle> articleList) {
-        this.articleList = articleList;
-    }
-
-    public List<UUID> getOpenOrders() {
+    public List<Order> getOpenOrders() {
         return openOrders;
     }
 
-    public void setOpenOrders(List<UUID> openOrders) {
-        this.openOrders = openOrders;
-    }
-
-    public void addOrder(UUID orderId) {
-        if (openOrders == null) {
-            openOrders = new ArrayList<>();
-        }
-        openOrders.add(orderId);
+    public void addOrder(Order order) {
+        openOrders.add(order);
     }
 
     public void removeOrder(UUID orderId) {
-        if (openOrders == null) {
-            openOrders = new ArrayList<>();
-            return;
-        }
-        openOrders.remove(orderId);
+        openOrders.removeIf(order -> Objects.equals(order.getId(), orderId));
     }
 
     public StoreArticle getArticle(int id) {
-        if (articleList == null) {
-            return null;
-        }
-        for (StoreArticle article : this.articleList) {
+        for (StoreArticle article : articleList) {
             if (article.getId() == id) {
                 return article;
             }
@@ -94,19 +53,32 @@ public class Store {
         return new Store(id, articles, new ArrayList<>());
     }
 
-    public void modify(Modifiable modifiable, IngoingMessage response, Service service, DatabaseConnector dataBase) {
-        modifiable.modify(this, response, service, dataBase);
+    public void modify(Modifiable modifiable, IngoingMessage response, Service service) {
+        modifiable.modify(this, response, service);
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Store store)) return false;
-        return Objects.equals(id, store.id) && Objects.equals(articleList, store.articleList);
+        return Objects.equals(id, store.id) && Objects.equals(articleList, store.articleList) && Objects.equals(openOrders, store.openOrders);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, articleList);
+        return Objects.hash(id, articleList, openOrders);
+    }
+
+    @Override
+    public String toString() {
+        return "Store{" +
+                "id=" + id +
+                ", articleList=" + articleList +
+                ", openOrders=" + openOrders +
+                '}';
     }
 }

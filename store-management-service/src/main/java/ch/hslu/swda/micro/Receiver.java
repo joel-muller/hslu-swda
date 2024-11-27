@@ -1,7 +1,7 @@
 package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.business.DatabaseConnector;
+import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.business.Modifiable;
 import ch.hslu.swda.entities.Store;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
@@ -31,9 +31,9 @@ public class Receiver<T extends IngoingMessage> implements MessageReceiver {
         try {
             ObjectMapper mapper = new ObjectMapper();
             T response = mapper.readValue(message, messageGenericClass);
-            Store store = database.getStoreById(response.getStoreId());
-            store.modify(modifiable, response, service, database);
-            database.saveStoreObject(store);
+            Store store = database.getStore(response.getStoreId());
+            store.modify(modifiable, response, service);
+            database.storeStore(store);
         } catch (IOException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());
         }

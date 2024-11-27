@@ -1,7 +1,7 @@
 package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.business.DatabaseConnector;
+import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.entities.Store;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class StoreCreationReciever implements MessageReceiver {
             ObjectMapper mapper = new ObjectMapper();
             LOG.info(message);
             Store store = mapper.readValue(message, Store.class);
-            database.saveStoreObject(store);
+            database.storeStore(store);
             LOG.info("Store with the id {} created and saved in the database", store.getId());
 
         } catch (IOException e) {

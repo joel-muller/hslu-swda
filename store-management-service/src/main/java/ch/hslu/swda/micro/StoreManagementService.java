@@ -18,7 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
-import ch.hslu.swda.business.DatabaseConnector;
+import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.business.ProcessOrderReady;
 import ch.hslu.swda.business.HandleNewOrder;
 import ch.hslu.swda.messagesIngoing.OrderReady;

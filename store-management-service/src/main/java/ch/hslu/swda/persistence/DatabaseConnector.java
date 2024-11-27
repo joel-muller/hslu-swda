@@ -1,7 +1,8 @@
-package ch.hslu.swda.business;
+package ch.hslu.swda.persistence;
 
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.Store;
+import ch.hslu.swda.entities.StoreArticle;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClients;
@@ -40,41 +41,32 @@ public class DatabaseConnector {
         datastore.ensureIndexes();
     }
 
-    public void storeOrder(Order order) {
-        datastore.save(order);
-//        LOG.info("Order stored: " + order);
-    }
-
-    public Order getOrderById(UUID id) {
-        Order order = datastore.find(Order.class)
-                .filter(eq("_id", id))
-                .first();
-        return order;
-    }
-
-    public void saveStoreObject(Store store) {
-        datastore.save(store);
-    }
-
-    public Store getStoreById(UUID id) {
-        Store store = datastore.find(Store.class)
-                .filter(eq("_id", id))
-                .first();
-        if (store == null) {
-            store = Store.createExampleStore(id);
+    public void storeStore(Store store) {
+        StoreWrapper wrapper = new StoreWrapper(store);
+        List<DBOrder> dbOrders = wrapper.getDbOrders();
+        DBStore dbstore = wrapper.getDbStore();
+        datastore.save(dbstore);
+        for (DBOrder order : dbOrders) {
+            datastore.save(order);
         }
-        return store;
     }
 
-    public List<Order> getOrdersForStore(Store store) {
-        List<Order> orders = new ArrayList<>();
-        List<UUID> orderIds = store.getOpenOrders();
-        for (UUID id : orderIds) {
-            Order order = datastore.find(Order.class)
-                    .filter(eq("_id", id))
-                    .first();
-            orders.add(order);
+    public Store getStore(UUID storeId) {
+        DBStore dbStore = datastore.find(DBStore.class)
+                .filter(eq("_id", storeId))
+                .first();
+        List<DBOrder> dbOrders = new ArrayList<>();
+        if (dbStore.getOpenOrders() != null) {
+            List<UUID> orderIds = dbStore.getOpenOrders();
+            for (UUID id : orderIds) {
+                DBOrder order = datastore.find(DBOrder.class)
+                        .filter(eq("_id", id))
+                        .first();
+                dbOrders.add(order);
+            }
         }
-        return orders;
+        StoreWrapper wrapper = new StoreWrapper(dbOrders, dbStore);
+        return wrapper.getStore();
     }
+
 }
