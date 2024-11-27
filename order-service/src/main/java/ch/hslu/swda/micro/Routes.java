@@ -31,6 +31,7 @@ public final class Routes {
     static final String LOG = "logs.new";
     static final String REQUEST_ARTICLES = "store.request-articles";
     static final String CHECK_CUSTOMER = "customer.validate";
+    static final String ORDER_READY = "store.order-ready";
 
     /**
      * No instance allowed.

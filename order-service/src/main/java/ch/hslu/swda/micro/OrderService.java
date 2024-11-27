@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.DatabaseConnector;
+import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messages.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -79,6 +80,11 @@ public final class OrderService implements AutoCloseable, Service {
     @Override
     public void checkCustomerValidity(CustomerRequest request) throws IOException {
         sendMessageAsynchronous(request, Routes.CHECK_CUSTOMER);
+    }
+
+    @Override
+    public void sendOrderReadyToStore(OrderReady ready) throws IOException {
+        sendMessageAsynchronous(ready, Routes.ORDER_READY);
     }
 
     public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {

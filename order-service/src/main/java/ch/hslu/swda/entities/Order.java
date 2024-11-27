@@ -116,6 +116,24 @@ public final class Order {
         this.employeeId = employeeId;
     }
 
+    public void setArticleInStore(int articleId) {
+        for (Article article : articles) {
+            if (article.getId() == articleId) {
+                article.setDelivered(true);
+                return;
+            }
+        }
+    }
+
+    public boolean allArticlesDelivered() {
+        for (Article article : articles) {
+            if (!article.isDelivered()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected Map<Integer, Integer> createMapOfArticles() {
         Map<Integer, Integer> articles = new HashMap<Integer, Integer>();
         for (Article art : this.articles) {

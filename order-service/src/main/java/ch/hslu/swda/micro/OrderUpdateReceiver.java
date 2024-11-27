@@ -3,6 +3,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.business.ModifyValidity;
+import ch.hslu.swda.business.UpdateOrder;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messages.OrderUpdate;
 import ch.hslu.swda.messages.VerifyResponse;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class OrderUpdateReceiver implements MessageReceiver {
-    private static final Logger LOG = LoggerFactory.getLogger(ValidityReceiver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrderUpdateReceiver.class);
     private final DatabaseConnector database;
     private final OrderService service;
 
@@ -27,8 +28,9 @@ public class OrderUpdateReceiver implements MessageReceiver {
         try {
             ObjectMapper mapper = new ObjectMapper();
             OrderUpdate response = mapper.readValue(message, OrderUpdate.class);
-            //Order order = database.getById(response.id());
-            //database.storeOrder(order);
+            Order order = database.getById(response.id());
+            order.modify(new UpdateOrder(response, this.service));
+            database.storeOrder(order);
             LOG.info("Received order Update check and order was updated: [{}]", response.toString());
         } catch (IOException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());

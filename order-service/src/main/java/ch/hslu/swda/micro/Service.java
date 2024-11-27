@@ -1,15 +1,14 @@
 package ch.hslu.swda.micro;
 
-import ch.hslu.swda.messages.CustomerRequest;
-import ch.hslu.swda.messages.LogMessage;
-import ch.hslu.swda.messages.StoreRequest;
-import ch.hslu.swda.messages.VerifyRequest;
+import ch.hslu.swda.messages.*;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public interface Service {
     void checkValidity(VerifyRequest request) throws IOException;
     void log(LogMessage message) throws IOException;
     void requestArticlesFromStore(StoreRequest request) throws IOException;
     void checkCustomerValidity(CustomerRequest request) throws IOException;
+    void sendOrderReadyToStore(OrderReady ready) throws IOException;
 }

@@ -1,9 +1,6 @@
 package ch.hslu.swda.business;
 
-import ch.hslu.swda.messages.CustomerRequest;
-import ch.hslu.swda.messages.LogMessage;
-import ch.hslu.swda.messages.StoreRequest;
-import ch.hslu.swda.messages.VerifyRequest;
+import ch.hslu.swda.messages.*;
 import ch.hslu.swda.micro.Service;
 
 import java.io.IOException;
@@ -13,6 +10,7 @@ public class ServiceMock implements Service {
     VerifyRequest verifyRequest;
     StoreRequest storeRequest;
     CustomerRequest customerRequest;
+    OrderReady orderReady;
 
     @Override
     public void checkValidity(VerifyRequest request) throws IOException {
@@ -33,5 +31,10 @@ public class ServiceMock implements Service {
     @Override
     public void checkCustomerValidity(CustomerRequest request) throws IOException {
         this.customerRequest = request;
+    }
+
+    @Override
+    public void sendOrderReadyToStore(OrderReady ready) throws IOException {
+        this.orderReady = ready;
     }
 }
