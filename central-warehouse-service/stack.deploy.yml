@@ -14,7 +14,7 @@ services:
     image: $CICD_IMAGE_ID
     environment:
       - RMQ_HOST=bus
-      - DATABASEHOST=centralWarehouseDB
+      - DATABASEHOST=central_warehouse_db
       - DATABASEPORT=3306
       - DATABASENAME=central_warehouse
       - DATABASEUSER=swda
@@ -32,7 +32,7 @@ services:
       #   - 'traefik.http.routers.${CICD_STACK_NAME}App.entrypoints=websecure'
       #   - 'traefik.http.routers.${CICD_STACK_NAME}App.tls.certresolver=letsencrypt'
 
-  centralWarehouseDB:
+  central_warehouse_db:
     image: mysql:latest
     restart: always
     networks:
