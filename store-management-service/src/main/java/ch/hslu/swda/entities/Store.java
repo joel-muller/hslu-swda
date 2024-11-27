@@ -1,6 +1,9 @@
 package ch.hslu.swda.entities;
 
+import ch.hslu.swda.business.DatabaseConnector;
 import ch.hslu.swda.business.Modifiable;
+import ch.hslu.swda.messagesIngoing.IngoingMessage;
+import ch.hslu.swda.micro.Service;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
@@ -14,9 +17,9 @@ public class Store {
     @Id
     private UUID id;
     private List<StoreArticle> articleList;
-    private List<UUID> openOrders;
+    private List<OrderIDStore> openOrders;
 
-    public Store(UUID id, List<StoreArticle> articleList, List<UUID> openOrders) {
+    public Store(UUID id, List<StoreArticle> articleList, List<OrderIDStore> openOrders) {
         this.id = id;
         this.articleList = articleList;
         this.openOrders = openOrders;
@@ -29,6 +32,7 @@ public class Store {
     public Store() {
         this.id = UUID.randomUUID();
         this.articleList = null;
+        this.openOrders = null;
     }
 
     public void setId(UUID id) {
@@ -47,15 +51,32 @@ public class Store {
         this.articleList = articleList;
     }
 
-    public List<UUID> getOpenOrders() {
+    public List<OrderIDStore> getOpenOrders() {
         return openOrders;
     }
 
-    public void setOpenOrders(List<UUID> openOrders) {
+    public void setOpenOrders(List<OrderIDStore> openOrders) {
         this.openOrders = openOrders;
     }
 
+    public void addOrder(UUID orderId) {
+        if (openOrders == null) {
+            openOrders = new ArrayList<>();
+        }
+        openOrders.add(new OrderIDStore(orderId));
+    }
+
+    public void removeOrder(UUID orderId) {
+        if (openOrders == null) {
+            openOrders = new ArrayList<>();
+        }
+        openOrders.remove(new OrderIDStore(orderId));
+    }
+
     public StoreArticle getArticle(int id) {
+        if (articleList == null) {
+            return null;
+        }
         for (StoreArticle article : this.articleList) {
             if (article.getId() == id) {
                 return article;
@@ -69,11 +90,11 @@ public class Store {
         articles.add(new StoreArticle(14, 200, 5, 5));
         articles.add(new StoreArticle(12, 200, 3, 3));
         articles.add(new StoreArticle(18, 200, 2, 3));
-        return new Store(id, articles, new ArrayList<UUID>());
+        return new Store(id, articles, new ArrayList<OrderIDStore>());
     }
 
-    public void modify(Modifiable modifiable) {
-        modifiable.modify(this);
+    public void modify(Modifiable modifiable, IngoingMessage response, Service service, DatabaseConnector dataBase) {
+        modifiable.modify(this, response, service, dataBase);
     }
 
     @Override

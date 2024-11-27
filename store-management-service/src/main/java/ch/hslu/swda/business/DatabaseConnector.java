@@ -1,6 +1,7 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.Order;
+import ch.hslu.swda.entities.OrderIDStore;
 import ch.hslu.swda.entities.Store;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -54,22 +55,24 @@ public class DatabaseConnector {
 
     public void saveStoreObject(Store store) {
         datastore.save(store);
-        LOG.info("Store object stored in the database: " + store);
     }
 
     public Store getStoreById(UUID id) {
         Store store = datastore.find(Store.class)
                 .filter(eq("_id", id))
                 .first();
+        if (store == null) {
+            store = Store.createExampleStore(id);
+        }
         return store;
     }
 
     public List<Order> getOrdersForStore(Store store) {
         List<Order> orders = new ArrayList<>();
-        List<UUID> orderIds = store.getOpenOrders();
-        for (UUID id : orderIds) {
+        List<OrderIDStore> orderIds = store.getOpenOrders();
+        for (OrderIDStore id : orderIds) {
             Order order = datastore.find(Order.class)
-                    .filter(eq("_id", id))
+                    .filter(eq("_id", id.getId()))
                     .first();
             orders.add(order);
         }

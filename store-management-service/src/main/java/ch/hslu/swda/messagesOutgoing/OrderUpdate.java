@@ -1,7 +1,6 @@
-package ch.hslu.swda.messages;
+package ch.hslu.swda.messagesOutgoing;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public record OrderUpdate(UUID id, List<Integer> articles, boolean valid) implements OutgoingMessage {}

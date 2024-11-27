@@ -17,5 +17,5 @@
 /**
  * Domain Entities.
  */
-package ch.hslu.swda.messages;
+package ch.hslu.swda.messagesIngoing;
 

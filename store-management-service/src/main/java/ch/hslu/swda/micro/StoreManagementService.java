@@ -16,16 +16,20 @@
 package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
+import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.DatabaseConnector;
-import ch.hslu.swda.messages.LogMessage;
-import ch.hslu.swda.messages.OrderUpdate;
-import ch.hslu.swda.messages.OutgoingMessage;
+import ch.hslu.swda.business.ProcessOrderReady;
+import ch.hslu.swda.business.HandleNewOrder;
+import ch.hslu.swda.messagesIngoing.OrderReady;
+import ch.hslu.swda.messagesIngoing.OrderRequest;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
+import ch.hslu.swda.messagesOutgoing.OrderUpdate;
+import ch.hslu.swda.messagesOutgoing.OutgoingMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -55,8 +59,9 @@ public final class StoreManagementService implements AutoCloseable, Service {
 
         this.database = new DatabaseConnector();
 
-        this.receiveOrder();
-        this.receiveStoreCreationRequest();
+        this.generalReceiver(Routes.ORDER_READY, new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
+        this.generalReceiver(Routes.REQUEST_ARTICLES, new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
+        this.generalReceiver(Routes.STORE_CREATION, new StoreCreationReciever(this.database, this));
     }
 
     @Override
@@ -78,12 +83,6 @@ public final class StoreManagementService implements AutoCloseable, Service {
         bus.talkAsync(exchangeName, route, data);
     }
 
-    private void receiveOrder() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.REQUEST_ARTICLES);
-        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.REQUEST_ARTICLES, Routes.REQUEST_ARTICLES,
-                new OrderReceiver(this.database, this));
-    }
-
     /**
      * @see java.lang.AutoCloseable#close()
      */
@@ -92,15 +91,8 @@ public final class StoreManagementService implements AutoCloseable, Service {
         bus.close();
     }
 
-    private void receiveStoreCreationRequest() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.STORE_CREATION);
-        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_CREATION, Routes.STORE_CREATION,
-                new StoreCreationReciever(this.database, this));
-    }
-
-    private void receiveOrderReady() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.ORDER_READY);
-        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.ORDER_READY, Routes.ORDER_READY,
-                new OrderReadyReceiver(this.database, this));
+    private void generalReceiver(String channel, MessageReceiver receiver) throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", channel);
+        bus.listenFor(exchangeName, "OrderService <- " + channel, channel, receiver);
     }
 }

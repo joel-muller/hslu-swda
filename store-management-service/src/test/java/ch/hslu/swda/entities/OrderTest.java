@@ -2,7 +2,7 @@ package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import ch.hslu.swda.messages.OrderRequest;
+import ch.hslu.swda.messagesIngoing.OrderRequest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
