@@ -17,9 +17,9 @@ public class Store {
     @Id
     private UUID id;
     private List<StoreArticle> articleList;
-    private List<OrderIDStore> openOrders;
+    private List<UUID> openOrders;
 
-    public Store(UUID id, List<StoreArticle> articleList, List<OrderIDStore> openOrders) {
+    public Store(UUID id, List<StoreArticle> articleList, List<UUID> openOrders) {
         this.id = id;
         this.articleList = articleList;
         this.openOrders = openOrders;
@@ -51,11 +51,11 @@ public class Store {
         this.articleList = articleList;
     }
 
-    public List<OrderIDStore> getOpenOrders() {
+    public List<UUID> getOpenOrders() {
         return openOrders;
     }
 
-    public void setOpenOrders(List<OrderIDStore> openOrders) {
+    public void setOpenOrders(List<UUID> openOrders) {
         this.openOrders = openOrders;
     }
 
@@ -63,14 +63,15 @@ public class Store {
         if (openOrders == null) {
             openOrders = new ArrayList<>();
         }
-        openOrders.add(new OrderIDStore(orderId));
+        openOrders.add(orderId);
     }
 
     public void removeOrder(UUID orderId) {
         if (openOrders == null) {
             openOrders = new ArrayList<>();
+            return;
         }
-        openOrders.remove(new OrderIDStore(orderId));
+        openOrders.remove(orderId);
     }
 
     public StoreArticle getArticle(int id) {
@@ -90,7 +91,7 @@ public class Store {
         articles.add(new StoreArticle(14, 200, 5, 5));
         articles.add(new StoreArticle(12, 200, 3, 3));
         articles.add(new StoreArticle(18, 200, 2, 3));
-        return new Store(id, articles, new ArrayList<OrderIDStore>());
+        return new Store(id, articles, new ArrayList<>());
     }
 
     public void modify(Modifiable modifiable, IngoingMessage response, Service service, DatabaseConnector dataBase) {
