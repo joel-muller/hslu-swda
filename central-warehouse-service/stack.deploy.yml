@@ -33,7 +33,7 @@ services:
       #   - 'traefik.http.routers.${CICD_STACK_NAME}App.tls.certresolver=letsencrypt'
 
   central_warehouse_db:
-    image: central_warehouse_custom_mysql:latest
+    image: central_warehouse_custom_mysql:1.0
     restart: always
     networks:
       - central_warehouse

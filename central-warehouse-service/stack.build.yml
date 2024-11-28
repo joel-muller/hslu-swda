@@ -11,6 +11,6 @@ services:
         CI_GIT_DATE: $CICD_GIT_DATE
 
   central_warehouse_db:
-    image: central_warehouse_custom_mysql:latest
+    image: central_warehouse_custom_mysql:1.0
     build:
       context: ./config/mysql/
