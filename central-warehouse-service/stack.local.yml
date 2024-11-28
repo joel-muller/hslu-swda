@@ -7,7 +7,8 @@ networks:
 
 services:
   db1:
-    image: mysql:latest
+    build:
+      context: ./config/mysql/
     restart: always
     networks:
       - central_warehouse
@@ -15,7 +16,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - /var/lib/mysql
-      - ./config/mysql/central_warehouse.sql:/docker-entrypoint-initdb.d/central_warehouse.sql
 
   central_warehouse:
     image: swda-24hs/central-warehouse-service:latest
