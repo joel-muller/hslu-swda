@@ -2,7 +2,6 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
-import ch.hslu.swda.model.Order;
 import ch.hslu.swda.model.StoreInventoryUpdate;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -22,8 +21,8 @@ import java.util.concurrent.TimeoutException;
 @Tag(name = "InvUpdate")
 
 @Controller("/api/v1/invUpdate")
-public class InventoryUpdate {
-    private static final Logger LOG = LoggerFactory.getLogger(InventoryUpdate.class);
+public class InventoryUpdateController {
+    private static final Logger LOG = LoggerFactory.getLogger(InventoryUpdateController.class);
     private String exchangeName = new RabbitMqConfig().getExchange();
     private BusConnector bus = new BusConnector();
     @Inject
