@@ -19,13 +19,15 @@ import java.util.*;
 
 
 public class MysqlDatabasePersistor implements CentralWarehouseOrderPersistor{
-private final Connection connection;
-private static final Logger LOG = LoggerFactory.getLogger(MysqlDatabasePersistor.class);
+    private final DatabaseConnector databaseConnector;
+    private Connection connection;
+    private static final Logger LOG = LoggerFactory.getLogger(MysqlDatabasePersistor.class);
 
-private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrderJSONMapper();
+    private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrderJSONMapper();
 
-    public MysqlDatabasePersistor(Connection connection){
-    this.connection = connection;
+    public MysqlDatabasePersistor(DatabaseConnector databaseConnector){
+    this.databaseConnector = databaseConnector;
+    this.connection = databaseConnector.getConnection();
 
     }
     @Override
@@ -41,10 +43,14 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
 
         }catch (SQLException e){
             LOG.error("Could not save order: "+ order.getId());
-            throw new IOException(e.getMessage());
+            reconnect();
         }
 
         LOG.info("saved order: "+ order.getId());
+    }
+
+    private void reconnect(){
+        connection = databaseConnector.getConnection();
     }
 
     private void insertUpdateArticle(UUID warehouseOrder, OrderArticle article) throws SQLException {
@@ -127,6 +133,8 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
             }
 
         }catch(SQLException e){
+            LOG.error(e.getMessage());
+            reconnect();
             throw new IOException(e.getMessage());
         }
 
@@ -165,6 +173,8 @@ private final CentralWarehouseOrderJSONMapper mapper = new CentralWarehouseOrder
             return list;
 
         }catch(SQLException e){
+            LOG.error(e.getMessage());
+            reconnect();
             throw new IOException(e.getMessage());
         }
     }

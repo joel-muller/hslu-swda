@@ -22,10 +22,13 @@ public class OrderManager  implements CentralWarehouseOrderManager{
 
     private final LogSender logSender;
 
-    public OrderManager(Stock stock, CentralWarehouseOrderPersistor persistor, LogSender logSender) {
+    private final MessageSender messageSender;
+
+    public OrderManager(Stock stock, CentralWarehouseOrderPersistor persistor, MessageSender messageSender) {
         this.stock = stock;
         this.persistor = persistor;
-        this.logSender = logSender;
+        this.messageSender = messageSender;
+        this.logSender = new LogMessageSender(messageSender, Routes.LOG);
 
         //schedule an order update at least each day
         final Timer timer = new Timer();
@@ -98,7 +101,9 @@ public class OrderManager  implements CentralWarehouseOrderManager{
 
 
                     if (currOrder.isComplete()) {
+
                         LOG.info("Order {} has been completed", currOrder.getCustomerOrderId());
+                        messageSender.send(String.format("{\"orderId:\":\"%s\",\"storeId:\":\"%s\"}",currOrder.getCustomerOrderId().toString(),currOrder.getStoreId().toString()),Routes.ORDERCOMPLETE);
                         logSender.send(new LogMessage(currOrder.getCustomerOrderId(), null, "warehouseOrder.completed", "Order completed"));
                     }
                 }
@@ -106,7 +111,7 @@ public class OrderManager  implements CentralWarehouseOrderManager{
 
             } catch (IOException e) {
                 LOG.error("Could not log Message: [{}]", e.getMessage());
-                
+
             }
 
         }

@@ -26,6 +26,7 @@ public final class Routes {
      */
 
     static final String LOG = "logs.new";
+    static final String ORDERCOMPLETE = "central-warehouse.complete";
     private Routes() {
     }
 }

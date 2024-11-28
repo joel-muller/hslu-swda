@@ -41,21 +41,7 @@ public class MysqlDatabasePersistorTest {
     void init(){
         container.start();
         LOG.info("exposed Port: "+container.getMappedPort(3306).toString());
-        String jdbcUrl = "jdbc:mysql://"+container.getHost()+":"+ container.getMappedPort(3306) +"/central_warehouse?serverTimezone=UTC";
-        LOG.info("jdbcURL: "+jdbcUrl);
-        Connection sqlConnection;
-        try{
-
-            LOG.debug("Try establishing database connection. url:"+ jdbcUrl+" user: swda");
-            sqlConnection = DriverManager.getConnection(jdbcUrl,"swda","swda");
-            LOG.info("Connected to Database");
-        }
-        catch (SQLException e){
-            LOG.info("Could not connect to Database");
-            throw new RuntimeException(e);
-
-        }
-
+        DatabaseConnector databaseConnector = new DatabaseConnector(container.getHost(),container.getMappedPort(3306).toString(),"central_warehouse","swda","swda");
         ArrayList<OrderArticle> articleList = new ArrayList<OrderArticle>();
         articleList.add(new OrderArticle(1002001,50,0,null));
         this.order = new CentralWarehouseOrder(
@@ -65,7 +51,7 @@ public class MysqlDatabasePersistorTest {
                 false,
                 articleList);
 
-        persistor = new MysqlDatabasePersistor(sqlConnection);
+        persistor = new MysqlDatabasePersistor(databaseConnector);
     }
 
     @Test

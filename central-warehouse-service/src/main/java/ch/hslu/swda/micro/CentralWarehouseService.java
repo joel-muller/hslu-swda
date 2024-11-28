@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 
+import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.persistence.MysqlDatabasePersistor;
 import ch.hslu.swda.stock.api.Stock;
 import ch.hslu.swda.stock.api.StockFactory;
@@ -45,12 +46,13 @@ public final class CentralWarehouseService implements AutoCloseable {
 
     private final CentralWarehouseOrderManager orderManager;
 
+    private final DatabaseConnector databaseConnector;
+
 
     /**
-     * @throws IOException      IO-Fehler.
      * @throws TimeoutException Timeout.
      */
-    CentralWarehouseService() throws IOException, TimeoutException {
+    CentralWarehouseService() throws TimeoutException, IOException {
         // thread info
         String threadName = Thread.currentThread().getName();
         LOG.debug("[Thread: {}] Service started", threadName);
@@ -68,49 +70,22 @@ public final class CentralWarehouseService implements AutoCloseable {
 
         final String DATABASENAME = System.getenv("DATABASENAME");
 
-        String jdbcUrl = "jdbc:mysql://"+DATABASEHOST+":"+DATABASEPORT+"/"+DATABASENAME+"?serverTimezone=UTC";
-        Connection sqlConnection;
-
-        int retryCount = 0;
-        int delaySeconds = 5;
-
-        while(true) {
-            try {
-
-                LOG.debug("Try establishing database connection. url:" + jdbcUrl + " user: " + DATABASEUSER);
-                sqlConnection = DriverManager.getConnection(jdbcUrl, DATABASEUSER, DATABASEPASSWORD);
-                LOG.info("Connected to Database");
-                break;
-            } catch (SQLException e) {
-                retryCount++;
-                LOG.error("Attempt {} - Could not connect to Database: {}", retryCount, e.getMessage());
-                LOG.info("Retrying in {} seconds...", delaySeconds);
-                    try {
-                        Thread.sleep(Duration.ofSeconds(delaySeconds).toMillis());
-                    } catch (InterruptedException ie) {
-                        LOG.error("Retry sleep interrupted: {}", ie.getMessage());
-                        Thread.currentThread().interrupt();
-                        throw new RuntimeException("Failed to establish a database connection after " + retryCount + " attempts.");
-
-                    }
-            }
-        }
+        databaseConnector = new DatabaseConnector(DATABASEHOST,DATABASEPORT,DATABASENAME,DATABASEUSER,DATABASEPASSWORD);
 
         // setup rabbitmq connection
         exchangeName = new RabbitMqConfig().getExchange();
+
         bus = new BusConnector();
         bus.connect();
 
-
         stock = StockFactory.getStock();
-        persistor = new MysqlDatabasePersistor(sqlConnection);
-        orderManager = new OrderManager(this.stock,this.persistor, new LogMessageSender(bus,exchangeName,Routes.LOG));
 
+        persistor = new MysqlDatabasePersistor(databaseConnector);
 
-
-        //read saved orders with items date < now()
-
+        orderManager = new OrderManager(this.stock,this.persistor, new GeneralMessageSender(bus,exchangeName));
         //try process orders
+
+
         receiveCentralWarehouseOrders();
 
         LOG.info("started receiving orders asynchronously");

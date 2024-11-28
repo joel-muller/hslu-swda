@@ -11,14 +11,12 @@ import java.io.IOException;
 public class LogMessageSender  implements LogSender{
 
     private final static Logger LOG =  LoggerFactory.getLogger(LogMessageSender.class);
-
-    private final BusConnector bus;
-    private final String exchangeName;
-
     private final String route;
-    public LogMessageSender(BusConnector bus, String exchangeName,String route){
-        this.bus = bus;
-        this.exchangeName = exchangeName;
+
+    private final MessageSender messageSender;
+
+    public LogMessageSender(MessageSender messageSender, String route){
+        this.messageSender = messageSender;
         this.route = route;
     }
     @Override
@@ -26,6 +24,6 @@ public class LogMessageSender  implements LogSender{
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(logMessage);
         LOG.debug("Sending asynchronous message to broker with routing [{}]", route);
-        bus.talkAsync(exchangeName, route, data);
+        messageSender.send(data, route);
     }
 }
