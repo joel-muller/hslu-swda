@@ -32,6 +32,7 @@ public class UserReceiver implements MessageReceiver {
     @Override
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         LOG.debug("Received message with routing [{}]", route);
+        LOG.info("Received message " + message);
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<UserUpsert> typeRef = new TypeReference<UserUpsert>() {};
         try {
@@ -50,7 +51,7 @@ public class UserReceiver implements MessageReceiver {
                     logMessage);
 
             String response = mapper.writeValueAsString(User.removeHashForReturn(user));
-            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(response));
+            bus.reply(exchangeName, replyTo, corrId, response);
             bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(log));
         } catch (IOException e) {
             LOG.error(e.getMessage());
