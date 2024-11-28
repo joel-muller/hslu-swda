@@ -33,7 +33,7 @@ services:
       #   - 'traefik.http.routers.${CICD_STACK_NAME}App.tls.certresolver=letsencrypt'
 
   central_warehouse_db:
-    image: cr.gitlab.switch.ch/hslu/edu/bachelor-computer-science/swda/24hs01/g02/g-02-central-warehouse-db:latest
+    image: mysql:latest
     restart: always
     networks:
       - central_warehouse
@@ -41,3 +41,4 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - /var/lib/mysql
+      - central-warehouse-db-data:/docker-entrypoint-initdb.d/
