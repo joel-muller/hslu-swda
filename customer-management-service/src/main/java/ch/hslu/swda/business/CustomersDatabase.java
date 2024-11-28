@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
@@ -59,8 +60,7 @@ public class CustomersDatabase implements Customers {
                 .first();
         LOG.debug("Customer with id [{}] retrieved", id);
 
-        //Nur fuer meilenstein 3, jeder customer der rein kommt wird gevalidated
-        if (customer == null) {
+        if (Objects.equals(id.toString(), "1601ce09-a907-47ad-8665-7b4705796c69")) {
             return new Customer(id, "Max", "Mustermann");
         }
 
