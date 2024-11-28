@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.business.ProcessOrderReady;
 import ch.hslu.swda.business.HandleNewOrder;
@@ -59,12 +60,14 @@ public final class StoreManagementService implements AutoCloseable, Service {
 
         this.database = new DatabaseConnector();
 
+
         this.generalReceiver(Routes.ORDER_READY,
                 new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
         this.generalReceiver(Routes.REQUEST_ARTICLES,
                 new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
         this.receiveStoreCreationRequests();
         this.receiveStoreGetrequests();
+
 
     }
 
@@ -78,6 +81,14 @@ public final class StoreManagementService implements AutoCloseable, Service {
         LOG.info("Order update for the order {} sent", update.id());
         sendMessageAsynchronous(update, Routes.ORDER_UPDATE);
     }
+
+
+    @Override
+    public void requestArticles(InventoryRequest request) throws IOException {
+        sendMessageAsynchronous(request, Routes.INVENTORY_REQUEST);
+    }
+
+
 
     public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {
         ObjectMapper mapper = new ObjectMapper();

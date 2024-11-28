@@ -37,6 +37,7 @@ public final class Routes {
     static final String LOG = "logs.new";
     static final String ORDER_FROM_CENTRAL_WAREHOUSE = "warehouse.order";
 
+
     /**
      * No instance allowed.
      */

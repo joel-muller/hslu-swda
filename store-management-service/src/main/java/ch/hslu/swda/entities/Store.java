@@ -1,13 +1,8 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.business.Modifiable;
-import ch.hslu.swda.messagesIngoing.IngoingMessage;
-import ch.hslu.swda.micro.Service;
+import ch.hslu.swda.messagesIngoing.OrderRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class Store {
     final private UUID id;
@@ -55,12 +50,41 @@ public class Store {
         List<StoreArticle> articles = new ArrayList<StoreArticle>();
         articles.add(new StoreArticle(14, 200, 5, 5));
         articles.add(new StoreArticle(12, 200, 3, 3));
-        articles.add(new StoreArticle(18, 200, 2, 3));
+        //articles.add(new StoreArticle(18, 200, 2, 3));
         return new Store(id, articles, new ArrayList<>());
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public OrderProcessed newOrder(OrderRequest orderRequest) {
+        Order order = Order.createFromOrderRequest(orderRequest);
+        addOrder(order);
+        Map<Integer, Integer> articleHaveToBeOrdered = new HashMap<>();
+        List<Integer> articleReserved = new ArrayList<>();
+        for (OrderArticle article : order.getArticleOrderedList()) {
+            StoreArticle storeArticle = getArticle(article.getId());
+            if (storeArticle == null) {
+                articleHaveToBeOrdered.put(article.getId(), article.getCount());
+            } else {
+                int refillBack = storeArticle.getWithRefillBack(article.getCount());
+                if (refillBack < 0) {
+                    // not enough count of article here
+                    articleHaveToBeOrdered.put(article.getId(), article.getCount());
+                } else if (refillBack == 0) {
+                    // article is reserved, no refill needed
+                    article.setReady(true);
+                    articleReserved.add(article.getId());
+                } else {
+                    // article is reserved but a refill is needed
+                    article.setReady(true);
+                    articleReserved.add(article.getId());
+                    articleHaveToBeOrdered.put(article.getId(), refillBack);
+                }
+            }
+        }
+        return new OrderProcessed(articleHaveToBeOrdered, articleReserved);
     }
 
     @Override
