@@ -93,6 +93,7 @@ public class OrderManager  implements CentralWarehouseOrderManager{
                 persistor.save(currOrder);
             }catch (IOException e){
                 LOG.error("Saving order failed. "+e.getMessage());
+
             }
             try {
                 if (updatedAnything) {

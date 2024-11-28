@@ -31,23 +31,37 @@ public class MysqlDatabasePersistor implements CentralWarehouseOrderPersistor{
 
     }
     @Override
-    public void save(CentralWarehouseOrder order) throws IOException{
-        try{
-        insertUpdateOrder(order);
+    public void save(CentralWarehouseOrder order) throws IOException {
+        int maxRetries = 3;
+        int attempt = 0;
+        boolean success = false;
 
+        while (attempt < maxRetries && !success) {
+            attempt++;
+            try {
+                insertUpdateOrder(order);
 
-        List<OrderArticle> orderArticles = order.getArticles();
-        for(OrderArticle article :orderArticles){
-            insertUpdateArticle(order.getId(),article);
+                List<OrderArticle> orderArticles = order.getArticles();
+                for (OrderArticle article : orderArticles) {
+                    insertUpdateArticle(order.getId(), article);
+                }
+
+                success = true; // Mark success if no exceptions are thrown
+            } catch (SQLException e) {
+                LOG.error("Attempt " + attempt + " failed to save order: " + order.getId(), e);
+                reconnect();
+
+                if (attempt == maxRetries) {
+                    throw new IOException("Failed to save order after " + maxRetries + " attempts.", e);
+                }
+            }
         }
 
-        }catch (SQLException e){
-            LOG.error("Could not save order: "+ order.getId());
-            reconnect();
+        if (success) {
+            LOG.info("Saved order: " + order.getId());
         }
-
-        LOG.info("saved order: "+ order.getId());
     }
+
 
     private void reconnect(){
         connection = databaseConnector.getConnection();
