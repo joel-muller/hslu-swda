@@ -121,15 +121,25 @@ public class AuthDatabase implements AuthStorage {
 
     @Override
     public boolean updateUser(UUID id, String username, String passwordHash, UserRole role) {
-        boolean updatedUsername = updateUsername(id, username);
-        if (!updatedUsername) {
+        if (id == null) {
             return false;
         }
-        boolean updatedPasswordHash = updatePasswordHash(id, passwordHash);
-        if (!updatedPasswordHash) {
-            return false;
+        if (!username.isEmpty() || username != null) {
+            boolean updatedUsername = updateUsername(id, username);
+            if (!updatedUsername) {
+                return false;
+            }
         }
-        return updateUserRole(id, role);
+        if (!passwordHash.isEmpty() || passwordHash != null) {
+            boolean updatedPasswordHash = updatePasswordHash(id, passwordHash);
+            if (!updatedPasswordHash) {
+                return false;
+            }
+        }
+        if (role != null) {
+            return updateUserRole(id, role);
+        }
+        return true;
     }
 
     @Override
