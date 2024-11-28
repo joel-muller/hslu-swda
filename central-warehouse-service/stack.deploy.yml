@@ -8,7 +8,9 @@ networks:
 
   central_warehouse:
     name: central_warehouse
-
+volumes:
+  central-warehouse-db-data:
+    
 services:
   app:
     image: $CICD_IMAGE_ID
