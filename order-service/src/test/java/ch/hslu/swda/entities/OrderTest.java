@@ -25,7 +25,7 @@ class OrderTest {
         customerId = UUID.randomUUID();
         employeeId = UUID.randomUUID();
         articles = List.of(new Article(1, 5), new Article(2, 10));
-        order = new Order(orderId, articles, storeId, customerId, employeeId);
+        order = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
     }
 
     @Test
@@ -55,48 +55,24 @@ class OrderTest {
         assertNotNull(order.getDate(), "getDate should return a non-null Date object");
     }
 
-    @Test
-    void testSetDate() {
-        Date newDate = new Date();
-        order.setDate(newDate);
-        assertEquals(newDate, order.getDate(), "setDate should update the date");
-    }
 
     @Test
     void testGetStoreId() {
         assertEquals(storeId, order.getStoreId(), "getStoreId should return the correct store UUID");
     }
 
-    @Test
-    void testSetStoreId() {
-        UUID newStoreId = UUID.randomUUID();
-        order.setStoreId(newStoreId);
-        assertEquals(newStoreId, order.getStoreId(), "setStoreId should update the store UUID");
-    }
 
     @Test
     void testGetCustomerId() {
         assertEquals(customerId, order.getCustomerId(), "getCustomerId should return the correct customer UUID");
     }
 
-    @Test
-    void testSetCustomerId() {
-        UUID newCustomerId = UUID.randomUUID();
-        order.setCustomerId(newCustomerId);
-        assertEquals(newCustomerId, order.getCustomerId(), "setCustomerId should update the customer UUID");
-    }
 
     @Test
     void testGetEmployeeId() {
         assertEquals(employeeId, order.getEmployeeId(), "getEmployeeId should return the correct employee UUID");
     }
 
-    @Test
-    void testSetEmployeeId() {
-        UUID newEmployeeId = UUID.randomUUID();
-        order.setEmployeeId(newEmployeeId);
-        assertEquals(newEmployeeId, order.getEmployeeId(), "setEmployeeId should update the employee UUID");
-    }
 
     @Test
     void testCreateMapOfArticles() {
@@ -137,8 +113,8 @@ class OrderTest {
 
     @Test
     void testEquals() {
-        Order sameOrder = new Order(orderId, articles, storeId, customerId, employeeId);
-        Order differentOrder = new Order(UUID.randomUUID(), articles, storeId, customerId, employeeId);
+        Order sameOrder = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+        Order differentOrder = new Order(UUID.randomUUID(), Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
 
         assertEquals(order, sameOrder, "Orders with the same ID should be equal");
         assertNotEquals(order, differentOrder, "Orders with different IDs should not be equal");
@@ -146,10 +122,9 @@ class OrderTest {
 
     @Test
     void testHashCode() {
-        Order sameOrder = new Order(orderId, articles, storeId, customerId, employeeId);
+        Order sameOrder = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+        Order differentOrder = new Order(UUID.randomUUID(), Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         assertEquals(order.hashCode(), sameOrder.hashCode(), "Orders with the same ID should have the same hash code");
-
-        Order differentOrder = new Order(UUID.randomUUID(), articles, storeId, customerId, employeeId);
         assertNotEquals(order.hashCode(), differentOrder.hashCode(), "Orders with different IDs should have different hash codes");
     }
 

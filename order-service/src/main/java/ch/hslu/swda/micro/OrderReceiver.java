@@ -17,7 +17,8 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.business.DatabaseConnector;
+import ch.hslu.swda.entities.State;
+import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
@@ -28,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -72,7 +74,7 @@ public final class OrderReceiver implements MessageReceiver {
             UUID customerId = UUID.fromString(orderNode.get("customerId").asText());
             UUID employeeId = UUID.fromString(orderNode.get("employeeId").asText());
 
-            Order order = new Order(orderId, articles, storeId, customerId, employeeId);
+            Order order = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
 
             this.database.storeOrder(order);
 

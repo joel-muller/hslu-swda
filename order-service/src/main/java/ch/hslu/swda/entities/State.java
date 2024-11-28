@@ -4,7 +4,6 @@ import dev.morphia.annotations.Entity;
 
 import java.util.Objects;
 
-@Entity("state")
 public class State {
     private boolean valid;
     private boolean articlesReady;

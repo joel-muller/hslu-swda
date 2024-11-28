@@ -1,7 +1,7 @@
 package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.business.DatabaseConnector;
+import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.business.Modifiable;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;

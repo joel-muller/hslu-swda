@@ -1,14 +1,9 @@
 package ch.hslu.swda.entities;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
 
 import java.util.*;
 
-@Entity("article")
 public class Article {
-    @Id
     private final int id;
     private final int count;
     private boolean delivered;
@@ -19,11 +14,6 @@ public class Article {
         this.delivered = false;
     }
 
-    public Article() {
-        this.id = 0;
-        this.count = 0;
-        this.delivered = false;
-    }
 
     public static List<Article> createListArticle(Map<Integer, Integer> map) {
         ArrayList<Article> list = new ArrayList<>();

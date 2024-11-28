@@ -24,49 +24,28 @@ import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesOutgoing.StoreRequest;
 import ch.hslu.swda.messagesOutgoing.VerifyRequest;
 import ch.hslu.swda.micro.Service;
-import dev.morphia.annotations.*;
 
 /**
  * Einfaches Datenmodell einer Bestellung.
  */
 
-@Entity("order")
 public final class Order {
-    @Id
-    private UUID id;
+    private final UUID id;
     private State state;
     private List<Article> articles;
-    private Date date;
-    private UUID storeId;
-    private UUID customerId;
-    private UUID employeeId;
+    private final Date date;
+    private final UUID storeId;
+    private final UUID customerId;
+    private final UUID employeeId;
 
-    public Order(UUID orderId, List<Article> articles, UUID storeId, UUID customerId, UUID employeeId) {
-        this.id = orderId;
-        this.state = new State();
-        this.articles = articles;
-        this.date = Calendar.getInstance().getTime();
+    public Order(UUID id, Date date, UUID storeId, UUID customerId, UUID employeeId, State state, List<Article> articles) {
+        this.id = id;
+        this.date = date;
         this.storeId = storeId;
         this.customerId = customerId;
         this.employeeId = employeeId;
-    }
-
-    public Order() {
-        this.id = UUID.randomUUID();
-        this.state = new State();
-        this.articles = new ArrayList<>();
-        this.date = Calendar.getInstance().getTime();
-        this.storeId = UUID.randomUUID();
-        this.customerId = UUID.randomUUID();
-        this.employeeId = UUID.randomUUID();
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public void setState(State state) {
         this.state = state;
+        this.articles = articles;
     }
 
     public UUID getId() {
@@ -75,6 +54,10 @@ public final class Order {
 
     public State getState() {
         return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     public List<Article> getArticles() {
@@ -89,32 +72,16 @@ public final class Order {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public UUID getStoreId() {
         return storeId;
-    }
-
-    public void setStoreId(UUID storeId) {
-        this.storeId = storeId;
     }
 
     public UUID getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
-        this.customerId = customerId;
-    }
-
     public UUID getEmployeeId() {
         return employeeId;
-    }
-
-    public void setEmployeeId(UUID employeeId) {
-        this.employeeId = employeeId;
     }
 
     public void setArticleInStore(int articleId) {

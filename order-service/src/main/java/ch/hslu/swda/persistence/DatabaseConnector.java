@@ -1,4 +1,4 @@
-package ch.hslu.swda.business;
+package ch.hslu.swda.persistence;
 
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
@@ -32,21 +32,21 @@ public class DatabaseConnector {
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .build();
         datastore = Morphia.createDatastore(MongoClients.create(settings), DATABASE_NAME);
-        datastore.getMapper().map(Order.class);
-        datastore.getMapper().map(Article.class);
+        datastore.getMapper().map(DBOrder.class);
         datastore.ensureIndexes();
     }
 
     public void storeOrder(Order order) {
-//        LOG.info("Order stored {}", order.toString());
-        datastore.save(order);
+        datastore.save(DatabaseWrapper.createDBOrder(order));
     }
 
-    public Order getById(UUID id) {
-        Order order = datastore.find(Order.class)
+    public Order getById(UUID id) throws IllegalArgumentException {
+        DBOrder dbOrder = datastore.find(DBOrder.class)
                 .filter(eq("_id", id))
                 .first();
-//        LOG.info("Order restored {}", order.toString());
-        return order;
+        if (dbOrder == null) {
+            throw new IllegalArgumentException("Order with the following id does not exist: " + id.toString());
+        }
+        return DatabaseWrapper.createOrder(dbOrder);
     }
 }

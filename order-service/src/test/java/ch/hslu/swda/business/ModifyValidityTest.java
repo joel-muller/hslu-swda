@@ -27,7 +27,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        Order order = new Order(id, articles, storeId, customerId, employeeId);
+        Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
 
         ServiceMock service = new ServiceMock();
         VerifyResponse response = new VerifyResponse(id, true);
@@ -50,8 +50,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        Order order = new Order(id, articles, storeId, customerId, employeeId);
-
+        Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
         VerifyResponse response = new VerifyResponse(id, true);
         order.modify(new ModifyValidity(), response, service);
@@ -70,8 +69,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        Order order = new Order(id, articles, storeId, customerId, employeeId);
-
+        Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
         VerifyResponse response = new VerifyResponse(id, true);
         order.modify(new ModifyValidity(), response, service);
@@ -90,8 +88,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        Order order = new Order(id, articles, storeId, customerId, employeeId);
-
+        Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
         VerifyResponse response = new VerifyResponse(id, true);
         order.modify(new ModifyValidity(), response, service);
@@ -111,8 +108,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        Order order = new Order(id, articles, storeId, customerId, employeeId);
-
+        Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
         VerifyResponse response = new VerifyResponse(id, false);
         order.modify(new ModifyValidity(), response, service);
@@ -135,8 +131,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        Order order = new Order(id, articles, storeId, customerId, employeeId);
-
+        Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
         VerifyResponse response = new VerifyResponse(id, false);
         order.modify(new ModifyValidity(), response, service);
@@ -155,8 +150,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        Order order = new Order(id, articles, storeId, customerId, employeeId);
-
+        Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
         VerifyResponse response = new VerifyResponse(id, false);
         order.modify(new ModifyValidity(), response, service);
@@ -175,8 +169,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        Order order = new Order(id, articles, storeId, customerId, employeeId);
-
+        Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
         VerifyResponse response = new VerifyResponse(id, false);
         order.modify(new ModifyValidity(), response, service);
