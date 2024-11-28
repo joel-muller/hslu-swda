@@ -13,6 +13,7 @@ services:
     environment:
       - RMQ_HOST=bus
       - MONGO_URI=mongodb://mongodb:27017
+      - PRIVATE_KEY=${PRIVATE_KEY}
     networks:
       - bus
       - internal
@@ -32,3 +33,8 @@ services:
       - '27010:27017'
     networks:
       - internal
+    volumes:
+      - auth-db:/bitnami/mongodb
+
+volumes:
+  auth-db:
