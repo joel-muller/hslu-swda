@@ -18,6 +18,8 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.business.InventoryUpdateStore;
+import ch.hslu.swda.messagesIngoing.InventoryUpdate;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.business.ProcessOrderReady;
@@ -65,7 +67,7 @@ public final class StoreManagementService implements AutoCloseable, Service {
                 new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
         this.generalReceiver(Routes.REQUEST_ARTICLES,
                 new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
-        this.generalReceiver(Routes.INVENTORY_UPDATE, new InventoryUpdateReceiver(database, this.exchangeName, this.bus, this));
+        this.generalReceiver(Routes.INVENTORY_UPDATE, new GatewayReceiver<>(database, exchangeName, bus, new InventoryUpdateStore(), InventoryUpdate.class, this));
         this.receiveStoreCreationRequests();
         this.receiveStoreGetrequests();
 
