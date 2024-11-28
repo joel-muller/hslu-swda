@@ -37,7 +37,7 @@ public class CustomerValidator implements MessageReceiver {
             Customer customer = customers.getById(request.customerId());
             boolean retVal = customer != null;
             LOG.debug("Customer of id [{}] existing: [{}]", request.customerId(), retVal);
-            ValidityResponse response = new ValidityResponse(request.customerId(), retVal);
+            ValidityResponse response = new ValidityResponse(request.orderId(), retVal);
             bus.talkAsync(exchangeName, "order.customer-validity", mapper.writeValueAsString(response));
         } catch (IOException e) {
             LOG.error(e.getMessage());
