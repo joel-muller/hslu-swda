@@ -53,10 +53,6 @@ public class Store {
         return new Store(id, articles, new ArrayList<>());
     }
 
-    public void modify(Modifiable modifiable, IngoingMessage response, Service service) {
-        modifiable.modify(this, response, service);
-    }
-
     public UUID getId() {
         return id;
     }

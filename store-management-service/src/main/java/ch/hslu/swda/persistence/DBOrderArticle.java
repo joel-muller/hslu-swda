@@ -1,7 +1,9 @@
 package ch.hslu.swda.persistence;
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
+@Entity("orderArticle")
 public class DBOrderArticle {
     @Id
     private int id;

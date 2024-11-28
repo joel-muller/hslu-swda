@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 public class Receiver<T extends IngoingMessage> implements MessageReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(Receiver.class);
@@ -31,9 +32,7 @@ public class Receiver<T extends IngoingMessage> implements MessageReceiver {
         try {
             ObjectMapper mapper = new ObjectMapper();
             T response = mapper.readValue(message, messageGenericClass);
-            Store store = database.getStore(response.getStoreId());
-            store.modify(modifiable, response, service);
-            database.storeStore(store);
+            modifiable.modify(database, response, service);
         } catch (IOException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());
         }
