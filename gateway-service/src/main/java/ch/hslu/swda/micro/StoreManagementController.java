@@ -72,7 +72,7 @@ public class StoreManagementController {
         }
     }
 
-<<<<<<< HEAD
+
     @Post("/create/")
     public void createStore() {
         try {
@@ -135,6 +135,5 @@ public class StoreManagementController {
         }
     }
 
-=======
->>>>>>> e8bcdea09bce03f83a99ecc4280e695fc8c7bb3e
+
 }
