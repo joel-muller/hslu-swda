@@ -30,7 +30,16 @@ Jeder MS hat die messages die er bekommt gelisted
 
 Prio Sprint 1: Order, customer Management, accounting
 
+==== Gateway endpoints:
+
+POST http://IP/api/v1/stores/createdefault (leerer Body): erstellt 10 default stores mit zufälliger Store ID.
+POST http://IP/api/v1/stores/create (leerer Body): erstellt 1 stores mit zufälliger Store ID.
+GET http://IP/api/v1/stores/: gibt alle Stores zurück. 
+
 ==== Store Management
+
+store.create (leere message)
+store.create-default (leere message)
 
 inventory.update (auch für das Hinzufügen neuer Artikel/Einträge in die Inventory-Datenbank)
 
