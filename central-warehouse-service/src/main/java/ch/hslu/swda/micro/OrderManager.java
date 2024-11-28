@@ -98,14 +98,15 @@ public class OrderManager  implements CentralWarehouseOrderManager{
 
 
                     if (currOrder.isComplete()) {
-                        LOG.info("Order {} has been completed", currOrder.getId());
-                        logSender.send(new LogMessage(currOrder.getId(), null, "warehouseOrder.completed", "Order completed"));
+                        LOG.info("Order {} has been completed", currOrder.getCustomerOrderId());
+                        logSender.send(new LogMessage(currOrder.getCustomerOrderId(), null, "warehouseOrder.completed", "Order completed"));
                     }
                 }
 
 
             } catch (IOException e) {
                 LOG.error("Could not log Message: [{}]", e.getMessage());
+                
             }
 
         }
