@@ -55,9 +55,9 @@ curl -X POST http://localhost:8090/api/v1/orders \
 -H "Content-Type: application/json" \
 -d '{
   "articles": {
-    "12": 0,
-    "14": 0,
-    "18": 0
+    "12": 10,
+    "14": 3,
+    "18": 44
   },
   "storeId": "100e14fa-614d-4ba7-9a3c-6d70b360a18e",
   "customerId": "1601ce09-a907-47ad-8665-7b4705796c69",

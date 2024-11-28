@@ -3,6 +3,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.model.Store;
+import ch.hslu.swda.model.StoreInventoryUpdate;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
@@ -69,4 +70,5 @@ public class StoreManagementController {
             throw new RuntimeException(e);
         }
     }
+
 }
