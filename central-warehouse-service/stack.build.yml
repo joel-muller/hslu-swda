@@ -11,6 +11,6 @@ services:
         CI_GIT_DATE: $CICD_GIT_DATE
 
   central_warehouse_db:
-    image: central_warehouse_custom_mysql:1.0
+    image: cr.gitlab.switch.ch/hslu/edu/bachelor-computer-science/swda/24hs01/g02/g-02-central-warehouse-db:latest
     build:
       context: ./config/mysql/
