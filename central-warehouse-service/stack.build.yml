@@ -9,3 +9,8 @@ services:
       args:
         CI_GIT_VERSION: $CICD_GIT_VERSION
         CI_GIT_DATE: $CICD_GIT_DATE
+
+  central_warehouse_db:
+    image: central_warehouse_custom_mysql:latest
+    build:
+      context: ./config/mysql/
