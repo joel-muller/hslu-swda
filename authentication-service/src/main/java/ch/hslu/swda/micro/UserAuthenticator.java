@@ -70,11 +70,18 @@ public class UserAuthenticator implements MessageReceiver {
                         "user.login",
                         user.getId(),
                         "User " + user.getUsername() + " successfully logged in.");
-                LOG.info(jwt);
                 bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(new UserJWT(jwt, true)));
                 bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(log));
+            } else {
+                LogEntry log = new LogEntry("authentication.service",
+                        Instant.now().getEpochSecond(),
+                        user.getId(),
+                        "user.login",
+                        user.getId(),
+                        "User " + user.getUsername() + " failed to log in.");
+                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(new UserJWT("", false)));
+                bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(log));
             }
-
         } catch (IOException e) {
             LOG.error(e.getMessage());
         } catch (InvalidKeySpecException e) {

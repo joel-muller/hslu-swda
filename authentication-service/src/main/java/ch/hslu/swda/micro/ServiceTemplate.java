@@ -82,8 +82,8 @@ public final class ServiceTemplate implements AutoCloseable {
     }
 
     private void retrieveUsers() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.USER_READ);
-        bus.listenFor(exchangeName, "AuthService <- " + Routes.USER_READ, Routes.USER_READ, new UserRetriever(exchangeName, bus));
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.USER_GET);
+        bus.listenFor(exchangeName, "AuthService <- " + Routes.USER_GET, Routes.USER_GET, new UserRetriever(exchangeName, bus));
     }
 
     private void updateUsers() throws IOException {

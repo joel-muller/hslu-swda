@@ -7,6 +7,7 @@ import ch.hslu.swda.business.AuthStorage;
 import ch.hslu.swda.entities.LogEntry;
 import ch.hslu.swda.entities.User;
 import ch.hslu.swda.entities.UserRole;
+import ch.hslu.swda.entities.UserSimple;
 import ch.hslu.swda.messages.UserUpsert;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +51,9 @@ public class UserReceiver implements MessageReceiver {
                     user.getId(),
                     logMessage);
 
-            String response = mapper.writeValueAsString(User.removeHashForReturn(user));
+            UserSimple simpleUser = new UserSimple(user.getId(), user.getUsername(), user.getRole().getName());
+
+            String response = mapper.writeValueAsString(simpleUser);
             bus.reply(exchangeName, replyTo, corrId, response);
             bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(log));
         } catch (IOException e) {

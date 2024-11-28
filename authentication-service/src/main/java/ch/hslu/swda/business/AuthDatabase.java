@@ -124,13 +124,13 @@ public class AuthDatabase implements AuthStorage {
         if (id == null) {
             return false;
         }
-        if (!username.isEmpty() || username != null) {
+        if (username != null && !username.isEmpty()) {
             boolean updatedUsername = updateUsername(id, username);
             if (!updatedUsername) {
                 return false;
             }
         }
-        if (!passwordHash.isEmpty() || passwordHash != null) {
+        if (passwordHash != null && !passwordHash.isEmpty()) {
             boolean updatedPasswordHash = updatePasswordHash(id, passwordHash);
             if (!updatedPasswordHash) {
                 return false;
