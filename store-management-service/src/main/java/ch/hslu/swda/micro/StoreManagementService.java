@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.business.ProcessOrderReady;
 import ch.hslu.swda.business.HandleNewOrder;
@@ -74,6 +75,11 @@ public final class StoreManagementService implements AutoCloseable, Service {
     public void sendOrderUpdate(OrderUpdate update) throws IOException {
         LOG.info("Order update for the order {} sent", update.id());
         sendMessageAsynchronous(update, Routes.ORDER_UPDATE);
+    }
+
+    @Override
+    public void requestArticles(InventoryRequest request) throws IOException {
+        sendMessageAsynchronous(request, Routes.INVENTORY_REQUEST);
     }
 
 

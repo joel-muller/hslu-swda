@@ -29,6 +29,23 @@ public class StoreArticle {
         return list;
     }
 
+    /**
+     * Get and article out of the store and get the refill value back
+     * @param count of the article
+     * @return will return -1 when there isn't enough or the article, or the refill value when the article has gotten reserved but has to get a refill
+     */
+    public int getWithRefillBack(int count) {
+        if (actualQuantity < count) {
+            return -1;
+        } else {
+            actualQuantity -= count;
+        }
+        if (actualQuantity < minimumQuantity) {
+            return refillCount;
+        }
+        return 0;
+    }
+
     public int getId() {
         return id;
     }

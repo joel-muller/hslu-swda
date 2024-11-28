@@ -22,7 +22,6 @@ public class Order {
         return new Order(request.orderId(), request.storeId(), articleOrdered);
     }
 
-
     public UUID getId() {
         return id;
     }
@@ -33,6 +32,15 @@ public class Order {
 
     public List<OrderArticle> getArticleOrderedList() {
         return articleOrderedList;
+    }
+
+    public boolean isReady() {
+        for (OrderArticle article : articleOrderedList) {
+            if (!article.isReady()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
