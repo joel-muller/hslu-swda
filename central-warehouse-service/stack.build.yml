@@ -9,8 +9,3 @@ services:
       args:
         CI_GIT_VERSION: $CICD_GIT_VERSION
         CI_GIT_DATE: $CICD_GIT_DATE
-
-  central_warehouse_db:
-    image: cr.gitlab.switch.ch/hslu/edu/bachelor-computer-science/swda/24hs01/g02/g-02-central-warehouse-db:latest
-    build:
-      context: ./config/mysql/
