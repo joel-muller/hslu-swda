@@ -10,7 +10,8 @@ networks:
     name: central_warehouse
 volumes:
   central-warehouse-db-data:
-    
+    external: true
+
 services:
   app:
     image: $CICD_IMAGE_ID
