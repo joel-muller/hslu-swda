@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class StoreWrapper {
-    private final List<DBOrder> dbOrders;
     private final DBStore dbStore;
 
     public StoreWrapper(final Store store) {
@@ -20,7 +19,6 @@ public class StoreWrapper {
             dbStoreArticles.add(new DBStoreArticle(storeArticle.getId(), storeArticle.getActualQuantity(), storeArticle.getMinimumQuantity(), storeArticle.getRefillCount()));
         }
         List<Order> orders = store.getOpenOrders();
-        List<UUID> openOrders = new ArrayList<>();
         List<DBOrder> dbOrders = new ArrayList<>();
         for (Order order : orders) {
             List<OrderArticle> orderArticles = order.getArticleOrderedList();
@@ -29,15 +27,12 @@ public class StoreWrapper {
                 dbOrderArticles.add(new DBOrderArticle(orderArticle.getId(), orderArticle.getCount(), orderArticle.isReady()));
             }
             dbOrders.add(new DBOrder(order.getId(), order.getStoreId(), dbOrderArticles));
-            openOrders.add(order.getId());
         }
-        this.dbOrders = dbOrders;
-        this.dbStore = new DBStore(store.getId(), dbStoreArticles, openOrders);
+        this.dbStore = new DBStore(store.getId(), dbStoreArticles, dbOrders);
     }
 
-    public StoreWrapper(final List<DBOrder> dbOrders, final DBStore dbStore) {
+    public StoreWrapper(final DBStore dbStore) {
         this.dbStore = dbStore;
-        this.dbOrders = dbOrders;
     }
 
     public Store getStore() {
@@ -47,6 +42,7 @@ public class StoreWrapper {
             storeArticles.add(new StoreArticle(dbStoreArticle.getId(), dbStoreArticle.getActualQuantity(), dbStoreArticle.getMinimumQuantity(), dbStoreArticle.getRefillCount()));
         }
         List<Order> orders = new ArrayList<>();
+        List<DBOrder> dbOrders = this.dbStore.getOpenOrders();
         for (DBOrder dbOrder : dbOrders) {
             List<OrderArticle> orderArticles = new ArrayList<>();
             List<DBOrderArticle> dbOrderArticles = dbOrder.getArticleOrderedList();
@@ -56,10 +52,6 @@ public class StoreWrapper {
             orders.add(new Order(dbOrder.getId(), dbOrder.getStoreId(), orderArticles));
         }
         return new Store(this.dbStore.getId(), storeArticles, orders);
-    }
-
-    public List<DBOrder> getDbOrders() {
-        return dbOrders;
     }
 
     public DBStore getDbStore() {

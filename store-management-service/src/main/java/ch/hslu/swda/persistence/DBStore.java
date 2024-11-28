@@ -17,9 +17,9 @@ public class DBStore {
     @Id
     private UUID id;
     private List<DBStoreArticle> articleList;
-    private List<UUID> openOrders;
+    private List<DBOrder> openOrders;
 
-    public DBStore(UUID id, List<DBStoreArticle> articleList, List<UUID> openOrders) {
+    public DBStore(UUID id, List<DBStoreArticle> articleList, List<DBOrder> openOrders) {
         this.id = id;
         this.articleList = articleList;
         this.openOrders = openOrders;
@@ -32,6 +32,7 @@ public class DBStore {
     public DBStore() {
         this.id = UUID.randomUUID();
         this.articleList = null;
+        this.openOrders = null;
     }
 
     public UUID getId() {
@@ -43,6 +44,9 @@ public class DBStore {
     }
 
     public List<DBStoreArticle> getArticleList() {
+        if (articleList == null) {
+            return new ArrayList<>();
+        }
         return articleList;
     }
 
@@ -50,11 +54,14 @@ public class DBStore {
         this.articleList = articleList;
     }
 
-    public List<UUID> getOpenOrders() {
+    public List<DBOrder> getOpenOrders() {
+        if (openOrders == null) {
+            return new ArrayList<>();
+        }
         return openOrders;
     }
 
-    public void setOpenOrders(List<UUID> openOrders) {
+    public void setOpenOrders(List<DBOrder> openOrders) {
         this.openOrders = openOrders;
     }
 }

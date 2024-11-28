@@ -41,14 +41,8 @@ public class DatabaseConnector {
     }
 
     public void storeStore(Store store) {
-        LOG.info("Try to store a store");
         StoreWrapper wrapper = new StoreWrapper(store);
-        List<DBOrder> dbOrders = wrapper.getDbOrders();
-        DBStore dbstore = wrapper.getDbStore();
-        datastore.save(dbstore);
-        for (DBOrder order : dbOrders) {
-            datastore.save(order);
-        }
+        datastore.save(wrapper.getDbStore());
     }
 
     public Store getStore(UUID storeId) throws NoSuchElementException {
@@ -60,20 +54,7 @@ public class DatabaseConnector {
             return Store.createExampleStore(storeId);
             //throw new NoSuchElementException("Store with the following id does not exist:" + storeId.toString());
         }
-        if (dbStore.getArticleList() == null) {
-            dbStore.setArticleList(new ArrayList<>());
-        }
-        List<DBOrder> dbOrders = new ArrayList<>();
-        if (dbStore.getOpenOrders() != null) {
-            List<UUID> orderIds = dbStore.getOpenOrders();
-            for (UUID id : orderIds) {
-                DBOrder order = datastore.find(DBOrder.class)
-                        .filter(eq("_id", id))
-                        .first();
-                dbOrders.add(order);
-            }
-        }
-        StoreWrapper wrapper = new StoreWrapper(dbOrders, dbStore);
+        StoreWrapper wrapper = new StoreWrapper(dbStore);
         return wrapper.getStore();
     }
 
