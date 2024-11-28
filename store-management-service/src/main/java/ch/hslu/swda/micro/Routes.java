@@ -36,7 +36,6 @@ public final class Routes {
     static final String ORDER_UPDATE = "order.update";
     static final String INVENTORY_REQUEST = "central-warehouse.request";
 
-
     /**
      * No instance allowed.
      */
