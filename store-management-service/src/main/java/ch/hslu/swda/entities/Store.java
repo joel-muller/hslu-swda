@@ -14,6 +14,12 @@ public class Store {
     private List<StoreArticle> articleList;
     private List<Order> openOrders;
 
+    public Store() {
+        this.id = UUID.randomUUID();
+        this.articleList = new ArrayList<>();
+        this.openOrders = new ArrayList<>();
+    }
+
     public Store(final UUID id, List<StoreArticle> articleList, List<Order> openOrders) {
         this.id = id;
         this.articleList = articleList;
@@ -59,9 +65,12 @@ public class Store {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Store store)) return false;
-        return Objects.equals(id, store.id) && Objects.equals(articleList, store.articleList) && Objects.equals(openOrders, store.openOrders);
+        if (this == o)
+            return true;
+        if (!(o instanceof Store store))
+            return false;
+        return Objects.equals(id, store.id) && Objects.equals(articleList, store.articleList)
+                && Objects.equals(openOrders, store.openOrders);
     }
 
     @Override

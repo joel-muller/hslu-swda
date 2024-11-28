@@ -11,16 +11,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
-public class StoreCreationReciever implements MessageReceiver {
-    private static final Logger LOG = LoggerFactory.getLogger(StoreCreationReciever.class);
+public class GetStoresReceiver implements MessageReceiver {
+    private static final Logger LOG = LoggerFactory.getLogger(GetStoresReceiver.class);
 
     private final DatabaseConnector database;
     private final StoreManagementService service;
     private final String exchangeName;
     private final BusConnector bus;
 
-    public StoreCreationReciever(final DatabaseConnector database, final String exchangeName, final BusConnector bus,
+    public GetStoresReceiver(final DatabaseConnector database, final String exchangeName, final BusConnector bus,
             final StoreManagementService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
@@ -31,15 +32,12 @@ public class StoreCreationReciever implements MessageReceiver {
     @Override
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         try {
-            //ObjectMapper mapper = new ObjectMapper();
-            //LOG.info(message);
-            Store store = new Store();
-            database.storeStore(store);
-            LOG.info("Store with the id {} created and saved in the database", store.getId());
-            service.log(new LogMessage(store.getId(), null, "store.create",
-                    "Store Created: " + store.toString()));
-
-            bus.reply(exchangeName, replyTo, corrId, "Store created" + store.toString());
+            ObjectMapper mapper = new ObjectMapper();
+            LOG.info("Retreiving store data...");
+            List<Store> storeList = database.getAllStores();
+            String storeJson = mapper.writeValueAsString(storeList);
+            LOG.info("Retrieved store data: {}", storeList);
+            bus.reply(exchangeName, replyTo, corrId, storeJson);
 
         } catch (IOException e) {
             LOG.error("Error occurred while creating the store object: {}", e.getMessage());

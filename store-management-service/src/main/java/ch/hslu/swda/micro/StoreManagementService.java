@@ -59,9 +59,19 @@ public final class StoreManagementService implements AutoCloseable, Service {
 
         this.database = new DatabaseConnector();
 
-        this.generalReceiver(Routes.ORDER_READY, new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
-        this.generalReceiver(Routes.REQUEST_ARTICLES, new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
-        this.generalReceiver(Routes.STORE_CREATION, new StoreCreationReciever(this.database, exchangeName, bus, this));
+        this.generalReceiver(Routes.ORDER_READY,
+                new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
+        this.generalReceiver(Routes.REQUEST_ARTICLES,
+                new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
+        // this.generalReceiver(Routes.STORE_CREATION, new
+        // StoreCreationReciever(this.database, exchangeName, bus, this));
+        // this.generalReceiver(Routes.STORE_DEFAULT_CREATION, new
+        // StoreDefaultCreationReciever(this.database, exchangeName, bus, this));
+        // this.generalReceiver(Routes.STORES_GET, new GetStoresReceiver(this.database,
+        // exchangeName, bus, this));
+        this.receiveStoreCreationRequests();
+        this.receiveStoreGetrequests();
+
     }
 
     @Override
@@ -74,7 +84,6 @@ public final class StoreManagementService implements AutoCloseable, Service {
         LOG.info("Order update for the order {} sent", update.id());
         sendMessageAsynchronous(update, Routes.ORDER_UPDATE);
     }
-
 
     public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -94,5 +103,25 @@ public final class StoreManagementService implements AutoCloseable, Service {
     private void generalReceiver(String channel, MessageReceiver receiver) throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", channel);
         bus.listenFor(exchangeName, "OrderService <- " + channel, channel, receiver);
+    }
+
+    private void receiveStoreCreationRequests() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}] and [{}]", Routes.STORE_CREATION,
+                Routes.STORE_DEFAULT_CREATION);
+        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_CREATION, Routes.STORE_CREATION,
+                new StoreCreationReciever(this.database, exchangeName, bus, this));
+        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_DEFAULT_CREATION,
+                Routes.STORE_DEFAULT_CREATION,
+                new StoreDefaultCreationReciever(this.database, exchangeName, bus, this));
+    }
+
+    private void receiveStoreGetrequests(){
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.STORES_GET);
+        try {
+            bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORES_GET, Routes.STORES_GET,
+                    new GetStoresReceiver(this.database, exchangeName, bus, this));
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+        }
     }
 }

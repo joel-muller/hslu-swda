@@ -57,4 +57,12 @@ public class DatabaseConnector {
         return StoreWrapper.getStore(dbStore);
     }
 
+    public List<Store> getAllStores() {
+        List<Store> stores = new ArrayList<>();
+        for (DBStore dbStore : datastore.find(DBStore.class)) {
+            stores.add(StoreWrapper.getStore(dbStore));
+        }
+        return stores;
+    }
+
 }

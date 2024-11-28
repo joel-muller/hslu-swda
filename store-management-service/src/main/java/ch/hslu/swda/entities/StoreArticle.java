@@ -14,6 +14,13 @@ public class StoreArticle {
     private int refillCount;
 
 
+    public StoreArticle() {
+        this.id = 0;
+        this.actualQuantity = 0;
+        this.minimumQuantity = 0;
+        this.refillCount = 0;
+    }
+
     public StoreArticle(final int id, final int actualQuantity, final int minimumQuantity, final int refillCount) {
         this.id = id;
         this.actualQuantity = actualQuantity;
