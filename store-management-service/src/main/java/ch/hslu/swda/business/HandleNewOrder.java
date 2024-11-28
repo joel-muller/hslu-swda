@@ -15,15 +15,18 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class HandleNewOrder implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(HandleNewOrder.class);
 
     @Override
-    public void modify(Store store, IngoingMessage responseRaw, Service service) {
+    public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
+            LOG.info("Handle new order");
             OrderRequest request = (OrderRequest) responseRaw;
             Order order = Order.createFromOrderRequest(request);
+            Store store = databaseConnector.getStore(request.getStoreId());
             store.addOrder(order);
             List<OrderArticle> articlesOrdered = order.getArticleOrderedList();
             List<Integer> articleValidated = new ArrayList<>();
@@ -47,9 +50,13 @@ public class HandleNewOrder implements Modifiable {
             if (!articleValidated.isEmpty()) {
                 service.sendOrderUpdate(new OrderUpdate(order.getId(), articleValidated, true));
             }
+            databaseConnector.storeStore(store);
             LOG.info("New order {} arrived for the store {}", order.getId(), store.getId());
         } catch (IOException e) {
             LOG.error("Exception occurred while trying to update the order {}", e.getMessage());
         }
+//        catch (NoSuchElementException e) {
+//            //TBD for when a store does not exist
+//        }
     }
 }
