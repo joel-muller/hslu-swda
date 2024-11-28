@@ -74,11 +74,18 @@ articles.checkValidity
 
 ==== Central Warehouse
 
-warehouse.order
+central-warehouse.request
 
 * articles : Map <idArticle : Integer, count : Integer>
-* storeId: Integer
-* customerOrderId: Integer
+* storeId: UUID
+* orderId: UUID
+
+central-warehouse.complete
+
+* orderId: UUID
+* storeId: UUID
+
+
 
 ==== Authentication & User Management
 
@@ -112,13 +119,13 @@ UUIDs in a filter are currently String to do .isEmpty() checks rather than null
 
 order.create
 
-* id: Integer
+* id: UUID
 * articles: Map <idArticle : Integer, count : Integer>
 * date : Date
 * status: Enum
 * storeId: Integer
-* employeeId: Integer
-* customerId: Integer
+* employeeId: UUID
+* customerId: UUID
 
 order.validate
 
@@ -129,16 +136,39 @@ order.validate
 
 customer.create
 
-* id : Integer
-* firstName : String
-* lastName : String
+* firstname : String
+* lastname : String
+
+customer.get
+
+* UUID (Optional)
+
+customer.validate
+
+* UUID
+
+customer.update
+
+* firstname : String (Optional)
+* lastname : String (Optional)
+
+customer.delete
+
+* UUID
+
+(customer.validate und customer.delete soll einfach das UUID haben, keine Wrapper-Klasse)
 
 ==== Accounting
 
 confirmation.create
 
-* orderId : Integer
-* customerId : Integer
+* orderId : UUID
+* customerId : UUID
+
+invoice.create
+
+* orderId : UUID
+* customerId : UUID
 
 === DB Entries
 
@@ -150,16 +180,16 @@ Order (Order)
 * date : Date
 * status: Enum
 * storeId: Integer
-* employeeId: Integer
-* customerId: Integer
+* employeeId: UUID
+* customerId: UUID
 
 vielleicht nach 24 stunden checken ob es noch invalid gibt und checkArticleValidity() ereut senden
 
 Customer (Customer Management)
 
-* id : Integer
-* firstName : String
-* lastName : String
+* id : UUID
+* firstname : String
+* lastname : String
 
 Article (Article Registry)
 
@@ -177,3 +207,15 @@ Sortiment (Store Management)
 * countAfterRefill : int
 
 Store (Store Management)
+
+* TBD
+
+LogEntry (Log)
+
+* id : UUID
+* source : String
+* timestamp : long
+* userId : UUID
+* eventType : String
+* objUuid : UUID
+* message : String
