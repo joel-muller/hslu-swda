@@ -6,6 +6,7 @@ import ch.hslu.swda.model.Store;
 import ch.hslu.swda.model.StoreInventoryUpdate;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.serde.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -70,5 +71,69 @@ public class StoreManagementController {
             throw new RuntimeException(e);
         }
     }
+
+
+    @Post("/create/")
+    public void createStore() {
+        try {
+            bus.connect();
+            String reply = bus.talkSync(exchangeName, "store.create", "");
+            if (reply == null) {
+                LOG.info("received empty reply from service");
+            } else {
+                LOG.info("received reply: " + reply);
+            }
+            ;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Post("/createdefault/")
+    public void createDefaultStores() {
+        try {
+            bus.connect();
+            String reply = bus.talkSync(exchangeName, "store.create-default", "");
+            if (reply == null) {
+                LOG.info("received empty reply from service");
+            } else {
+                LOG.info("received reply: " + reply);
+            }
+            ;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Get("/")
+    public void getStores() {
+        try {
+            bus.connect();
+            String reply = bus.talkSync(exchangeName, "stores.get", "");
+            if (reply == null) {
+                LOG.info("received empty reply from service");
+            } else {
+                LOG.info("received reply: " + reply);
+            }
+            ;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

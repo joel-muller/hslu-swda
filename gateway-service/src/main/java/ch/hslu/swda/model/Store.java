@@ -7,6 +7,6 @@ import io.micronaut.serde.annotation.Serdeable;
 
 
 @Introspected @Serdeable
-public record Store(UUID storeId, List<StoreArticle> articleList) {
+public record Store(UUID id, List<StoreArticle> articleList, List<Order> openOrders) {
 
 }
