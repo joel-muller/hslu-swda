@@ -3,6 +3,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.model.Store;
+import ch.hslu.swda.model.StoreInventoryUpdate;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -71,6 +72,7 @@ public class StoreManagementController {
         }
     }
 
+<<<<<<< HEAD
     @Post("/create/")
     public void createStore() {
         try {
@@ -133,4 +135,6 @@ public class StoreManagementController {
         }
     }
 
+=======
+>>>>>>> e8bcdea09bce03f83a99ecc4280e695fc8c7bb3e
 }
