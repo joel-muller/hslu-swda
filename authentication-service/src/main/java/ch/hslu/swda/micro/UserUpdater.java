@@ -44,11 +44,17 @@ public class UserUpdater implements MessageReceiver {
             }
             User oldUser = authDb.getUserById(request.id());
             boolean success;
+            String passwordHash;
+            if (request.password() != null && !request.password().isEmpty()) {
+                passwordHash = BCrypt.hashpw(request.password(), BCrypt.gensalt());
+            } else {
+                passwordHash = null;
+            }
             if (request.role() != null && !request.role().isEmpty()) {
                 UserRole role = authDb.getRoleByName(request.role());
-                success = authDb.updateUser(request.id(), request.username(), request.password(), role);
+                success = authDb.updateUser(request.id(), request.username(), passwordHash, role);
             } else {
-                success = authDb.updateUser(request.id(), request.username(), request.password(), null);
+                success = authDb.updateUser(request.id(), request.username(), passwordHash, null);
             }
 
             if (!success) {
