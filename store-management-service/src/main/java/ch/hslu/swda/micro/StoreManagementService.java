@@ -63,12 +63,6 @@ public final class StoreManagementService implements AutoCloseable, Service {
                 new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
         this.generalReceiver(Routes.REQUEST_ARTICLES,
                 new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
-        // this.generalReceiver(Routes.STORE_CREATION, new
-        // StoreCreationReciever(this.database, exchangeName, bus, this));
-        // this.generalReceiver(Routes.STORE_DEFAULT_CREATION, new
-        // StoreDefaultCreationReciever(this.database, exchangeName, bus, this));
-        // this.generalReceiver(Routes.STORES_GET, new GetStoresReceiver(this.database,
-        // exchangeName, bus, this));
         this.receiveStoreCreationRequests();
         this.receiveStoreGetrequests();
 
