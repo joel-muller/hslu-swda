@@ -44,7 +44,7 @@ public class UserUpdater implements MessageReceiver {
             }
             User oldUser = authDb.getUserById(request.id());
             boolean success;
-            if (request.role() != null || !request.role().isEmpty()) {
+            if (request.role() != null && !request.role().isEmpty()) {
                 UserRole role = authDb.getRoleByName(request.role());
                 success = authDb.updateUser(request.id(), request.username(), request.password(), role);
             } else {
