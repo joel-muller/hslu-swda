@@ -41,8 +41,8 @@ public class DatabaseConnector {
     }
 
     public void storeStore(Store store) {
-        StoreWrapper wrapper = new StoreWrapper(store);
-        datastore.save(wrapper.getDbStore());
+        DBStore dbStore = StoreWrapper.createDBStore(store);
+        datastore.save(dbStore);
     }
 
     public Store getStore(UUID storeId) throws NoSuchElementException {
@@ -54,8 +54,7 @@ public class DatabaseConnector {
             return Store.createExampleStore(storeId);
             //throw new NoSuchElementException("Store with the following id does not exist:" + storeId.toString());
         }
-        StoreWrapper wrapper = new StoreWrapper(dbStore);
-        return wrapper.getStore();
+        return StoreWrapper.getStore(dbStore);
     }
 
 }

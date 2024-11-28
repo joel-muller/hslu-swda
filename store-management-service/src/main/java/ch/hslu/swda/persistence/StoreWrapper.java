@@ -10,9 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class StoreWrapper {
-    private final DBStore dbStore;
 
-    public StoreWrapper(final Store store) {
+    public static DBStore createDBStore(final Store store) {
         List<StoreArticle> storeArticles = store.getArticleList();
         List<DBStoreArticle> dbStoreArticles = new ArrayList<>();
         for (StoreArticle storeArticle : storeArticles) {
@@ -28,21 +27,18 @@ public class StoreWrapper {
             }
             dbOrders.add(new DBOrder(order.getId(), order.getStoreId(), dbOrderArticles));
         }
-        this.dbStore = new DBStore(store.getId(), dbStoreArticles, dbOrders);
+        return new DBStore(store.getId(), dbStoreArticles, dbOrders);
     }
 
-    public StoreWrapper(final DBStore dbStore) {
-        this.dbStore = dbStore;
-    }
 
-    public Store getStore() {
+    public static Store getStore(DBStore dbStore) {
         List<DBStoreArticle> dbStoreArticles = dbStore.getArticleList();
         List<StoreArticle> storeArticles = new ArrayList<>();
         for (DBStoreArticle dbStoreArticle : dbStoreArticles) {
             storeArticles.add(new StoreArticle(dbStoreArticle.getId(), dbStoreArticle.getActualQuantity(), dbStoreArticle.getMinimumQuantity(), dbStoreArticle.getRefillCount()));
         }
         List<Order> orders = new ArrayList<>();
-        List<DBOrder> dbOrders = this.dbStore.getOpenOrders();
+        List<DBOrder> dbOrders = dbStore.getOpenOrders();
         for (DBOrder dbOrder : dbOrders) {
             List<OrderArticle> orderArticles = new ArrayList<>();
             List<DBOrderArticle> dbOrderArticles = dbOrder.getArticleOrderedList();
@@ -51,10 +47,7 @@ public class StoreWrapper {
             }
             orders.add(new Order(dbOrder.getId(), dbOrder.getStoreId(), orderArticles));
         }
-        return new Store(this.dbStore.getId(), storeArticles, orders);
+        return new Store(dbStore.getId(), storeArticles, orders);
     }
 
-    public DBStore getDbStore() {
-        return dbStore;
-    }
 }
