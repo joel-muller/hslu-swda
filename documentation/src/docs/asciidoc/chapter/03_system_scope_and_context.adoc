@@ -65,11 +65,18 @@ articles.checkValidity
 
 ==== Central Warehouse
 
-warehouse.order
+central-warehouse.request
 
 * articles : Map <idArticle : Integer, count : Integer>
-* storeId: Integer
-* customerOrderId: Integer
+* storeId: UUID
+* orderId: UUID
+
+central-warehouse.complete
+
+* orderId: UUID
+* storeId: UUID
+
+
 
 ==== Authentication & User Management
 
