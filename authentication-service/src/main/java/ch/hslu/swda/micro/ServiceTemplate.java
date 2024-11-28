@@ -54,7 +54,11 @@ public final class ServiceTemplate implements AutoCloseable {
         this.setupRightsAndRoles();
 
         // start message receivers
-
+        this.receiveUsers();
+        this.retrieveUsers();
+        this.updateUsers();
+        this.deleteUsers();
+        this.authenticateUsers();
     }
 
     /**
@@ -75,5 +79,24 @@ public final class ServiceTemplate implements AutoCloseable {
     private void receiveUsers() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.USER_CREATE);
         bus.listenFor(exchangeName, "AuthService <- " + Routes.USER_CREATE, Routes.USER_CREATE, new UserReceiver(exchangeName, bus));
+    }
+
+    private void retrieveUsers() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.USER_READ);
+        bus.listenFor(exchangeName, "AuthService <- " + Routes.USER_READ, Routes.USER_READ, new UserRetriever(exchangeName, bus));
+    }
+
+    private void updateUsers() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.USER_UPDATE);
+        bus.listenFor(exchangeName, "AuthService <- " + Routes.USER_UPDATE, Routes.USER_UPDATE, new UserUpdater(exchangeName, bus));
+    }
+
+    private void deleteUsers() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.USER_DELETE);
+        bus.listenFor(exchangeName, "AuthService <- " + Routes.USER_DELETE, Routes.USER_DELETE, new UserDeleter(exchangeName, bus));
+    }
+    private void authenticateUsers() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.USER_LOGIN);
+        bus.listenFor(exchangeName, "AuthService <- " + Routes.USER_LOGIN, Routes.USER_LOGIN, new UserAuthenticator(exchangeName, bus));
     }
 }

@@ -21,6 +21,10 @@ package ch.hslu.swda.micro;
 public final class Routes {
 
     static final String USER_CREATE = "user.create";
+    static final String USER_READ = "user.read";
+    static final String USER_UPDATE = "user.update";
+    static final String USER_DELETE = "user.delete";
+    static final String USER_LOGIN = "user.login";
 
     /**
      * No instance allowed.
