@@ -29,7 +29,7 @@ public class Store {
         Random random = new Random();
         List<StoreArticle> articleList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            articleList.add(new StoreArticle(i, random.nextInt(500), random.nextInt(200), random.nextInt(600)));
+            articleList.add(new StoreArticle(100000 + random.nextInt(Integer.MAX_VALUE - 100000), random.nextInt(500), random.nextInt(200), random.nextInt(600)));
         }
         this.articleList = articleList;
     }
