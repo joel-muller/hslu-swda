@@ -116,16 +116,17 @@ public class StoreManagementController {
 
 
     @Get("/")
-    public void getStores() {
+    public String getStores() {
         try {
             bus.connect();
             String reply = bus.talkSync(exchangeName, "stores.get", "");
             if (reply == null) {
                 LOG.info("received empty reply from service");
+                return "no reply from service";
             } else {
                 LOG.info("received reply: " + reply);
+                return reply;
             }
-            ;
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
