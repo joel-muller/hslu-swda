@@ -25,6 +25,15 @@ public class Store {
         return articleList;
     }
 
+    public void setDefaultArticleList() {
+        Random random = new Random();
+        List<StoreArticle> articleList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            articleList.add(new StoreArticle(i, random.nextInt(500), random.nextInt(200), random.nextInt(600)));
+        }
+        this.articleList = articleList;
+    }
+
     public List<Order> getOpenOrders() {
         return openOrders;
     }

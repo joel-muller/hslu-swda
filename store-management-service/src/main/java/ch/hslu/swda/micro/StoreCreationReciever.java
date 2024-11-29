@@ -31,17 +31,19 @@ public class StoreCreationReciever implements MessageReceiver {
     @Override
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         try {
-            //ObjectMapper mapper = new ObjectMapper();
-            //LOG.info(message);
+            // ObjectMapper mapper = new ObjectMapper();
+            // LOG.info(message);
             Store store = new Store();
+            store.setDefaultArticleList();
             database.storeStore(store);
             LOG.info("Store with the id {} created and saved in the database", store.getId());
             service.log(new LogMessage(store.getId(), null, "store.create",
                     "Store Created: " + store.toString()));
-
             bus.reply(exchangeName, replyTo, corrId, "Store created" + store.toString());
 
-        } catch (IOException e) {
+        } catch (
+
+        IOException e) {
             LOG.error("Error occurred while creating the store object: {}", e.getMessage());
         }
     }

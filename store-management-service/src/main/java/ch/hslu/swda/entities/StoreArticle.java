@@ -35,6 +35,7 @@ public class StoreArticle {
         }
         return list;
     }
+    
 
     /**
      * Get and article out of the store and get the refill value back

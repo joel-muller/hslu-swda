@@ -35,9 +35,9 @@ public class GetStoresReceiver implements MessageReceiver {
             ObjectMapper mapper = new ObjectMapper();
             LOG.info("Retreiving store data...");
             List<Store> storeList = database.getAllStores();
-            String storeJson = mapper.writeValueAsString(storeList);
+            String storeListJson = mapper.writeValueAsString(storeList);
             LOG.info("Retrieved store data: {}", storeList);
-            bus.reply(exchangeName, replyTo, corrId, storeJson);
+            bus.reply(exchangeName, replyTo, corrId, storeListJson);
 
         } catch (IOException e) {
             LOG.error("Error occurred while creating the store object: {}", e.getMessage());

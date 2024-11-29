@@ -34,7 +34,8 @@ public class StoreDefaultCreationReciever implements MessageReceiver {
             LOG.info("Creating default stores...");
             for (int i = 0; i < 10; i++) {
                 Store store = new Store();
-                //TODO Artikelliste erstellen
+                store.setDefaultArticleList();
+                LOG.info("Store to be created: {}", store.toString());
                 database.storeStore(store);
                 LOG.info("Store with the id {} created and saved in the database", store.getId());
                 service.log(new LogMessage(store.getId(), null, "store.create",
