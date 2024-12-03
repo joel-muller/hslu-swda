@@ -15,46 +15,7 @@
  */
 package ch.hslu.swda.entities;
 
+import java.util.Map;
 import java.util.UUID;
 
-/**
- * Einfaches Datenmodell eines Artikel.
- */
-public final class Validity {
-
-    private final UUID idOrder;
-    private final boolean valid;
-
-    public Validity(boolean valid, UUID idOrder) {
-        this.valid = valid;
-        this.idOrder = idOrder;
-    }
-
-    public UUID getIdOrder() {
-        return idOrder;
-    }
-
-    public boolean isValid() {
-        return valid;
-    }
-
-    /**
-     * Artikel mit identischer ID sind gleich. {@inheritDoc}.
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        return obj instanceof Validity val
-                && this.idOrder == val.idOrder;
-    }
-
-    @Override
-    public String toString() {
-        return "Validity{" +
-                "idOrder=" + idOrder +
-                ", valid=" + valid +
-                '}';
-    }
-}
+public record Validity(UUID idOrder, boolean valid, Map<Integer, Integer> franken, Map<Integer, Integer> rappen) { }

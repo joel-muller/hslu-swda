@@ -67,8 +67,7 @@ public final class ValidityReceiver implements MessageReceiver {
             Map<Integer, Integer> articles = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             LOG.info("Order with the id [{}] received articles: [{}]", orderId, articles);
 
-
-            Validity validity = new Validity(handler.checkArticles(articles), orderId);
+            Validity validity = handler.generateValidity(articles, orderId);
 
             service.log(new LogMessage(orderId, employeeId, "validity.ckecked", "Order validity of order " + validity.toString()));
             service.sendValidity(validity);

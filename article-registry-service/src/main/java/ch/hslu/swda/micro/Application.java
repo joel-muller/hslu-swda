@@ -41,7 +41,7 @@ public final class Application {
         HeartBeat() {
             try {
                 this.service = new ArticleRegistryService();
-            } catch (IOException | TimeoutException e) {
+            } catch (IOException | TimeoutException | InterruptedException e) {
                 LOG.error(e.getMessage(), e);
             }
         }

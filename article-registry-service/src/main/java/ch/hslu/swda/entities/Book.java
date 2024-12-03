@@ -13,8 +13,9 @@ public class Book {
     private final String imageUrlS;
     private final String imageUrlM;
     private final String imageUrlL;
+    private final Price price;
 
-    public Book(final int id, String isbn, String title, String author, String year, String publisher, String imageUrlS, String imageUrlM, String imageUrlL) {
+    public Book(final int id, String isbn, String title, String author, String year, String publisher, String imageUrlS, String imageUrlM, String imageUrlL, Price price) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
@@ -24,10 +25,11 @@ public class Book {
         this.imageUrlS = imageUrlS;
         this.imageUrlM = imageUrlM;
         this.imageUrlL = imageUrlL;
+        this.price = price;
     }
 
-    public static Book generateFromList(int id, List<String> list) {
-        return new Book(id, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
+    public static Book generateFromList(int id, List<String> list, Price price) {
+        return new Book(id, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7), price);
     }
 
     public int getId() {
@@ -64,6 +66,18 @@ public class Book {
 
     public String getImageUrlL() {
         return imageUrlL;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public int getFranken() {
+        return price.getFranken();
+    }
+
+    public int getRappen() {
+        return price.getRappen();
     }
 
     @Override

@@ -44,7 +44,7 @@ public final class ArticleRegistryService implements AutoCloseable {
      * @throws IOException      IO-Fehler.
      * @throws TimeoutException Timeout.
      */
-    ArticleRegistryService() throws IOException, TimeoutException {
+    ArticleRegistryService() throws IOException, TimeoutException, InterruptedException {
 
         // thread info
         String threadName = Thread.currentThread().getName();
