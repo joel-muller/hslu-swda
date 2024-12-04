@@ -12,10 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ArticleTest {
     private Article article;
+    private Article article2;
 
     @BeforeEach
     void setUp() {
         article = new Article(1, 10);
+        article2 = new Article(2, 14, new Price(4, 10));
     }
 
     @Test
@@ -26,6 +28,17 @@ class ArticleTest {
     @Test
     void getCount() {
         assertEquals(10, article.getCount(), "getCount should return the correct count value");
+    }
+
+    @Test
+    void getPrice() {
+        assertEquals(new Price(4, 10), article2.getPrice());
+    }
+
+    @Test
+    void setPrice() {
+        article2.setPrice(15, 5);
+        assertEquals(new Price(15, 5), article2.getPrice());
     }
 
     @Test
@@ -65,11 +78,11 @@ class ArticleTest {
 
     @Test
     void testToString() {
-        String expectedString = "Article{id=1, count=10, delivered=false}";
+        String expectedString = "Article{id=1, count=10, delivered=false, price=Price{0.00 Francs}}";
         assertEquals(expectedString, article.toString(), "toString should match the expected format for the article");
 
         article.setDelivered(true);
-        String updatedString = "Article{id=1, count=10, delivered=true}";
+        String updatedString = "Article{id=1, count=10, delivered=true, price=Price{0.00 Francs}}";
         assertEquals(updatedString, article.toString(), "toString should reflect the current delivered status");
     }
 
@@ -96,7 +109,7 @@ class ArticleTest {
 
     @Test
     void testEqualsAndHashCode() {
-        EqualsVerifier.simple().forClass(State.class)
+        EqualsVerifier.simple().forClass(Article.class)
                 .verify();
     }
 

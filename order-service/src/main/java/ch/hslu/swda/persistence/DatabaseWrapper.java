@@ -2,6 +2,7 @@ package ch.hslu.swda.persistence;
 
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
+import ch.hslu.swda.entities.Price;
 import ch.hslu.swda.entities.State;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class DatabaseWrapper {
         List<DBArticle> dbArticleList = new ArrayList<>();
         List<Article> articleList = order.getArticles();
         for (Article article : articleList) {
-            dbArticleList.add(new DBArticle(article.getId(), article.getCount(), article.isDelivered()));
+            dbArticleList.add(new DBArticle(article.getId(), article.getCount(), article.isDelivered(), article.getPrice().getFrancs(), article.getPrice().getCentimes()));
         }
         State state = order.getState();
         DBState dbState = new DBState(state.isValid(), state.isArticlesReady(), state.isCustomerReady(), state.isDelivered(), state.isCancelled());
@@ -23,7 +24,7 @@ public class DatabaseWrapper {
         List<DBArticle> dbArticleList = dbOrder.getArticles();
         List<Article> articleList = new ArrayList<>();
         for (DBArticle dbArticle : dbArticleList) {
-            Article article = new Article(dbArticle.getId(), dbArticle.getCount());
+            Article article = new Article(dbArticle.getId(), dbArticle.getCount(), new Price(dbArticle.getFrancs(), dbArticle.getCentimes()));
             article.setDelivered(dbArticle.isDelivered());
             articleList.add(article);
         }

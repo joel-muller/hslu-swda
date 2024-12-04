@@ -16,14 +16,11 @@
 package ch.hslu.swda.entities;
 
 import java.util.*;
-import java.util.Calendar;
 
-import ch.hslu.swda.business.Modifiable;
+import ch.hslu.swda.messagesIngoing.VerifyResponse;
 import ch.hslu.swda.messagesOutgoing.CustomerRequest;
-import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesOutgoing.StoreRequest;
 import ch.hslu.swda.messagesOutgoing.VerifyRequest;
-import ch.hslu.swda.micro.Service;
 
 /**
  * Einfaches Datenmodell einer Bestellung.
@@ -84,6 +81,16 @@ public final class Order {
         return employeeId;
     }
 
+    public Price getTotalPrice() {
+        int francs = 0;
+        int centimes = 0;
+        for (Article article : articles) {
+            francs += article.getPrice().getFrancs();
+            centimes += article.getPrice().getCentimes();
+        }
+        return new Price(francs, centimes);
+    }
+
     public void setArticleInStore(int articleId) {
         for (Article article : articles) {
             if (article.getId() == articleId) {
@@ -110,6 +117,26 @@ public final class Order {
         return articles;
     }
 
+
+    public void handleVerifyResponse(VerifyResponse response) {
+        if (!response.valid() || this.state.isCancelled()) {
+            this.state.setCancelled(true);
+            return;
+        }
+        Map<Integer, Integer> francsResponse = response.francsPerUnit();
+        Map<Integer, Integer> centimesResponse = response.centimesPerUnit();
+        for (Article article : this.articles) {
+            int francs = francsResponse.getOrDefault(article.getId(), -1);
+            int centimes = centimesResponse.getOrDefault(article.getId(), -1);
+            if (francs < 0 || centimes < 0) {
+                this.state.setCancelled(true);
+                return;
+            }
+            article.setPrice(francs, centimes);
+        }
+        this.state.setValid(true);
+    }
+
     public VerifyRequest getVerifyRequest() {
         return new VerifyRequest(getId(), createMapOfArticles(), getEmployeeId());
     }
@@ -120,10 +147,6 @@ public final class Order {
 
     public CustomerRequest getCustomerRequest() {
         return new CustomerRequest(getCustomerId(), getEmployeeId(), getId());
-    }
-
-    public void modify(Modifiable modifiable, IngoingMessage response, Service service) {
-        modifiable.modify(this, response, service);
     }
 
     /**
