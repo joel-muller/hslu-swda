@@ -19,24 +19,10 @@ public class UpdateOrder implements Modifiable {
     public void modify(Order order, IngoingMessage responseRaw, Service service) {
         OrderUpdate update = (OrderUpdate) responseRaw;
         LOG.info("Order update did go in to the order service {}", update.toString());
+        order.handleOrderUpdate(update);
         try {
-            if (!update.valid()) {
-                order.getCopyOfState().setCancelled(true);
-                return;
-            }
-            List<Integer> readyOrders = update.articles();
-            for (int article : readyOrders) {
-                order.setArticleInStore(article);
-            }
-            if (order.allArticlesDelivered()) {
-                State state = order.getCopyOfState();
-                state.setArticlesReady(true);
-
-                //remove following line only for testing
-                state.setCustomerReady(true);
-            }
-            if (order.getCopyOfState().isReady()) {
-                service.sendOrderReadyToStore(new OrderReady(order.getId(), order.getStoreId()));
+            if (order.isReady()) {
+                service.sendOrderReadyToStore(order.getOrderReady());
             }
         } catch (IOException e) {
             LOG.error("An error occurred while trying to update the order {}", e.getMessage());

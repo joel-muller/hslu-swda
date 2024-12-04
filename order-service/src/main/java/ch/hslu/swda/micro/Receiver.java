@@ -32,7 +32,7 @@ public class Receiver<T extends IngoingMessage> implements MessageReceiver {
             ObjectMapper mapper = new ObjectMapper();
             T response = mapper.readValue(message, messageGenericClass);
             Order order = database.getById(response.getOrderId());
-            if (!order.getCopyOfState().isCancelled()) {
+            if (!order.isCancelled()) {
                 modifiable.modify(order, response, service);
             }
             database.storeOrder(order);

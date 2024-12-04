@@ -1,6 +1,10 @@
 package ch.hslu.swda.entities;
 
 
+import ch.hslu.swda.micro.Application;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 public final class Article {
@@ -61,7 +65,9 @@ public final class Article {
     }
 
     public Article getCopy() {
-        return new Article(this.id, this.count, getPrice());
+        Article article = new Article(this.id, this.count, getPrice());
+        article.setDelivered(this.delivered);
+        return article;
     }
 
     @Override

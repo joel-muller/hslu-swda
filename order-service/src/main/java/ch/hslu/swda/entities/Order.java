@@ -18,10 +18,15 @@ package ch.hslu.swda.entities;
 import java.util.*;
 
 import ch.hslu.swda.messagesIngoing.CreateOrder;
+import ch.hslu.swda.messagesIngoing.OrderUpdate;
 import ch.hslu.swda.messagesIngoing.VerifyResponse;
 import ch.hslu.swda.messagesOutgoing.CustomerRequest;
+import ch.hslu.swda.messagesOutgoing.OrderReady;
 import ch.hslu.swda.messagesOutgoing.StoreRequest;
 import ch.hslu.swda.messagesOutgoing.VerifyRequest;
+import ch.hslu.swda.micro.Application;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Einfaches Datenmodell einer Bestellung.
@@ -94,6 +99,26 @@ public final class Order {
         this.state.setCancelled(true);
     }
 
+    public void setArticlesReady() {
+        this.state.setArticlesReady(true);
+    }
+
+    public void setCustomerValid() {
+        this.state.setCustomerReady(true);
+    }
+
+    public boolean isCustomerReady() {
+        return this.state.isCustomerReady();
+    }
+
+    public boolean isArticleReady() {
+        return this.state.isArticlesReady();
+    }
+
+    public boolean isReady() {
+        return this.state.isReady();
+    }
+
     public Price getTotalPrice() {
         int francs = 0;
         int centimes = 0;
@@ -108,6 +133,9 @@ public final class Order {
         for (Article article : articles) {
             if (article.getId() == articleId) {
                 article.setDelivered(true);
+                if (allArticlesDelivered()) {
+                    state.setArticlesReady(true);
+                }
                 return;
             }
         }
@@ -150,6 +178,20 @@ public final class Order {
         this.state.setValid(true);
     }
 
+    public void handleOrderUpdate(OrderUpdate update) {
+        if (!update.storeValid()) {
+            setCancelled();
+            return;
+        }
+        List<Integer> readyOrders = update.articles();
+        for (int article : readyOrders) {
+            setArticleInStore(article);
+        }
+        if (allArticlesDelivered()) {
+            setArticlesReady();
+        }
+    }
+
     public VerifyRequest getVerifyRequest() {
         return new VerifyRequest(getId(), createMapOfArticles(), getEmployeeId());
     }
@@ -160,6 +202,10 @@ public final class Order {
 
     public CustomerRequest getCustomerRequest() {
         return new CustomerRequest(getCustomerId(), getEmployeeId(), getId());
+    }
+
+    public OrderReady getOrderReady() {
+        return new OrderReady(getId(), getStoreId());
     }
 
     /**

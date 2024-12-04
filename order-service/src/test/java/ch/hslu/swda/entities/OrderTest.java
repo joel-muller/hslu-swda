@@ -2,6 +2,7 @@ package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import ch.hslu.swda.messagesIngoing.OrderUpdate;
 import ch.hslu.swda.messagesIngoing.VerifyResponse;
 import ch.hslu.swda.messagesOutgoing.CustomerRequest;
 import ch.hslu.swda.messagesOutgoing.StoreRequest;
@@ -9,7 +10,6 @@ import ch.hslu.swda.messagesOutgoing.VerifyRequest;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.*;
 
 class OrderTest {
@@ -156,6 +156,8 @@ class OrderTest {
     void testSetArticleInStore() {
         order.setArticleInStore(1);
         order.setArticleInStore(1);
+        Article article = order.getCopyOfArticles().getFirst();
+        assertTrue(article.isDelivered(), "article is not delivered " + article.toString());
         assertFalse(order.allArticlesDelivered());
         order.setArticleInStore(2);
         assertTrue(order.allArticlesDelivered());
@@ -194,6 +196,51 @@ class OrderTest {
         assertFalse(order.isCancelled());
         assertTrue(order.getCopyOfState().isValid());
         assertEquals(new Price(9, 60), order.getTotalPrice());
+    }
+
+    @Test
+    void testHandleOrderUpdateOnlyOne() {
+        List<Integer> ready = new ArrayList<>();
+        ready.add(1);
+        OrderUpdate update = new OrderUpdate(orderId, ready, true);
+        order.handleOrderUpdate(update);
+        List<Article> articleList = order.getCopyOfArticles();
+        Article article = articleList.getFirst();
+        assertTrue(article.isDelivered());
+        assertFalse(order.isArticleReady());
+        assertFalse(order.isCancelled());
+    }
+
+    @Test
+    void testHandleOrderUpdateBoth() {
+        List<Integer> ready = new ArrayList<>();
+        ready.add(1);
+        ready.add(2);
+        OrderUpdate update = new OrderUpdate(orderId, ready, true);
+        order.handleOrderUpdate(update);
+        List<Article> articleList = order.getCopyOfArticles();
+        Article article = articleList.getFirst();
+        assertTrue(article.isDelivered());
+        article = articleList.getLast();
+        assertTrue(article.isDelivered());
+        assertTrue(order.isArticleReady());
+        assertFalse(order.isCancelled());
+    }
+
+    @Test
+    void testHandleOrderInvalidStore() {
+        List<Integer> ready = new ArrayList<>();
+        ready.add(1);
+        ready.add(2);
+        OrderUpdate update = new OrderUpdate(orderId, ready, false);
+        order.handleOrderUpdate(update);
+        List<Article> articleList = order.getCopyOfArticles();
+        Article article = articleList.getFirst();
+        assertFalse(article.isDelivered());
+        article = articleList.getLast();
+        assertFalse(article.isDelivered());
+        assertFalse(order.isArticleReady());
+        assertTrue(order.isCancelled());
     }
 
     @Test
