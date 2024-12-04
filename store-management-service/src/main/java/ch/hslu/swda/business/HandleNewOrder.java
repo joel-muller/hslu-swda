@@ -26,7 +26,7 @@ public class HandleNewOrder implements Modifiable {
                 service.requestArticles(new InventoryRequest(request.orderId(), request.storeId(), processed.articlesHaveToGetOrdered()));
             }
             if (!processed.articlesReady().isEmpty()) {
-                service.sendOrderUpdate(new OrderUpdate(request.orderId(), processed.articlesReady(), true));
+                service.sendOrderUpdate(new OrderUpdate(request.orderId(), processed.articlesReady()));
             }
             databaseConnector.storeStore(store);
             LOG.info("New order {} arrived for the store {}", request.orderId(), request.storeId());
