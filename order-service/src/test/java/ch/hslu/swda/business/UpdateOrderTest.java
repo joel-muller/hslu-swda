@@ -6,6 +6,7 @@ import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.State;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
+import ch.hslu.swda.messagesOutgoing.OrderCancelled;
 import ch.hslu.swda.messagesOutgoing.OrderReady;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,7 @@ class UpdateOrderTest {
         articles.add(5);
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
         assertEquals(new OrderReady(order.getId(), storeId), serviceMock.orderReady);
+        assertNull(serviceMock.orderCancelled);
     }
 
     @Test
@@ -56,6 +58,7 @@ class UpdateOrderTest {
         articles.add(5);
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
         assertNull(serviceMock.orderReady);
+        assertNull(serviceMock.orderCancelled);
     }
 
     @Test
@@ -65,6 +68,7 @@ class UpdateOrderTest {
         articles.add(11);
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
         assertNull(serviceMock.orderReady);
+        assertNull(serviceMock.orderCancelled);
     }
 
     @Test
@@ -73,5 +77,15 @@ class UpdateOrderTest {
         List<Integer> articles = new ArrayList<>();
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
         assertNull(serviceMock.orderReady);
+        assertNull(serviceMock.orderCancelled);
+    }
+
+    @Test
+    void testInvalidStore() {
+        order.setCustomerValid();
+        List<Integer> articles = new ArrayList<>();
+        new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, false), serviceMock);
+        assertNull(serviceMock.orderReady);
+        assertEquals(new OrderCancelled(order.getId(), order.getStoreId()), serviceMock.orderCancelled);
     }
 }

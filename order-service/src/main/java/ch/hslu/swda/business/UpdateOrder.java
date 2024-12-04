@@ -24,6 +24,9 @@ public class UpdateOrder implements Modifiable {
             if (order.isReady()) {
                 service.sendOrderReadyToStore(order.getOrderReady());
             }
+            if (order.isCancelled()) {
+                service.sendOrderCancelledToStore(order.getOrderCancelled());
+            }
         } catch (IOException e) {
             LOG.error("An error occurred while trying to update the order {}", e.getMessage());
         }

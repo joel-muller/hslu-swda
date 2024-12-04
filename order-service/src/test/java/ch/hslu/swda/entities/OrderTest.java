@@ -90,8 +90,8 @@ class OrderTest {
     void testGetVerifyRequest() {
         VerifyRequest verifyRequest = order.getVerifyRequest();
         assertNotNull(verifyRequest, "getVerifyRequest should return a non-null VerifyRequest");
-        assertEquals(order.getId(), verifyRequest.getOrderId(), "VerifyRequest should contain the correct order ID");
-        assertEquals(order.getEmployeeId(), verifyRequest.getEmployeeId(), "VerifyRequest should contain the correct employee ID");
+        assertEquals(order.getId(), verifyRequest.orderId(), "VerifyRequest should contain the correct order ID");
+        assertEquals(order.getEmployeeId(), verifyRequest.employeeId(), "VerifyRequest should contain the correct employee ID");
     }
 
     @Test

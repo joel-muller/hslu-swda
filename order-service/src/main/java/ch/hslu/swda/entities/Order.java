@@ -20,10 +20,7 @@ import java.util.*;
 import ch.hslu.swda.messagesIngoing.CreateOrder;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
 import ch.hslu.swda.messagesIngoing.VerifyResponse;
-import ch.hslu.swda.messagesOutgoing.CustomerRequest;
-import ch.hslu.swda.messagesOutgoing.OrderReady;
-import ch.hslu.swda.messagesOutgoing.StoreRequest;
-import ch.hslu.swda.messagesOutgoing.VerifyRequest;
+import ch.hslu.swda.messagesOutgoing.*;
 import ch.hslu.swda.micro.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,6 +203,10 @@ public final class Order {
 
     public OrderReady getOrderReady() {
         return new OrderReady(getId(), getStoreId());
+    }
+
+    public OrderCancelled getOrderCancelled() {
+        return new OrderCancelled(getId(), getStoreId());
     }
 
     /**
