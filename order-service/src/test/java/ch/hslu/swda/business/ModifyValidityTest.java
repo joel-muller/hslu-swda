@@ -30,7 +30,7 @@ class ModifyValidityTest {
         Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
 
         ServiceMock service = new ServiceMock();
-        VerifyResponse response = new VerifyResponse(id, true);
+        VerifyResponse response = new VerifyResponse(id, true, new HashMap<>(), new HashMap<>());
         order.modify(new ModifyValidity(), response, service);
 
         State state = new State();
@@ -52,7 +52,7 @@ class ModifyValidityTest {
         List<Article> articles = Article.createListArticle(articlesMap);
         Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
-        VerifyResponse response = new VerifyResponse(id, true);
+        VerifyResponse response = new VerifyResponse(id, true, new HashMap<>(), new HashMap<>());
         order.modify(new ModifyValidity(), response, service);
         assertEquals(new StoreRequest(id, articlesMap, employeeId, storeId), service.storeRequest);
     }
@@ -71,7 +71,7 @@ class ModifyValidityTest {
         List<Article> articles = Article.createListArticle(articlesMap);
         Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
-        VerifyResponse response = new VerifyResponse(id, true);
+        VerifyResponse response = new VerifyResponse(id, true, new HashMap<>(), new HashMap<>());
         order.modify(new ModifyValidity(), response, service);
         assertEquals(new CustomerRequest(customerId, employeeId, id), service.customerRequest);
     }
@@ -90,7 +90,7 @@ class ModifyValidityTest {
         List<Article> articles = Article.createListArticle(articlesMap);
         Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
-        VerifyResponse response = new VerifyResponse(id, true);
+        VerifyResponse response = new VerifyResponse(id, true, new HashMap<>(), new HashMap<>());
         order.modify(new ModifyValidity(), response, service);
         assertEquals(new LogMessage(id, employeeId, "order.validate", "Order Validated, order id: " + id.toString()), service.logMessage);
     }
@@ -110,7 +110,7 @@ class ModifyValidityTest {
         List<Article> articles = Article.createListArticle(articlesMap);
         Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
-        VerifyResponse response = new VerifyResponse(id, false);
+        VerifyResponse response = new VerifyResponse(id, false, new HashMap<>(), new HashMap<>());
         order.modify(new ModifyValidity(), response, service);
 
         State state = new State();
@@ -133,7 +133,7 @@ class ModifyValidityTest {
         List<Article> articles = Article.createListArticle(articlesMap);
         Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
-        VerifyResponse response = new VerifyResponse(id, false);
+        VerifyResponse response = new VerifyResponse(id, false, new HashMap<>(), new HashMap<>());
         order.modify(new ModifyValidity(), response, service);
         assertNull(service.storeRequest);
     }
@@ -152,7 +152,7 @@ class ModifyValidityTest {
         List<Article> articles = Article.createListArticle(articlesMap);
         Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
-        VerifyResponse response = new VerifyResponse(id, false);
+        VerifyResponse response = new VerifyResponse(id, false, new HashMap<>(), new HashMap<>());
         order.modify(new ModifyValidity(), response, service);
         assertNull(service.customerRequest);
     }
@@ -171,7 +171,7 @@ class ModifyValidityTest {
         List<Article> articles = Article.createListArticle(articlesMap);
         Order order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
         ServiceMock service = new ServiceMock();
-        VerifyResponse response = new VerifyResponse(id, false);
+        VerifyResponse response = new VerifyResponse(id, false, new HashMap<>(), new HashMap<>());
         order.modify(new ModifyValidity(), response, service);
         assertEquals(new LogMessage(id, employeeId, "order.validate", "Order not validated, order id: " + id.toString()), service.logMessage);
     }
