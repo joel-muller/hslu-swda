@@ -73,8 +73,7 @@ class PriceTest {
 
     @Test
     void testWithEqualsVerifier() {
-        EqualsVerifier.forClass(Book.class)
-                .withIgnoredFields("id", "title", "author", "year", "publisher", "imageUrlS", "imageUrlM", "imageUrlL", "price") // Test based only on ISBN
+        EqualsVerifier.forClass(Price.class)
                 .verify();
     }
 }
