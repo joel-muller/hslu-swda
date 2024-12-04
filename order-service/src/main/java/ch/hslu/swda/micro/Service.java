@@ -10,4 +10,5 @@ public interface Service {
     void requestArticlesFromStore(StoreRequest request) throws IOException;
     void checkCustomerValidity(CustomerRequest request) throws IOException;
     void sendOrderReadyToStore(OrderReady ready) throws IOException;
+    void sendOrderCancelledToStore(OrderCancelled cancelled) throws IOException;
 }

@@ -11,6 +11,7 @@ public class ServiceMock implements Service {
     StoreRequest storeRequest;
     CustomerRequest customerRequest;
     OrderReady orderReady;
+    OrderCancelled orderCancelled;
 
     @Override
     public void checkValidity(VerifyRequest request) throws IOException {
@@ -36,5 +37,10 @@ public class ServiceMock implements Service {
     @Override
     public void sendOrderReadyToStore(OrderReady ready) throws IOException {
         this.orderReady = ready;
+    }
+
+    @Override
+    public void sendOrderCancelledToStore(OrderCancelled cancelled) throws IOException {
+        this.orderCancelled = cancelled;
     }
 }

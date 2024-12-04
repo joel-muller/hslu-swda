@@ -18,7 +18,7 @@ public class ModifyValidity implements Modifiable {
         try {
             VerifyResponse response = (VerifyResponse) responseRaw;
             order.handleVerifyResponse(response);
-            if (!order.getState().isCancelled()) {
+            if (!order.isCancelled()) {
                 service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.validate", "Order Validated, order id: " + order.getId().toString()));
                 service.requestArticlesFromStore(order.getStoreRequest());
                 service.checkCustomerValidity(order.getCustomerRequest());

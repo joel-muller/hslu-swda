@@ -2,9 +2,11 @@ package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import ch.hslu.swda.messagesIngoing.VerifyResponse;
 import ch.hslu.swda.messagesOutgoing.CustomerRequest;
 import ch.hslu.swda.messagesOutgoing.StoreRequest;
 import ch.hslu.swda.messagesOutgoing.VerifyRequest;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +26,7 @@ class OrderTest {
         storeId = UUID.randomUUID();
         customerId = UUID.randomUUID();
         employeeId = UUID.randomUUID();
-        articles = List.of(new Article(1, 5), new Article(2, 10));
+        articles = List.of(new Article(1, 5, new Price(15, 10)), new Article(2, 10, new Price(4, 50)));
         order = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
     }
 
@@ -141,6 +143,70 @@ class OrderTest {
                 '}';
 
         assertEquals(expectedString, order.toString(), "toString should match the expected format");
+    }
+
+    @Test
+    void testWithEqualsVerifier() {
+        EqualsVerifier.simple().forClass(Order.class)
+                .withIgnoredFields("date", "storeId", "customerId", "employeeId", "state", "articles")
+                .verify();
+    }
+
+    @Test
+    void testSetArticleInStore() {
+        order.setArticleInStore(1);
+        order.setArticleInStore(1);
+        assertFalse(order.allArticlesDelivered());
+        order.setArticleInStore(2);
+        assertTrue(order.allArticlesDelivered());
+    }
+
+    @Test
+    void testHandleVerifyResponseInvalidResponse() {
+        VerifyResponse response = new VerifyResponse(orderId, false, new HashMap<>(), new HashMap<>());
+        order.handleVerifyResponse(response);
+        assertTrue(order.isCancelled());
+        assertFalse(order.getState().isValid());
+    }
+
+    @Test
+    void testHandleVerifyResponseNotAllArticlesHere() {
+        Map<Integer, Integer> francsResponse = new HashMap<>();
+        francsResponse.put(1, 4);
+        Map<Integer, Integer> centimesResponse = new HashMap<>();
+        centimesResponse.put(1, 10);
+        VerifyResponse response = new VerifyResponse(orderId, true, francsResponse, centimesResponse);
+        order.handleVerifyResponse(response);
+        assertTrue(order.isCancelled());
+        assertFalse(order.getState().isValid());
+    }
+
+    @Test
+    void testHandleVerifyResponse() {
+        Map<Integer, Integer> francsResponse = new HashMap<>();
+        francsResponse.put(1, 4);
+        francsResponse.put(2, 5);
+        Map<Integer, Integer> centimesResponse = new HashMap<>();
+        centimesResponse.put(1, 10);
+        centimesResponse.put(2, 50);
+        VerifyResponse response = new VerifyResponse(orderId, true, francsResponse, centimesResponse);
+        order.handleVerifyResponse(response);
+        assertFalse(order.isCancelled());
+        assertTrue(order.getState().isValid());
+        assertEquals(new Price(9, 60), order.getTotalPrice());
+    }
+
+    @Test
+    void testIsCancelled() {
+        assertFalse(order.isCancelled());
+        order.setCancelled();
+        assertTrue(order.isCancelled());
+    }
+
+    @Test
+    void tesGetTotalPrice() {
+        assertEquals(19, order.getTotalPrice().getFrancs());
+        assertEquals(60, order.getTotalPrice().getCentimes());
     }
 
 }

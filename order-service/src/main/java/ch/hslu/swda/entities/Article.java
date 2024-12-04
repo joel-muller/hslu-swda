@@ -3,7 +3,7 @@ package ch.hslu.swda.entities;
 
 import java.util.*;
 
-public class Article {
+public final class Article {
     private final int id;
     private final int count;
     private boolean delivered;

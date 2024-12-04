@@ -32,7 +32,9 @@ public class Receiver<T extends IngoingMessage> implements MessageReceiver {
             ObjectMapper mapper = new ObjectMapper();
             T response = mapper.readValue(message, messageGenericClass);
             Order order = database.getById(response.getOrderId());
-            modifiable.modify(order, response, service);
+            if (!order.getState().isCancelled()) {
+                modifiable.modify(order, response, service);
+            }
             database.storeOrder(order);
         } catch (IOException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());

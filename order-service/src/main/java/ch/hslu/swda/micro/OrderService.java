@@ -91,13 +91,17 @@ public final class OrderService implements AutoCloseable, Service {
         sendMessageAsynchronous(ready, Routes.ORDER_READY);
     }
 
+    @Override
+    public void sendOrderCancelledToStore(OrderCancelled cancelled) throws IOException {
+        sendMessageAsynchronous(cancelled, Routes.ORDER_CANCELLED);
+    }
+
     public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(message);
         LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.LOG);
         bus.talkAsync(exchangeName, route, data);
     }
-
 
     private void generalReceiver(String channel, MessageReceiver receiver) throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", channel);

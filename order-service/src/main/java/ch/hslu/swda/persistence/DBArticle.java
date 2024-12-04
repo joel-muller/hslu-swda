@@ -5,7 +5,6 @@ import dev.morphia.annotations.Id;
 
 @Entity("article")
 public class DBArticle {
-    @Id
     private final int id;
     private final int count;
     private boolean delivered;

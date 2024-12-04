@@ -32,6 +32,7 @@ public final class Routes {
     static final String REQUEST_ARTICLES = "store.request-articles";
     static final String CHECK_CUSTOMER = "customer.validate";
     static final String ORDER_READY = "store.order-ready";
+    static final String ORDER_CANCELLED = "store.order-cancelled";
 
     /**
      * No instance allowed.

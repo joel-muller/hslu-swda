@@ -28,7 +28,7 @@ import ch.hslu.swda.messagesOutgoing.VerifyRequest;
 
 public final class Order {
     private final UUID id;
-    private State state;
+    private final State state;
     private List<Article> articles;
     private final Date date;
     private final UUID storeId;
@@ -53,10 +53,6 @@ public final class Order {
         return state;
     }
 
-    public void setState(State state) {
-        this.state = state;
-    }
-
     public List<Article> getArticles() {
         return articles;
     }
@@ -79,6 +75,14 @@ public final class Order {
 
     public UUID getEmployeeId() {
         return employeeId;
+    }
+
+    public boolean isCancelled() {
+        return this.state.isCancelled();
+    }
+
+    public void setCancelled() {
+        this.state.setCancelled(true);
     }
 
     public Price getTotalPrice() {
@@ -119,8 +123,8 @@ public final class Order {
 
 
     public void handleVerifyResponse(VerifyResponse response) {
-        if (!response.valid() || this.state.isCancelled()) {
-            this.state.setCancelled(true);
+        if (!response.valid()) {
+            setCancelled();
             return;
         }
         Map<Integer, Integer> francsResponse = response.francsPerUnit();
@@ -129,7 +133,7 @@ public final class Order {
             int francs = francsResponse.getOrDefault(article.getId(), -1);
             int centimes = centimesResponse.getOrDefault(article.getId(), -1);
             if (francs < 0 || centimes < 0) {
-                this.state.setCancelled(true);
+                setCancelled();
                 return;
             }
             article.setPrice(francs, centimes);
@@ -157,8 +161,8 @@ public final class Order {
         if (this == obj) {
             return true;
         }
-        return obj instanceof Order ord
-                && this.id == ord.id;
+        if (!(obj instanceof Order order)) return false;
+        return Objects.equals(order.getId(), this.getId());
     }
 
     /**
