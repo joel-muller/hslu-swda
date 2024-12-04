@@ -18,8 +18,8 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.ArticleHandler;
+import ch.hslu.swda.business.CSVReader;
 import ch.hslu.swda.entities.LogMessage;
-import ch.hslu.swda.entities.Student;
 import ch.hslu.swda.entities.Validity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public final class ArticleRegistryService implements AutoCloseable {
      * @throws IOException      IO-Fehler.
      * @throws TimeoutException Timeout.
      */
-    ArticleRegistryService() throws IOException, TimeoutException, InterruptedException {
+    ArticleRegistryService() throws IOException, TimeoutException {
 
         // thread info
         String threadName = Thread.currentThread().getName();
@@ -56,7 +56,11 @@ public final class ArticleRegistryService implements AutoCloseable {
         this.bus.connect();
 
         // load the articles
-        this.articleHandler = new ArticleHandler();
+        try {
+            this.articleHandler = new ArticleHandler(CSVReader.getBooks());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         // start message receivers
         this.receiveValidityCheck();

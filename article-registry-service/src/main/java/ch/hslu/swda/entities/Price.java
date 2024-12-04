@@ -1,45 +1,43 @@
 package ch.hslu.swda.entities;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import java.util.List;
 import java.util.Objects;
 
-public class Price {
-    private final int franken;
-    private final int rappen;
+public final class Price {
+    private final int francs;
+    private final int centimes;
 
-    public Price(int franken, int rappen) {
-        this.franken = franken;
-        if (rappen % 5 != 0) {
-            throw new IllegalArgumentException("Rappen ist nicht auch 5 genau");
+    public Price(int francs, int centimes) {
+        this.francs = francs;
+        if (centimes % 5 != 0) {
+            throw new IllegalArgumentException("Centimes should be divisible through 5");
         }
-        this.rappen = rappen;
+        this.centimes = centimes;
     }
 
     public static Price generateFromList(List<String> list) throws NumberFormatException {
-        int franken = Integer.parseInt(list.get(1));
-        int rappen = Integer.parseInt(list.get(2));
-        return new Price(franken, rappen);
+        int francs = Integer.parseInt(list.get(1));
+        int centimes = Integer.parseInt(list.get(2));
+        return new Price(francs, centimes);
     }
 
-    public int getFranken() {
-        return franken;
+    public int getFrancs() {
+        return francs;
     }
 
-    public int getRappen() {
-        return rappen;
+    public int getCentimes() {
+        return centimes;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Price price)) return false;
-        return franken == price.franken && rappen == price.rappen;
+        return francs == price.francs && centimes == price.centimes;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(franken, rappen);
+        return Objects.hash(francs, centimes);
     }
 }

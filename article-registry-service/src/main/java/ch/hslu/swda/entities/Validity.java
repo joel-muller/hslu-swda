@@ -18,4 +18,4 @@ package ch.hslu.swda.entities;
 import java.util.Map;
 import java.util.UUID;
 
-public record Validity(UUID idOrder, boolean valid, Map<Integer, Integer> franken, Map<Integer, Integer> rappen) { }
+public record Validity(UUID idOrder, boolean valid, Map<Integer, Integer> francsPerUnit, Map<Integer, Integer> centimesPerUnit) { }

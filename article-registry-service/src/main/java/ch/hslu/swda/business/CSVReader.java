@@ -5,7 +5,6 @@ import ch.hslu.swda.entities.Price;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.plaf.IconUIResource;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,15 +34,15 @@ public class CSVReader {
                 currentId++;
                 count ++;
             }
-            if (count != NUMBER_OF_ARTICLES) throw new IOException("Not all books could be scanned only {} books" + currentId);
-            LOG.info("All {} articles have been successfully initialized", NUMBER_OF_ARTICLES);
         } catch (IOException e) {
             LOG.error("Error occurred while reading the file: {}", e.getMessage());
         }
+        if (count != NUMBER_OF_ARTICLES) throw new RuntimeException("Not all books could be scanned only {} books" + currentId);
+        LOG.info("All {} articles have been successfully initialized", NUMBER_OF_ARTICLES);
         return records;
     }
 
-    public static Map<Integer, Price> addPrices() throws InterruptedException {
+    private static Map<Integer, Price> addPrices() throws InterruptedException {
         Map<Integer, Price> prices = new HashMap<>();
         int currentId = MIN_ID;
         int count = 0;
@@ -61,7 +60,7 @@ public class CSVReader {
         } catch (NumberFormatException e) {
             LOG.error("Parsing strings to price was not possible {}", e.getMessage());
         }
-        if (count != NUMBER_OF_ARTICLES) throw new InterruptedException("Not all books could be scanned" + currentId);
+        if (count != NUMBER_OF_ARTICLES) throw new RuntimeException("Not all books could be scanned" + currentId);
         LOG.info("All {} prices have been successfully initialized", NUMBER_OF_ARTICLES);
         return prices;
     }

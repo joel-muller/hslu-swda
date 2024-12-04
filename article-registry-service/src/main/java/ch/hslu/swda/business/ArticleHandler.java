@@ -17,14 +17,8 @@ public class ArticleHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ArticleHandler.class);
 
 
-    public ArticleHandler() throws InterruptedException {
-        this.articles = CSVReader.getBooks();
-    }
-
-    public void printArticles() {
-        for (Book book : articles) {
-            LOG.info(book.toString());
-        }
+    public ArticleHandler(List<Book> articles) {
+        this.articles = articles;
     }
 
     private boolean checkArticles(Map<Integer, Integer> map) {
@@ -41,24 +35,25 @@ public class ArticleHandler {
         return true;
     }
 
-    public Validity generateValidity(Map<Integer, Integer> articles, UUID orderId) throws InterruptedException {
+    public Validity generateValidity(Map<Integer, Integer> articles, UUID orderId) {
         if (articles.isEmpty() || !checkArticles(articles)) {
             return new Validity(orderId, false, new HashMap<>(), new HashMap<>());
         }
-        Map<Integer, Integer> franken = new HashMap<>();
-        Map<Integer, Integer> rappen = new HashMap<>();
+        Map<Integer, Integer> francs = new HashMap<>();
+        Map<Integer, Integer> centimes = new HashMap<>();
         for (int id : articles.keySet()) {
             Book book = getBook(id);
             if (book == null) {
-                throw new InterruptedException("Error while loading a book");
+                // Throwing runtime exception because the article validity is given, so something has to be wrong with the list because the book should be here
+                throw new RuntimeException("Error while loading a book");
             }
-            franken.put(id, book.getFranken());
-            rappen.put(id, book.getFranken());
+            francs.put(id, book.getFrancs());
+            centimes.put(id, book.getCentimes());
         }
-        return new Validity(orderId, true, franken, rappen);
+        return new Validity(orderId, true, francs, centimes);
     }
 
-    private Book getBook(int id) {
+    protected Book getBook(int id) {
         for (Book book : articles) {
             if (book.getId() == id) {
                 return book;

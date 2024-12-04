@@ -1,9 +1,10 @@
 package ch.hslu.swda.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Book {
+public final class Book {
     private final int id;
     private final String isbn;
     private final String title;
@@ -28,8 +29,19 @@ public class Book {
         this.price = price;
     }
 
-    public static Book generateFromList(int id, List<String> list, Price price) {
+    public static Book generateFromList(int id, List<String> listRaw, Price price) {
+        List<String> list = new ArrayList<>();
+        for (String item : listRaw) {
+            list.add(removeQuotes(item));
+        }
         return new Book(id, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7), price);
+    }
+
+    public static String removeQuotes(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.replace("\"", "").replace("'", "");
     }
 
     public int getId() {
@@ -72,12 +84,12 @@ public class Book {
         return price;
     }
 
-    public int getFranken() {
-        return price.getFranken();
+    public int getFrancs() {
+        return price.getFrancs();
     }
 
-    public int getRappen() {
-        return price.getRappen();
+    public int getCentimes() {
+        return price.getCentimes();
     }
 
     @Override
