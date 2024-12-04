@@ -157,4 +157,10 @@ class PriceTest {
             new Price(3, -5);
         }, "Creating a Price with negative centimes should throw IllegalArgumentException");
     }
+
+    @Test
+    void testToString() {
+        assertEquals("Price{5.05 Francs}", new Price(5, 5).toString());
+        assertEquals("Price{8.15 Francs}", new Price(8, 15).toString());
+    }
 }
