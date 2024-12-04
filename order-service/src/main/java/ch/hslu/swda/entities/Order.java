@@ -17,6 +17,7 @@ package ch.hslu.swda.entities;
 
 import java.util.*;
 
+import ch.hslu.swda.messagesIngoing.CreateOrder;
 import ch.hslu.swda.messagesIngoing.VerifyResponse;
 import ch.hslu.swda.messagesOutgoing.CustomerRequest;
 import ch.hslu.swda.messagesOutgoing.StoreRequest;
@@ -41,20 +42,28 @@ public final class Order {
         this.storeId = storeId;
         this.customerId = customerId;
         this.employeeId = employeeId;
-        this.state = state;
+        this.state = state.getCopy();
         this.articles = articles;
+    }
+
+    public Order(CreateOrder createOrder) {
+        this(UUID.randomUUID(), Calendar.getInstance().getTime(), createOrder.storeId(), createOrder.customerId(), createOrder.employeeId(), new State(), Article.createListArticle(createOrder.articles()));
     }
 
     public UUID getId() {
         return id;
     }
 
-    public State getState() {
-        return state;
+    public State getCopyOfState() {
+        return state.getCopy();
     }
 
-    public List<Article> getArticles() {
-        return articles;
+    public List<Article> getCopyOfArticles() {
+        List<Article> copy = new ArrayList<>();
+        for (Article article : this.articles) {
+            copy.add(article.getCopy());
+        }
+        return copy;
     }
 
     public void setArticles(List<Article> articles) {
@@ -113,7 +122,7 @@ public final class Order {
         return true;
     }
 
-    protected Map<Integer, Integer> createMapOfArticles() {
+    public Map<Integer, Integer> createMapOfArticles() {
         Map<Integer, Integer> articles = new HashMap<Integer, Integer>();
         for (Article art : this.articles) {
             articles.put(art.getId(), art.getCount());

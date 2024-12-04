@@ -21,7 +21,7 @@ public class UpdateOrder implements Modifiable {
         LOG.info("Order update did go in to the order service {}", update.toString());
         try {
             if (!update.valid()) {
-                order.getState().setCancelled(true);
+                order.getCopyOfState().setCancelled(true);
                 return;
             }
             List<Integer> readyOrders = update.articles();
@@ -29,13 +29,13 @@ public class UpdateOrder implements Modifiable {
                 order.setArticleInStore(article);
             }
             if (order.allArticlesDelivered()) {
-                State state = order.getState();
+                State state = order.getCopyOfState();
                 state.setArticlesReady(true);
 
                 //remove following line only for testing
                 state.setCustomerReady(true);
             }
-            if (order.getState().isReady()) {
+            if (order.getCopyOfState().isReady()) {
                 service.sendOrderReadyToStore(new OrderReady(order.getId(), order.getStoreId()));
             }
         } catch (IOException e) {

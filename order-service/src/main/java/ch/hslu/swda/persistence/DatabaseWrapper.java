@@ -11,11 +11,11 @@ import java.util.List;
 public class DatabaseWrapper {
     public static DBOrder createDBOrder(Order order) {
         List<DBArticle> dbArticleList = new ArrayList<>();
-        List<Article> articleList = order.getArticles();
+        List<Article> articleList = order.getCopyOfArticles();
         for (Article article : articleList) {
             dbArticleList.add(new DBArticle(article.getId(), article.getCount(), article.isDelivered(), article.getPrice().getFrancs(), article.getPrice().getCentimes()));
         }
-        State state = order.getState();
+        State state = order.getCopyOfState();
         DBState dbState = new DBState(state.isValid(), state.isArticlesReady(), state.isCustomerReady(), state.isDelivered(), state.isCancelled());
         return new DBOrder(order.getId(), dbState, dbArticleList, order.getDate(), order.getStoreId(), order.getCustomerId(), order.getEmployeeId());
     }

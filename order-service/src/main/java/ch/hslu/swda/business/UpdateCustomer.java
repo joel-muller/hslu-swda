@@ -14,10 +14,10 @@ public class UpdateCustomer implements Modifiable {
     public void modify(Order order, IngoingMessage responseRaw, Service service) {
         CustomerResponse response = (CustomerResponse) responseRaw;
         if (response.exists()) {
-            order.getState().setCustomerReady(true);
+            order.getCopyOfState().setCustomerReady(true);
             LOG.info("Order with the id {} has a valid customer", order.getId());
         } else {
-            order.getState().setCancelled(true);
+            order.getCopyOfState().setCancelled(true);
             LOG.info("Order with the id {} has not a valid customer", order.getId());
         }
     }

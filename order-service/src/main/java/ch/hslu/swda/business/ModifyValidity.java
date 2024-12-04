@@ -24,7 +24,7 @@ public class ModifyValidity implements Modifiable {
                 service.checkCustomerValidity(order.getCustomerRequest());
                 LOG.info("Received Validity check oder with the id {} is Valid", order.getId());
             } else {
-                order.getState().setCancelled(true);
+                order.getCopyOfState().setCancelled(true);
                 service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.validate", "Order not validated, order id: " + order.getId().toString()));
                 LOG.info("Received Validity check oder with the id {} is not Valid", order.getId());
             }

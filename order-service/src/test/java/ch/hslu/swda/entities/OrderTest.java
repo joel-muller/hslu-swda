@@ -37,19 +37,19 @@ class OrderTest {
 
     @Test
     void testGetState() {
-        assertNotNull(order.getState(), "getState should return a non-null State object");
+        assertNotNull(order.getCopyOfState(), "getState should return a non-null State object");
     }
 
     @Test
     void testGetArticles() {
-        assertEquals(articles, order.getArticles(), "getArticles should return the correct list of articles");
+        assertEquals(articles, order.getCopyOfArticles(), "getArticles should return the correct list of articles");
     }
 
     @Test
     void testSetArticles() {
         List<Article> newArticles = List.of(new Article(3, 15));
         order.setArticles(newArticles);
-        assertEquals(newArticles, order.getArticles(), "setArticles should update the articles list");
+        assertEquals(newArticles, order.getCopyOfArticles(), "setArticles should update the articles list");
     }
 
     @Test
@@ -100,7 +100,7 @@ class OrderTest {
         assertNotNull(storeRequest, "getStoreRequest should return a non-null StoreRequest");
         assertEquals(order.getId(), storeRequest.getOrderId(), "StoreRequest should contain the correct order ID");
         assertEquals(order.getEmployeeId(), storeRequest.getEmployeeId(), "StoreRequest should contain the correct employee ID");
-        assertEquals(order.getArticles().size(), storeRequest.getArticles().size(), "Not all articles where given with the store request");
+        assertEquals(order.getCopyOfArticles().size(), storeRequest.getArticles().size(), "Not all articles where given with the store request");
     }
 
     @Test
@@ -134,7 +134,7 @@ class OrderTest {
     void testToString() {
         String expectedString = "Order{" +
                 "id=" + orderId +
-                ", state=" + order.getState() +
+                ", state=" + order.getCopyOfState() +
                 ", articles=" + articles +
                 ", date=" + order.getDate() +
                 ", storeId=" + storeId +
@@ -166,7 +166,7 @@ class OrderTest {
         VerifyResponse response = new VerifyResponse(orderId, false, new HashMap<>(), new HashMap<>());
         order.handleVerifyResponse(response);
         assertTrue(order.isCancelled());
-        assertFalse(order.getState().isValid());
+        assertFalse(order.getCopyOfState().isValid());
     }
 
     @Test
@@ -178,7 +178,7 @@ class OrderTest {
         VerifyResponse response = new VerifyResponse(orderId, true, francsResponse, centimesResponse);
         order.handleVerifyResponse(response);
         assertTrue(order.isCancelled());
-        assertFalse(order.getState().isValid());
+        assertFalse(order.getCopyOfState().isValid());
     }
 
     @Test
@@ -192,7 +192,7 @@ class OrderTest {
         VerifyResponse response = new VerifyResponse(orderId, true, francsResponse, centimesResponse);
         order.handleVerifyResponse(response);
         assertFalse(order.isCancelled());
-        assertTrue(order.getState().isValid());
+        assertTrue(order.getCopyOfState().isValid());
         assertEquals(new Price(9, 60), order.getTotalPrice());
     }
 

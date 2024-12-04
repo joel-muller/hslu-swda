@@ -28,6 +28,14 @@ public final class Article {
         return list;
     }
 
+    public static List<Article> copyListArticle(List<Article> articles) {
+        List<Article> articleList = new ArrayList<>();
+        for (Article article : articles) {
+            articleList.add(article.getCopy());
+        }
+        return articleList;
+    }
+
     public int getId() {
         return id;
     }
@@ -50,6 +58,10 @@ public final class Article {
 
     public Price getPrice() {
         return new Price(this.price.getFrancs(), this.price.getCentimes());
+    }
+
+    public Article getCopy() {
+        return new Article(this.id, this.count, getPrice());
     }
 
     @Override

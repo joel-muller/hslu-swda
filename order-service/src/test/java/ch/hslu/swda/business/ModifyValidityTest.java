@@ -56,7 +56,7 @@ class ModifyValidityTest {
         new ModifyValidity().modify(order, response, serviceMock);
         State state = new State();
         state.setValid(true);
-        assertEquals(state, order.getState());
+        assertEquals(state, order.getCopyOfState());
     }
 
     @Test
@@ -86,7 +86,7 @@ class ModifyValidityTest {
         new ModifyValidity().modify(order, response, serviceMock);
         State state = new State();
         state.setCancelled(true);
-        assertEquals(state, order.getState());
+        assertEquals(state, order.getCopyOfState());
     }
 
 

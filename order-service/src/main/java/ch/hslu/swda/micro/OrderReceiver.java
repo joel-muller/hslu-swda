@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.entities.State;
+import ch.hslu.swda.messagesIngoing.CreateOrder;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
@@ -62,24 +63,14 @@ public final class OrderReceiver implements MessageReceiver {
             LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
 
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode orderNode = mapper.readTree(message);
+            CreateOrder orderNode = mapper.readValue(message, CreateOrder.class);
 
-            UUID orderId = UUID.randomUUID();
-
-            String articlesString = orderNode.get("articles").toString();
-            Map<Integer, Integer> articlesMap = mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
-            List<Article> articles = Article.createListArticle(articlesMap);
-
-            UUID storeId = UUID.fromString(orderNode.get("storeId").asText());
-            UUID customerId = UUID.fromString(orderNode.get("customerId").asText());
-            UUID employeeId = UUID.fromString(orderNode.get("employeeId").asText());
-
-            Order order = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+            Order order = new Order(orderNode);
 
             this.database.storeOrder(order);
 
             LOG.info("Following order received and stored: [{}]", order.toString());
-            service.log(new LogMessage(orderId, order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
+            service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
 
             service.checkValidity(order.getVerifyRequest());
             bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());

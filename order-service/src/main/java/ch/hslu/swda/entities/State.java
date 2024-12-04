@@ -64,6 +64,16 @@ public final class State {
         this.cancelled = cancelled;
     }
 
+    public State getCopy() {
+        State state = new State();
+        state.setCancelled(this.isCancelled());
+        state.setValid(this.isValid());
+        state.setDelivered(this.isDelivered());
+        state.setArticlesReady(this.isArticlesReady());
+        state.setCustomerReady(this.isCustomerReady());
+        return state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
