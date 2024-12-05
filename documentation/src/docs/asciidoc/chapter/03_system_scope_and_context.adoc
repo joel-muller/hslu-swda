@@ -38,23 +38,14 @@ GET http://IP/api/v1/stores/: gibt alle Stores zurück.
 
 ==== Store Management
 
+store.request-articles
+store.inventory-update
+store.order-ready
+store.status
 store.create (leere message)
 store.create-default (leere message)
-
-inventory.update (auch für das Hinzufügen neuer Artikel/Einträge in die Inventory-Datenbank)
-
-* store: String
-* articleId : int
-* minimuimQuantity: int
-* actualQuantity: int
-
-
-inventory.check
-
-* store: String
-* articleId : int
-
-
+stores.get
+ 
 ==== Article Registry
 
 article.create
@@ -160,14 +151,21 @@ customer.delete
 
 ==== Accounting
 
-confirmation.create
-
-* orderId : UUID
-* customerId : UUID
-
 invoice.create
 
 * orderId : UUID
+* customerId : UUID
+* employeeId : UUID
+* storeId : UUID
+* Artikel (Format TBD)
+* Preise (Format TBD)
+* Gesamtpreis : int
+
+invoice.get
+* customerId : UUID
+* invoiceId : UUID
+
+paymentwarning.get
 * customerId : UUID
 
 === DB Entries
@@ -208,7 +206,9 @@ Sortiment (Store Management)
 
 Store (Store Management)
 
-* TBD
+* id: UUID
+* articleList : List<StoreArticle>
+* openOrders : List<Order>
 
 LogEntry (Log)
 
