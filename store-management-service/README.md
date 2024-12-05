@@ -22,9 +22,3 @@ Vorausgesetzt, der backbone läuft, kann der Service lokal vielfältig gestartet
   * `mvn docker:logs` - Anzeige der Logs
   * `mvn docker:stop` - Stoppen und löschen des Containers
 * Docker pur: `docker run --rm -it -e "RMQ_HOST=host.docker.internal" swda-24fs01/store-management-service`
-
-## TO Do
--[x] Make gateway to store management (CRUD from stores (no delete)) - Order Microservice als Vorbild - Céline
--[x] Integration to order - Joel
--[] Integration to central warehouse
--[x] Setup service with random stores (übers Gateway - generate store, generate default stores) - Céline
