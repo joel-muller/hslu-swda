@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-
 /**
- * StoreManagementController is a REST controller that handles HTTP POST requests
+ * StoreManagementController is a REST controller that handles HTTP POST
+ * requests
  * for creating new store entries. It communicates with a message bus to send
  * store creation requests and logs the responses.
  * 
@@ -30,17 +30,23 @@ import java.util.concurrent.TimeoutException;
  * Dependencies:
  * - Logger: Used for logging information.
  * - RabbitMqConfig: Provides configuration for RabbitMQ exchange.
- * - BusConnector: Manages the connection and communication with the message bus.
+ * - BusConnector: Manages the connection and communication with the message
+ * bus.
  * - ObjectMapper: Used for converting Java objects to JSON and vice versa.
  * 
  * Methods:
- * - receive(Store store): Handles HTTP POST requests to create a new store. UUID for the store is not required as it will be assigned automatically.
- *   Connects to the message bus, sends the store creation request, and logs the response.
+ * - receive(Store store): Handles HTTP POST requests to create a new store.
+ * UUID for the store is not required as it will be assigned automatically.
+ * Connects to the message bus, sends the store creation request, and logs the
+ * response.
  * 
  * Exceptions:
- * - IOException: Thrown if an I/O error occurs during communication with the message bus.
- * - TimeoutException: Thrown if a timeout occurs while waiting for a response from the message bus.
- * - InterruptedException: Thrown if the thread is interrupted while waiting for a response from the message bus.
+ * - IOException: Thrown if an I/O error occurs during communication with the
+ * message bus.
+ * - TimeoutException: Thrown if a timeout occurs while waiting for a response
+ * from the message bus.
+ * - InterruptedException: Thrown if the thread is interrupted while waiting for
+ * a response from the message bus.
  */
 @Tag(name = "StoreManagement")
 
@@ -53,16 +59,18 @@ public class StoreManagementController {
     private ObjectMapper mapper;
 
     @Post("/")
-    public void receive(@Body Store store) {
+    public String receive(@Body Store store) {
         try {
             bus.connect();
             String reply = bus.talkSync(exchangeName, "store.create", mapper.writeValueAsString(store));
             if (reply == null) {
-                LOG.info("received no empty reply from service");
+                LOG.info("received no reply from service");
+                return "no reply from service";
             } else {
                 LOG.info("received reply: " + reply);
+                return reply;
             }
-            ;
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
@@ -72,18 +80,19 @@ public class StoreManagementController {
         }
     }
 
-
     @Post("/create/")
-    public void createStore() {
+    public String createStore() {
         try {
             bus.connect();
             String reply = bus.talkSync(exchangeName, "store.create", "");
             if (reply == null) {
-                LOG.info("received empty reply from service");
+                LOG.info("received no reply from service");
+                return "no reply from service";
             } else {
                 LOG.info("received reply: " + reply);
+                return reply;
             }
-            ;
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
@@ -93,18 +102,19 @@ public class StoreManagementController {
         }
     }
 
-
     @Post("/createdefault/")
-    public void createDefaultStores() {
+    public String createDefaultStores() {
         try {
             bus.connect();
             String reply = bus.talkSync(exchangeName, "store.create-default", "");
             if (reply == null) {
                 LOG.info("received empty reply from service");
+                return "no reply from service";
             } else {
                 LOG.info("received reply: " + reply);
+                return reply;
             }
-            ;
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
@@ -114,18 +124,18 @@ public class StoreManagementController {
         }
     }
 
-
     @Get("/")
-    public void getStores() {
+    public String getStores() {
         try {
             bus.connect();
             String reply = bus.talkSync(exchangeName, "stores.get", "");
             if (reply == null) {
                 LOG.info("received empty reply from service");
+                return "no reply from service";
             } else {
                 LOG.info("received reply: " + reply);
+                return reply;
             }
-            ;
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
@@ -134,6 +144,5 @@ public class StoreManagementController {
             throw new RuntimeException(e);
         }
     }
-
 
 }
