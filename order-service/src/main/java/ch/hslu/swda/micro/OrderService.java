@@ -18,6 +18,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.business.CancelOrder;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.business.ModifyValidity;
 import ch.hslu.swda.business.UpdateCustomer;
@@ -64,6 +65,7 @@ public final class OrderService implements AutoCloseable, Service {
         this.generalReceiver(Routes.RECEIVE_ORDER, new OrderReceiver(this.database, exchangeName, bus, this));
         this.generalReceiver(Routes.ORDER_UPDATE, new Receiver<>(this.database, new UpdateOrder(), OrderUpdate.class, this));
         this.generalReceiver(Routes.CUSTOMER_RECEIVE_VALIDITY, new Receiver<>(this.database, new UpdateCustomer(), CustomerResponse.class, this));
+        this.generalReceiver(Routes.ORDER_CANCEL, new ReceiverSynchronous<>(this.database, exchangeName, bus, new CancelOrder(), OrderCancel.class, this));
     }
 
     @Override
