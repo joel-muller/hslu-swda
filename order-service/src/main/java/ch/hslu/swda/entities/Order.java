@@ -21,9 +21,6 @@ import ch.hslu.swda.messagesIngoing.CreateOrder;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
 import ch.hslu.swda.messagesIngoing.VerifyResponse;
 import ch.hslu.swda.messagesOutgoing.*;
-import ch.hslu.swda.micro.Application;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Einfaches Datenmodell einer Bestellung.
@@ -31,33 +28,35 @@ import org.slf4j.LoggerFactory;
 
 public final class Order {
     private final UUID id;
-    private final State state;
-    private List<Article> articles;
+    private final List<Article> articles;
     private final Date date;
     private final UUID storeId;
     private final UUID customerId;
     private final UUID employeeId;
+    private StateEnum stateEnum;
+    private boolean cancelled;
 
-    public Order(UUID id, Date date, UUID storeId, UUID customerId, UUID employeeId, State state, List<Article> articles) {
+    public Order(UUID id, Date date, UUID storeId, UUID customerId, UUID employeeId, List<Article> articles, StateEnum stateEnum, boolean cancelled) {
         this.id = id;
         this.date = date;
         this.storeId = storeId;
         this.customerId = customerId;
         this.employeeId = employeeId;
-        this.state = state.getCopy();
-        this.articles = articles;
+        this.articles = Article.copyListArticle(articles);
+        this.cancelled = cancelled;
+        this.stateEnum = stateEnum;
     }
 
     public Order(CreateOrder createOrder) {
-        this(UUID.randomUUID(), Calendar.getInstance().getTime(), createOrder.storeId(), createOrder.customerId(), createOrder.employeeId(), new State(), Article.createListArticle(createOrder.articles()));
+        this(UUID.randomUUID(), Calendar.getInstance().getTime(), createOrder.storeId(), createOrder.customerId(), createOrder.employeeId(), Article.createListArticle(createOrder.articles()), StateEnum.STORED, false);
     }
 
     public UUID getId() {
         return id;
     }
 
-    public State getCopyOfState() {
-        return state.getCopy();
+    public StateEnum getState() {
+        return stateEnum;
     }
 
     public List<Article> getCopyOfArticles() {
@@ -66,10 +65,6 @@ public final class Order {
             copy.add(article.getCopy());
         }
         return copy;
-    }
-
-    public void setArticles(List<Article> articles) {
-        this.articles = articles;
     }
 
     public Date getDate() {
@@ -89,31 +84,53 @@ public final class Order {
     }
 
     public boolean isCancelled() {
-        return this.state.isCancelled();
+        return cancelled;
     }
 
     public void setCancelled() {
-        this.state.setCancelled(true);
+        cancelled = true;
     }
 
-    public void setArticlesReady() {
-        this.state.setArticlesReady(true);
+    public boolean isArticlesValid() {
+        return !(this.stateEnum.equals(StateEnum.STORED));
+    }
+
+    public void setArticlesValid() {
+        if (this.stateEnum.equals(StateEnum.STORED)) {
+            this.stateEnum = StateEnum.ARTICLE_VALIDATED;
+        }
     }
 
     public void setCustomerValid() {
-        this.state.setCustomerReady(true);
+        if (this.stateEnum.equals(StateEnum.ARTICLE_VALIDATED)) {
+            this.stateEnum = StateEnum.CUSTOMER_VALID;
+            if (allArticlesDelivered()) {
+                this.stateEnum = StateEnum.READY;
+            }
+        }
     }
 
     public boolean isCustomerReady() {
-        return this.state.isCustomerReady();
-    }
-
-    public boolean isArticleReady() {
-        return this.state.isArticlesReady();
+        return (this.stateEnum.equals(StateEnum.CUSTOMER_VALID) || this.stateEnum.equals(StateEnum.READY));
     }
 
     public boolean isReady() {
-        return this.state.isReady();
+        return this.stateEnum.equals(StateEnum.READY);
+    }
+
+    public void tryToSetReady() {
+        if (this.stateEnum.equals(StateEnum.CUSTOMER_VALID) && allArticlesDelivered()) {
+            this.stateEnum = StateEnum.READY;
+        }
+    }
+
+    public boolean isArticleReady() {
+        for (Article article : articles) {
+            if (!article.isDelivered()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Price getTotalPrice() {
@@ -130,9 +147,6 @@ public final class Order {
         for (Article article : articles) {
             if (article.getId() == articleId) {
                 article.setDelivered(true);
-                if (allArticlesDelivered()) {
-                    state.setArticlesReady(true);
-                }
                 return;
             }
         }
@@ -172,7 +186,7 @@ public final class Order {
             }
             article.setPrice(francs, centimes);
         }
-        this.state.setValid(true);
+        setArticlesValid();
     }
 
     public void handleOrderUpdate(OrderUpdate update) {
@@ -184,9 +198,7 @@ public final class Order {
         for (int article : readyOrders) {
             setArticleInStore(article);
         }
-        if (allArticlesDelivered()) {
-            setArticlesReady();
-        }
+        tryToSetReady();
     }
 
     public VerifyRequest getVerifyRequest() {
@@ -233,7 +245,7 @@ public final class Order {
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", state=" + state +
+                ", state=" + stateEnum +
                 ", articles=" + articles+
                 ", date=" + date +
                 ", storeId=" + storeId +

@@ -17,7 +17,6 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.entities.State;
 import ch.hslu.swda.messagesIngoing.CreateOrder;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.entities.Article;
@@ -73,7 +72,7 @@ public final class OrderReceiver implements MessageReceiver {
             service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
 
             service.checkValidity(order.getVerifyRequest());
-            bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.toString());
+            bus.reply(exchangeName, replyTo, corrId, "Order Successfully created: " + order.getId());
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }

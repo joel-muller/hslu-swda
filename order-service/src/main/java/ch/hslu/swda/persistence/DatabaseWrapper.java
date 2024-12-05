@@ -1,9 +1,6 @@
 package ch.hslu.swda.persistence;
 
-import ch.hslu.swda.entities.Article;
-import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.entities.Price;
-import ch.hslu.swda.entities.State;
+import ch.hslu.swda.entities.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +12,7 @@ public class DatabaseWrapper {
         for (Article article : articleList) {
             dbArticleList.add(new DBArticle(article.getId(), article.getCount(), article.isDelivered(), article.getPrice().getFrancs(), article.getPrice().getCentimes()));
         }
-        State state = order.getCopyOfState();
-        DBState dbState = new DBState(state.isValid(), state.isArticlesReady(), state.isCustomerReady(), state.isDelivered(), state.isCancelled());
-        return new DBOrder(order.getId(), dbState, dbArticleList, order.getDate(), order.getStoreId(), order.getCustomerId(), order.getEmployeeId());
+        return new DBOrder(order.getId(), dbArticleList, order.getDate(), order.getStoreId(), order.getCustomerId(), order.getEmployeeId(), order.getState().toNumber(), order.isCancelled());
     }
 
     public static Order createOrder(DBOrder dbOrder) {
@@ -28,13 +23,6 @@ public class DatabaseWrapper {
             article.setDelivered(dbArticle.isDelivered());
             articleList.add(article);
         }
-        DBState dbState = dbOrder.getState();
-        State state = new State();
-        state.setArticlesReady(dbState.isArticlesReady());
-        state.setCustomerReady(dbState.isCustomerReady());
-        state.setCancelled(dbState.isCancelled());
-        state.setValid(dbState.isValid());
-        state.setDelivered(dbState.isDelivered());
-        return new Order(dbOrder.getId(), dbOrder.getDate(), dbOrder.getStoreId(), dbOrder.getCustomerId(), dbOrder.getEmployeeId(), state, articleList);
+        return new Order(dbOrder.getId(), dbOrder.getDate(), dbOrder.getStoreId(), dbOrder.getCustomerId(), dbOrder.getEmployeeId(), articleList, StateEnum.fromNumber(dbOrder.getState()), dbOrder.isCancelled());
     }
 }

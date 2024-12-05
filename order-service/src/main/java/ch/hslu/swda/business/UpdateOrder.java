@@ -1,7 +1,6 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.entities.State;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesOutgoing.OrderReady;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;

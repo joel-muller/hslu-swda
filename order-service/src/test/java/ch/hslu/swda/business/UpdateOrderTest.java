@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.entities.State;
+import ch.hslu.swda.entities.StateEnum;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
 import ch.hslu.swda.messagesOutgoing.OrderCancelled;
 import ch.hslu.swda.messagesOutgoing.OrderReady;
@@ -32,7 +32,7 @@ class UpdateOrderTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+        order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.ARTICLE_VALIDATED, false);
         serviceMock = new ServiceMock();
     }
 

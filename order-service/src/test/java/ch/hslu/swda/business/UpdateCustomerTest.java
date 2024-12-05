@@ -2,7 +2,7 @@ package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
-import ch.hslu.swda.entities.State;
+import ch.hslu.swda.entities.StateEnum;
 import ch.hslu.swda.messagesIngoing.CustomerResponse;
 import ch.hslu.swda.messagesOutgoing.OrderCancelled;
 import ch.hslu.swda.messagesOutgoing.OrderReady;
@@ -32,13 +32,16 @@ class UpdateCustomerTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+        order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.ARTICLE_VALIDATED, false);
         serviceMock = new ServiceMock();
     }
 
     @Test
     void customerValid() {
-        order.setArticlesReady();
+        order.setArticleInStore(11);
+        order.setArticleInStore(33);
+        order.setArticleInStore(44);
+        order.setArticleInStore(5);
         new UpdateCustomer().modify(order, new CustomerResponse(order.getId(), true), serviceMock);
         assertEquals(new OrderReady(order.getId(), order.getStoreId()), serviceMock.orderReady);
         assertNull(serviceMock.orderCancelled);

@@ -3,7 +3,7 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 
-import ch.hslu.swda.entities.State;
+import ch.hslu.swda.entities.StateEnum;
 import ch.hslu.swda.messagesIngoing.*;
 import ch.hslu.swda.messagesOutgoing.CustomerRequest;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
@@ -34,7 +34,7 @@ class ModifyValidityTest {
         articlesMap.put(44, 6);
         articlesMap.put(5, 9);
         List<Article> articles = Article.createListArticle(articlesMap);
-        order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+        order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.STORED, false);
 
         serviceMock = new ServiceMock();
 
@@ -54,9 +54,7 @@ class ModifyValidityTest {
     void testOrderValidState() {
         VerifyResponse response = new VerifyResponse(id, true, francsResponse, centimesResponse);
         new ModifyValidity().modify(order, response, serviceMock);
-        State state = new State();
-        state.setValid(true);
-        assertEquals(state, order.getCopyOfState());
+        assertEquals(StateEnum.ARTICLE_VALIDATED, order.getState());
     }
 
     @Test
@@ -84,9 +82,7 @@ class ModifyValidityTest {
     void testOrderInvalidOrderState() {
         VerifyResponse response = new VerifyResponse(id, false, francsResponse, centimesResponse);
         new ModifyValidity().modify(order, response, serviceMock);
-        State state = new State();
-        state.setCancelled(true);
-        assertEquals(state, order.getCopyOfState());
+        assertTrue(order.isCancelled());
     }
 
 

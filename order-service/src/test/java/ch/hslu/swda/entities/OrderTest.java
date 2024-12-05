@@ -19,6 +19,7 @@ class OrderTest {
     private UUID customerId;
     private UUID employeeId;
     private List<Article> articles;
+    private StateEnum stateEnum;
 
     @BeforeEach
     void setUp() {
@@ -26,8 +27,9 @@ class OrderTest {
         storeId = UUID.randomUUID();
         customerId = UUID.randomUUID();
         employeeId = UUID.randomUUID();
+        stateEnum = StateEnum.STORED;
         articles = List.of(new Article(1, 5, new Price(15, 10)), new Article(2, 10, new Price(4, 50)));
-        order = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+        order = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, stateEnum, false);
     }
 
     @Test
@@ -37,7 +39,7 @@ class OrderTest {
 
     @Test
     void testGetState() {
-        assertNotNull(order.getCopyOfState(), "getState should return a non-null State object");
+        assertNotNull(order.getState(), "getState should return a non-null State object");
     }
 
     @Test
@@ -45,12 +47,6 @@ class OrderTest {
         assertEquals(articles, order.getCopyOfArticles(), "getArticles should return the correct list of articles");
     }
 
-    @Test
-    void testSetArticles() {
-        List<Article> newArticles = List.of(new Article(3, 15));
-        order.setArticles(newArticles);
-        assertEquals(newArticles, order.getCopyOfArticles(), "setArticles should update the articles list");
-    }
 
     @Test
     void testGetDate() {
@@ -115,8 +111,8 @@ class OrderTest {
 
     @Test
     void testEquals() {
-        Order sameOrder = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
-        Order differentOrder = new Order(UUID.randomUUID(), Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+        Order sameOrder = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.STORED, false);
+        Order differentOrder = new Order(UUID.randomUUID(), Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.STORED, false);
 
         assertEquals(order, sameOrder, "Orders with the same ID should be equal");
         assertNotEquals(order, differentOrder, "Orders with different IDs should not be equal");
@@ -124,8 +120,8 @@ class OrderTest {
 
     @Test
     void testHashCode() {
-        Order sameOrder = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
-        Order differentOrder = new Order(UUID.randomUUID(), Calendar.getInstance().getTime(), storeId, customerId, employeeId, new State(), articles);
+        Order sameOrder = new Order(orderId, Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.STORED, false);
+        Order differentOrder = new Order(UUID.randomUUID(), Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.STORED, false);
         assertEquals(order.hashCode(), sameOrder.hashCode(), "Orders with the same ID should have the same hash code");
         assertNotEquals(order.hashCode(), differentOrder.hashCode(), "Orders with different IDs should have different hash codes");
     }
@@ -134,7 +130,7 @@ class OrderTest {
     void testToString() {
         String expectedString = "Order{" +
                 "id=" + orderId +
-                ", state=" + order.getCopyOfState() +
+                ", state=" + stateEnum.toString() +
                 ", articles=" + articles +
                 ", date=" + order.getDate() +
                 ", storeId=" + storeId +
@@ -148,7 +144,7 @@ class OrderTest {
     @Test
     void testWithEqualsVerifier() {
         EqualsVerifier.simple().forClass(Order.class)
-                .withIgnoredFields("date", "storeId", "customerId", "employeeId", "state", "articles")
+                .withIgnoredFields("date", "storeId", "customerId", "employeeId", "stateEnum", "articles", "cancelled")
                 .verify();
     }
 
@@ -168,7 +164,7 @@ class OrderTest {
         VerifyResponse response = new VerifyResponse(orderId, false, new HashMap<>(), new HashMap<>());
         order.handleVerifyResponse(response);
         assertTrue(order.isCancelled());
-        assertFalse(order.getCopyOfState().isValid());
+        assertFalse(order.isArticlesValid());
     }
 
     @Test
@@ -180,7 +176,7 @@ class OrderTest {
         VerifyResponse response = new VerifyResponse(orderId, true, francsResponse, centimesResponse);
         order.handleVerifyResponse(response);
         assertTrue(order.isCancelled());
-        assertFalse(order.getCopyOfState().isValid());
+        assertFalse(order.isArticlesValid());
     }
 
     @Test
@@ -194,7 +190,7 @@ class OrderTest {
         VerifyResponse response = new VerifyResponse(orderId, true, francsResponse, centimesResponse);
         order.handleVerifyResponse(response);
         assertFalse(order.isCancelled());
-        assertTrue(order.getCopyOfState().isValid());
+        assertTrue(order.isArticlesValid());
         assertEquals(new Price(9, 60), order.getTotalPrice());
     }
 

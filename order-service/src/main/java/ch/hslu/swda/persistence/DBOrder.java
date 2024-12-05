@@ -10,31 +10,34 @@ import java.util.*;
 public class DBOrder {
     @Id
     private UUID id;
-    private DBState state;
     private List<DBArticle> articles;
     private Date date;
     private UUID storeId;
     private UUID customerId;
     private UUID employeeId;
+    private int stateEnum;
+    private boolean cancelled;
 
-    public DBOrder(UUID id, DBState state, List<DBArticle> articles, Date date, UUID storeId, UUID customerId, UUID employeeId) {
+    public DBOrder(UUID id, List<DBArticle> articles, Date date, UUID storeId, UUID customerId, UUID employeeId, int stateEnum, boolean cancelled) {
         this.id = id;
-        this.state = state;
         this.articles = articles;
         this.date = date;
         this.storeId = storeId;
         this.customerId = customerId;
         this.employeeId = employeeId;
+        this.stateEnum = stateEnum;
+        this.cancelled = cancelled;
     }
 
     public DBOrder() {
         this.id = UUID.randomUUID();
-        this.state = new DBState();
         this.articles = new ArrayList<>();
         this.date = Calendar.getInstance().getTime();
         this.storeId = UUID.randomUUID();
         this.customerId = UUID.randomUUID();
         this.employeeId = UUID.randomUUID();
+        this.stateEnum = -1;
+        this.cancelled = true;
     }
 
     public UUID getId() {
@@ -45,12 +48,12 @@ public class DBOrder {
         this.id = id;
     }
 
-    public DBState getState() {
-        return state;
+    public int getState() {
+        return stateEnum;
     }
 
-    public void setState(DBState state) {
-        this.state = state;
+    public void setState(int state) {
+        this.stateEnum = state;
     }
 
     public List<DBArticle> getArticles() {
@@ -94,5 +97,14 @@ public class DBOrder {
 
     public void setEmployeeId(UUID employeeId) {
         this.employeeId = employeeId;
+    }
+
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }
