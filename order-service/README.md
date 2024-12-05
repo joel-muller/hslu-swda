@@ -39,9 +39,3 @@ Creating an order manually from RabbitMQ Desktop:
   "employeeId": 501
 }
 ```
-
-## TODO Joel
-
-- [x] Remove state because inconsistent state is maybe possibel
-- [ ] Write order finished for celine if she is done
-- [ ] Make tests for persistence layer
