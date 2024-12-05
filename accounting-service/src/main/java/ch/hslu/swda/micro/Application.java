@@ -36,11 +36,11 @@ public final class Application {
 
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeat.class);
 
-        private ServiceTemplate service;
+        private AccountingService service;
 
         HeartBeat() {
             try {
-                this.service = new ServiceTemplate();
+                this.service = new AccountingService();
             } catch (IOException | TimeoutException e) {
                 LOG.error(e.getMessage(), e);
             }

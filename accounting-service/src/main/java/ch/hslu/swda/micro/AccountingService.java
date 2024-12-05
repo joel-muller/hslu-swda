@@ -29,9 +29,9 @@ import java.util.concurrent.TimeoutException;
 /**
  * Beispielcode für Implementation eines Servcies mit RabbitMQ.
  */
-public final class ServiceTemplate implements AutoCloseable {
+public final class AccountingService implements AutoCloseable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServiceTemplate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AccountingService.class);
     private final String exchangeName;
     private final BusConnector bus;
 
@@ -39,7 +39,7 @@ public final class ServiceTemplate implements AutoCloseable {
      * @throws IOException      IO-Fehler.
      * @throws TimeoutException Timeout.
      */
-    ServiceTemplate() throws IOException, TimeoutException {
+    AccountingService() throws IOException, TimeoutException {
 
         // thread info
         String threadName = Thread.currentThread().getName();
