@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import ch.hslu.swda.entities.CentralWarehouseOrder;
 import ch.hslu.swda.entities.CentralWarehouseOrderJSONMapper;
 import ch.hslu.swda.entities.OrderArticle;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -19,9 +20,18 @@ public class CentralWarehouseOrderJSONMapperTest {
     CentralWarehouseOrderJSONMapper jsonMapper = new CentralWarehouseOrderJSONMapper();
     @Test
     void loadFromJSONTest() {
-        String JSON= """
-        {"id": "63dbbace-a29e-11ef-87e3-0242ac130007", "storeId": "63dbbae9-a29e-11ef-87e3-0242ac130008", "articles": [{"count": 50, "articleId": 1002001, "fulfilled": 0, "nextDeliveryDate": null}, {"count": 10, "articleId": 1002002, "fulfilled": 1, "nextDeliveryDate": "2024-12-01"}], "cancelled": 0, "customerOrderId": "63dbbaeb-a29e-11ef-87e3-0242ac130009"}
-        """;
+
+        String date = LocalDate.now().plusDays(1).toString();
+        String JSON = String.format("""
+        {"id": "63dbbace-a29e-11ef-87e3-0242ac130007", 
+         "storeId": "63dbbae9-a29e-11ef-87e3-0242ac130008", 
+         "articles": [
+             {"count": 50, "articleId": 1002001, "fulfilled": 0, "nextDeliveryDate": null}, 
+             {"count": 10, "articleId": 1002002, "fulfilled": 1, "nextDeliveryDate": "%s"}
+         ], 
+         "cancelled": 0, 
+         "customerOrderId": "63dbbaeb-a29e-11ef-87e3-0242ac130009"}
+        """, date);
         CentralWarehouseOrder order = jsonMapper.toCentralWarehouseOrder(JSON);
         Assertions.assertEquals(UUID.fromString("63dbbace-a29e-11ef-87e3-0242ac130007"), order.getId());
         Assertions.assertEquals(UUID.fromString("63dbbae9-a29e-11ef-87e3-0242ac130008"), order.getStoreId());
@@ -31,7 +41,7 @@ public class CentralWarehouseOrderJSONMapperTest {
         Assertions.assertEquals(50,order.getArticles().getFirst().getCount());
         Assertions.assertEquals(0,order.getArticles().getFirst().getFulfilled());
         Assertions.assertNull(order.getArticles().getFirst().getNextDeliveryDate());
-        Assertions.assertEquals(LocalDate.parse("2024-12-01"),order.getArticles().get(1).getNextDeliveryDate());
+        Assertions.assertEquals(LocalDate.parse(date),order.getArticles().get(1).getNextDeliveryDate());
     }
 
     @Test

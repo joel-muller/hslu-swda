@@ -54,12 +54,12 @@ public final class CentralWarehouseOrderReceiver implements MessageReceiver {
             articles= mapper.readValue(articlesString, new TypeReference<Map<Integer, Integer>>() {});
             storeId = UUID.fromString(orderNode.get("storeId").asText());
             customerOrderId = orderNode.get("orderId").asText()==null?null:UUID.fromString(orderNode.get("orderId").asText());
-
+            warehouseOrder  = new CentralWarehouseOrder(storeId,articles,customerOrderId);
         }catch (IOException|IllegalArgumentException  e){
             LOG.error(e.getMessage(), e);
             return;
         }
         LOG.info("warehouseOrder {} from store {} correctly received. Start processing Order",customerOrderId,storeId);
-        orderManager.process(new CentralWarehouseOrder(storeId,articles,customerOrderId));
+        orderManager.process(warehouseOrder);
     }
 }
