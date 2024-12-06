@@ -51,7 +51,6 @@ public final class AccountingService implements AutoCloseable {
         this.bus.connect();
 
         // start message receivers
-        this.createConfirmations();
         this.createInvoices();
     }
 
@@ -63,10 +62,6 @@ public final class AccountingService implements AutoCloseable {
         bus.close();
     }
 
-    private void createConfirmations() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}]", Routes.CONFIRMATION_CREATE);
-        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.CONFIRMATION_CREATE, Routes.CONFIRMATION_CREATE, new ConfirmationCreator(exchangeName, bus));
-    }
 
     private void createInvoices() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.INVOICE_CREATE);
