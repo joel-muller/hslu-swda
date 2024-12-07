@@ -1,9 +1,11 @@
 package ch.hslu.swda.persistence;
 
-import ch.hslu.swda.entities.Invoice;
+
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClients;
+
+import ch.hslu.swda.entities.Invoice;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import org.bson.UuidRepresentation;

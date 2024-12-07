@@ -22,6 +22,7 @@ public final class Routes {
 
     static final String CONFIRMATION_CREATE = "confirmation.create";
     static final String INVOICE_CREATE = "invoice.create";
+    static final String PAYMENTSTATUS_GET = "paymentstatus.get";
 
     /**
      * No instance allowed.

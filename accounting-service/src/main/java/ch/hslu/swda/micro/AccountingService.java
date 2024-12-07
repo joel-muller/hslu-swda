@@ -17,14 +17,20 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.entities.Invoice;
+import ch.hslu.swda.persistence.DatabaseConnector;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
-
 
 /**
  * Beispielcode für Implementation eines Servcies mit RabbitMQ.
@@ -50,8 +56,10 @@ public final class AccountingService implements AutoCloseable {
         this.bus = new BusConnector();
         this.bus.connect();
 
+        this.initializeDummyData();
         // start message receivers
         this.createInvoices();
+        this.receivePaymentStatusRequest();
     }
 
     /**
@@ -62,9 +70,30 @@ public final class AccountingService implements AutoCloseable {
         bus.close();
     }
 
-
     private void createInvoices() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.INVOICE_CREATE);
-        bus.listenFor(exchangeName, "ServiceTemplate <- " + Routes.INVOICE_CREATE, Routes.INVOICE_CREATE, new InvoiceCreator(exchangeName, bus));
+        bus.listenFor(exchangeName, "AccountingService <- " + Routes.INVOICE_CREATE, Routes.INVOICE_CREATE,
+                new InvoiceCreationReceiver(exchangeName, bus));
     }
+
+    private void receivePaymentStatusRequest() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.PAYMENTSTATUS_GET);
+        bus.listenFor(exchangeName, "AccountingService <- " + Routes.PAYMENTSTATUS_GET, Routes.PAYMENTSTATUS_GET,
+                new PaymentStatusRequestReceiver(exchangeName, bus));
+    }
+
+    private void initializeDummyData() throws JsonProcessingException {
+        // create some dummy data
+        DatabaseConnector database = new DatabaseConnector();
+        ObjectMapper mapper = new ObjectMapper();
+        for (int i = 0; i < 10; i++) {
+            Invoice invoice = new Invoice(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
+                    new HashMap<>(), new HashMap<>(),
+                    String.valueOf(ThreadLocalRandom.current().nextDouble(0, 10000.0)));
+            database.storeInvoice(invoice);
+            LOG.debug("Created dummy invoice: {}", mapper.writeValueAsString(invoice));
+        }
+
+    }
+
 }
