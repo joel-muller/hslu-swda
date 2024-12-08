@@ -19,6 +19,9 @@ public class CancelOrder implements Modifiable {
             if (!order.isReady()) {
                 order.setCancelled();
                 service.sendOrderCancelledToStore(order.getOrderCancelled());
+                LOG.info("Order cancelled successfully");
+            } else {
+                LOG.info("Order could not get cancelled because it is already finished");
             }
         } catch (IOException e) {
             LOG.error("An error occurred while trying to cancel the order: {}", e.toString());

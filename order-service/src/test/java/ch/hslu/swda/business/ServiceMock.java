@@ -36,8 +36,9 @@ public class ServiceMock implements Service {
     }
 
     @Override
-    public void sendOrderReadyToStore(OrderReady ready) throws IOException {
+    public void sendOrderReadyToStore(OrderReady ready, Invoice invoice) throws IOException {
         this.orderReady = ready;
+        this.invoice = invoice;
     }
 
     @Override
@@ -45,8 +46,4 @@ public class ServiceMock implements Service {
         this.orderCancelled = cancelled;
     }
 
-    @Override
-    public void createInvoice(Invoice invoice) throws IOException {
-        this.invoice = invoice;
-    }
 }

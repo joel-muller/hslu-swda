@@ -19,8 +19,7 @@ public class UpdateOrder implements Modifiable {
         order.handleOrderUpdate(update);
         try {
             if (order.isReady()) {
-                service.sendOrderReadyToStore(order.getOrderReady());
-                service.createInvoice(order.getInvoice());
+                service.sendOrderReadyToStore(order.getOrderReady(), order.getInvoice());
             }
             if (order.isCancelled()) {
                 service.sendOrderCancelledToStore(order.getOrderCancelled());

@@ -89,18 +89,14 @@ public final class OrderService implements AutoCloseable, Service {
     }
 
     @Override
-    public void sendOrderReadyToStore(OrderReady ready) throws IOException {
+    public void sendOrderReadyToStore(OrderReady ready, Invoice invoice) throws IOException {
         sendMessageAsynchronous(ready, Routes.ORDER_READY);
+        sendMessageAsynchronous(invoice, Routes.INVOICE_CREATE);
     }
 
     @Override
     public void sendOrderCancelledToStore(OrderCancelled cancelled) throws IOException {
         sendMessageAsynchronous(cancelled, Routes.ORDER_CANCELLED);
-    }
-
-    @Override
-    public void createInvoice(Invoice invoice) throws IOException {
-        sendMessageAsynchronous(invoice, Routes.INVOICE_CREATE);
     }
 
     public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {

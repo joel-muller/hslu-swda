@@ -19,8 +19,7 @@ public class UpdateCustomer implements Modifiable {
                 order.setCustomerValid();
                 LOG.info("Order with the id {} has a valid customer", order.getId());
                 if (order.isReady()) {
-                    service.sendOrderReadyToStore(order.getOrderReady());
-                    service.createInvoice(order.getInvoice());
+                    service.sendOrderReadyToStore(order.getOrderReady(), order.getInvoice());
                 }
             } else {
                 order.setCancelled();

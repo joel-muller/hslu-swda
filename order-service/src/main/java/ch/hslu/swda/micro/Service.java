@@ -9,7 +9,6 @@ public interface Service {
     void log(LogMessage message) throws IOException;
     void requestArticlesFromStore(StoreRequest request) throws IOException;
     void checkCustomerValidity(CustomerRequest request) throws IOException;
-    void sendOrderReadyToStore(OrderReady ready) throws IOException;
+    void sendOrderReadyToStore(OrderReady ready, Invoice invoice) throws IOException;
     void sendOrderCancelledToStore(OrderCancelled cancelled) throws IOException;
-    void createInvoice(Invoice invoice) throws IOException;
 }
