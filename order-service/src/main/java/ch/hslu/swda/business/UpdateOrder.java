@@ -2,14 +2,12 @@ package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
-import ch.hslu.swda.messagesOutgoing.OrderReady;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 
 public class UpdateOrder implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(UpdateOrder.class);
@@ -22,6 +20,7 @@ public class UpdateOrder implements Modifiable {
         try {
             if (order.isReady()) {
                 service.sendOrderReadyToStore(order.getOrderReady());
+                service.createInvoice(order.getInvoice());
             }
             if (order.isCancelled()) {
                 service.sendOrderCancelledToStore(order.getOrderCancelled());

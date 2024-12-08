@@ -137,8 +137,8 @@ public final class Order {
         int francs = 0;
         int centimes = 0;
         for (Article article : articles) {
-            francs += article.getPrice().getFrancs();
-            centimes += article.getPrice().getCentimes();
+            francs += article.getTotalPrice().getFrancs();
+            centimes += article.getTotalPrice().getCentimes();
         }
         return new Price(francs, centimes);
     }
@@ -219,6 +219,16 @@ public final class Order {
 
     public OrderCancelled getOrderCancelled() {
         return new OrderCancelled(getId(), getStoreId());
+    }
+
+    public Invoice getInvoice() {
+        Map<Integer, Integer> articlesCount = new HashMap<>();
+        Map<Integer, String> articlesPrices = new HashMap<>();
+        for (Article article : articles) {
+            articlesCount.put(article.getId(), article.getCount());
+            articlesPrices.put(article.getId(), article.getTotalPrice().getInvoiceString());
+        }
+        return new Invoice(getId(), getCustomerId(), getEmployeeId(), getStoreId(), articlesCount, articlesPrices, getTotalPrice().getInvoiceString());
     }
 
     /**

@@ -163,4 +163,16 @@ class PriceTest {
         assertEquals("Price{5.05 Francs}", new Price(5, 5).toString());
         assertEquals("Price{8.15 Francs}", new Price(8, 15).toString());
     }
+
+    @Test
+    void multiplyPrice() {
+        Price price = new Price(15, 55);
+        assertEquals(new Price(202, 15), Price.multiplyPrice(price, 13));
+    }
+
+    @Test
+    void getInvoiceString() {
+        assertEquals("15.65", new Price(15, 65).getInvoiceString());
+        assertEquals("569.05", new Price(569, 5).getInvoiceString());
+    }
 }

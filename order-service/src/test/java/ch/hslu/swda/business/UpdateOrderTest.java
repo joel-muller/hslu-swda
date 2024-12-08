@@ -45,7 +45,8 @@ class UpdateOrderTest {
         articles.add(44);
         articles.add(5);
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
-        assertEquals(new OrderReady(order.getId(), storeId), serviceMock.orderReady);
+        assertEquals(order.getOrderReady(), serviceMock.orderReady);
+        assertEquals(order.getInvoice(), serviceMock.invoice);
         assertNull(serviceMock.orderCancelled);
     }
 
@@ -59,6 +60,7 @@ class UpdateOrderTest {
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
         assertNull(serviceMock.orderReady);
         assertNull(serviceMock.orderCancelled);
+        assertNull(serviceMock.invoice);
     }
 
     @Test
@@ -69,6 +71,7 @@ class UpdateOrderTest {
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
         assertNull(serviceMock.orderReady);
         assertNull(serviceMock.orderCancelled);
+        assertNull(serviceMock.invoice);
     }
 
     @Test
@@ -78,6 +81,7 @@ class UpdateOrderTest {
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
         assertNull(serviceMock.orderReady);
         assertNull(serviceMock.orderCancelled);
+        assertNull(serviceMock.invoice);
     }
 
     @Test
@@ -86,6 +90,7 @@ class UpdateOrderTest {
         List<Integer> articles = new ArrayList<>();
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, false), serviceMock);
         assertNull(serviceMock.orderReady);
-        assertEquals(new OrderCancelled(order.getId(), order.getStoreId()), serviceMock.orderCancelled);
+        assertEquals(order.getOrderCancelled(), serviceMock.orderCancelled);
+        assertNull(serviceMock.invoice);
     }
 }

@@ -64,6 +64,12 @@ public final class Article {
         return new Price(this.price.getFrancs(), this.price.getCentimes());
     }
 
+    public Price getTotalPrice() {
+        int francs = price.getFrancs() * count;
+        int centimes = price.getCentimes() * count;
+        return new Price(francs, centimes);
+    }
+
     public Article getCopy() {
         Article article = new Article(this.id, this.count, getPrice());
         article.setDelivered(this.delivered);

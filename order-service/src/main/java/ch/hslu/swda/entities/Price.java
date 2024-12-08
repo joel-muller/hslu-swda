@@ -36,6 +36,12 @@ public final class Price {
         return new Price(francs, centimes);
     }
 
+    public static Price multiplyPrice(Price price, int multiplier) {
+        int francs = price.getFrancs() * multiplier;
+        int centimes = price.getCentimes() * multiplier;
+        return new Price(francs, centimes);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,9 +56,13 @@ public final class Price {
 
     @Override
     public String toString() {
+        return "Price{" + getInvoiceString() + " Francs}";
+    }
+
+    public String getInvoiceString() {
         if (centimes < 10) {
-            return "Price{" + this.francs + ".0" + this.centimes + " Francs}";
+            return this.francs + ".0" + this.centimes;
         }
-        return "Price{" + this.francs + "." + this.centimes + " Francs}";
+        return this.francs + "." + this.centimes;
     }
 }

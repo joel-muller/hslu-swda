@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
 import ch.hslu.swda.messagesIngoing.VerifyResponse;
 import ch.hslu.swda.messagesOutgoing.CustomerRequest;
+import ch.hslu.swda.messagesOutgoing.Invoice;
 import ch.hslu.swda.messagesOutgoing.StoreRequest;
 import ch.hslu.swda.messagesOutgoing.VerifyRequest;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -191,7 +192,11 @@ class OrderTest {
         order.handleVerifyResponse(response);
         assertFalse(order.isCancelled());
         assertTrue(order.isArticlesValid());
-        assertEquals(new Price(9, 60), order.getTotalPrice());
+        assertEquals(new Price(4, 10), order.getCopyOfArticles().getFirst().getPrice());
+        assertEquals(new Price(5, 50), order.getCopyOfArticles().getLast().getPrice());
+        assertEquals(5, order.getCopyOfArticles().getFirst().getCount());
+        assertEquals(10, order.getCopyOfArticles().getLast().getCount());
+        assertEquals(new Price(75, 50), order.getTotalPrice());
     }
 
     @Test
@@ -248,8 +253,18 @@ class OrderTest {
 
     @Test
     void tesGetTotalPrice() {
-        assertEquals(19, order.getTotalPrice().getFrancs());
-        assertEquals(60, order.getTotalPrice().getCentimes());
+        assertEquals(120, order.getTotalPrice().getFrancs());
+        assertEquals(50, order.getTotalPrice().getCentimes());
     }
 
+    @Test
+    void getInvoice() {
+        Map<Integer, Integer> count = new HashMap<>();
+        Map<Integer, String> prices = new HashMap<>();
+        count.put(1, 5);
+        count.put(2, 10);
+        prices.put(1, "75.50");
+        prices.put(2, "45.00");
+        assertEquals(new Invoice(orderId, customerId, employeeId, storeId, count, prices, order.getTotalPrice().getInvoiceString()), order.getInvoice());
+    }
 }

@@ -4,6 +4,7 @@ import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.StateEnum;
 import ch.hslu.swda.messagesIngoing.CustomerResponse;
+import ch.hslu.swda.messagesOutgoing.Invoice;
 import ch.hslu.swda.messagesOutgoing.OrderCancelled;
 import ch.hslu.swda.messagesOutgoing.OrderReady;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +44,8 @@ class UpdateCustomerTest {
         order.setArticleInStore(44);
         order.setArticleInStore(5);
         new UpdateCustomer().modify(order, new CustomerResponse(order.getId(), true), serviceMock);
-        assertEquals(new OrderReady(order.getId(), order.getStoreId()), serviceMock.orderReady);
+        assertEquals(order.getOrderReady(), serviceMock.orderReady);
+        assertEquals(order.getInvoice(), serviceMock.invoice);
         assertNull(serviceMock.orderCancelled);
     }
 
@@ -52,6 +54,7 @@ class UpdateCustomerTest {
         new UpdateCustomer().modify(order, new CustomerResponse(order.getId(), true), serviceMock);
         assertNull(serviceMock.orderReady);
         assertNull(serviceMock.orderCancelled);
+        assertNull(serviceMock.invoice);
     }
 
     @Test
@@ -59,5 +62,6 @@ class UpdateCustomerTest {
         new UpdateCustomer().modify(order, new CustomerResponse(order.getId(), false), serviceMock);
         assertEquals(new OrderCancelled(order.getId(), order.getStoreId()), serviceMock.orderCancelled);
         assertNull(serviceMock.orderReady);
+        assertNull(serviceMock.invoice);
     }
 }

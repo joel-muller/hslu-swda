@@ -98,6 +98,11 @@ public final class OrderService implements AutoCloseable, Service {
         sendMessageAsynchronous(cancelled, Routes.ORDER_CANCELLED);
     }
 
+    @Override
+    public void createInvoice(Invoice invoice) throws IOException {
+        sendMessageAsynchronous(invoice, Routes.INVOICE_CREATE);
+    }
+
     public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(message);
