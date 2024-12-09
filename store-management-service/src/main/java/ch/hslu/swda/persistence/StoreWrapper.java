@@ -24,7 +24,7 @@ public class StoreWrapper {
             for (OrderArticle orderArticle : orderArticles) {
                 dbOrderArticles.add(new DBOrderArticle(orderArticle.getId(), orderArticle.getCount(), orderArticle.isReady()));
             }
-            dbOrders.add(new DBOrder(order.getId(), order.getStoreId(), dbOrderArticles));
+            dbOrders.add(new DBOrder(order.getId(), dbOrderArticles));
         }
         return new DBStore(store.getId(), dbStoreArticles, dbOrders);
     }
@@ -44,7 +44,7 @@ public class StoreWrapper {
             for (DBOrderArticle article : dbOrderArticles) {
                 orderArticles.add(new OrderArticle(article.getId(), article.getCount(), article.isReady()));
             }
-            orders.add(new Order(dbOrder.getId(), dbOrder.getStoreId(), orderArticles));
+            orders.add(new Order(dbOrder.getId(), orderArticles));
         }
         return new Store(dbStore.getId(), storeArticles, orders);
     }

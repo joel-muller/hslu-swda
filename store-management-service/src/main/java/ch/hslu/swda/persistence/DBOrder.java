@@ -12,19 +12,16 @@ import java.util.UUID;
 public class DBOrder {
     @Id
     private UUID id;
-    private UUID storeId;
     private List<DBOrderArticle> articleOrderedList;
     private boolean finished;
 
-    public DBOrder(UUID id, UUID storeId, List<DBOrderArticle> articleOrderedList) {
+    public DBOrder(UUID id, List<DBOrderArticle> articleOrderedList) {
         this.id = id;
-        this.storeId = storeId;
         this.articleOrderedList = articleOrderedList;
     }
 
     public DBOrder() {
         this.id = UUID.randomUUID();
-        this.storeId = UUID.randomUUID();
         this.articleOrderedList = null;
     }
 
@@ -36,13 +33,7 @@ public class DBOrder {
         this.id = id;
     }
 
-    public UUID getStoreId() {
-        return storeId;
-    }
 
-    public void setStoreId(UUID storeId) {
-        this.storeId = storeId;
-    }
 
     public List<DBOrderArticle> getArticleOrderedList() {
         return articleOrderedList;
