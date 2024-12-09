@@ -14,7 +14,7 @@ public class DBArticle {
     public DBArticle(final int id, final int count, final boolean delivered, final int francs, final int centimes) {
         this.id = id;
         this.count = count;
-        this.delivered = false;
+        this.delivered = delivered;
         this.francs = francs;
         this.centimes = centimes;
     }
