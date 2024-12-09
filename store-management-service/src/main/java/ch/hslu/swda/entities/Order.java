@@ -2,10 +2,7 @@ package ch.hslu.swda.entities;
 
 import ch.hslu.swda.messagesIngoing.NewOrder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public final class Order {
     private final UUID id;
@@ -16,9 +13,9 @@ public final class Order {
         this.articleOrderedList = OrderArticle.getCopyOfArticleOrderedList(articleOrderedList);
     }
 
-    public static Order createFromOrderRequest(NewOrder request) {
-        List<OrderArticle> articleOrdered = OrderArticle.createListArticle(request.articles());
-        return new Order(request.orderId(), articleOrdered);
+    public static Order createFromOrderRequest(UUID orderId, Map<Integer, Integer> articles) {
+        List<OrderArticle> articleOrdered = OrderArticle.createListArticle(articles);
+        return new Order(orderId, articleOrdered);
     }
 
     public UUID getId() {

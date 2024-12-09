@@ -29,10 +29,7 @@ class OrderTest {
         UUID storeId = UUID.randomUUID();
         Map<Integer, Integer> articlesMap = Map.of(1, 5, 2, 10); // Random order
 
-        // Create the OrderRequest instance directly
-        NewOrder request = new NewOrder(orderId, employeeId, storeId, articlesMap);
-
-        Order order = Order.createFromOrderRequest(request);
+        Order order = Order.createFromOrderRequest(orderId, articlesMap);
 
         assertEquals(orderId, order.getId());
         assertEquals(2, order.getCopyOfArticleOrderedList().size());

@@ -25,6 +25,27 @@ public final class Store {
         return StoreArticle.getCopyOfList(articleList);
     }
 
+    public void addArticle(StoreArticle article) {
+        for (StoreArticle a : articleList) {
+            if (a.getId() == article.getId()) {
+                a.setRefillCount(article.getRefillCount());
+                a.setMinimumQuantity(article.getMinimumQuantity());
+                a.incrementQuantity(article.getActualQuantity());
+                return;
+            }
+        }
+        articleList.add(article.getCopy());
+    }
+
+    public void refillArticle(int id, int count) {
+        StoreArticle article = getArticle(id);
+        if (article == null) {
+            addArticle(new StoreArticle(id, count, 0, 0));
+        } else {
+            article.incrementQuantity(count);
+        }
+    }
+
     public void addDefaultInventory() {
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
@@ -61,8 +82,8 @@ public final class Store {
         return id;
     }
 
-    public OrderProcessed newOrder(NewOrder newOrder) {
-        Order order = Order.createFromOrderRequest(newOrder);
+    public OrderProcessed newOrder(UUID orderId, Map<Integer, Integer> articlesOrder) {
+        Order order = Order.createFromOrderRequest(orderId, articlesOrder);
         addOrder(order);
         Map<Integer, Integer> articleHaveToBeOrdered = new HashMap<>();
         List<Integer> articleReserved = new ArrayList<>();

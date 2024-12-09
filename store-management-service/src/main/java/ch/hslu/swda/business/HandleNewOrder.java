@@ -21,7 +21,7 @@ public class HandleNewOrder implements Modifiable {
             LOG.info("Handle new order");
             NewOrder request = (NewOrder) responseRaw;
             Store store = databaseConnector.getStore(request.getStoreId());
-            OrderProcessed processed = store.newOrder(request);
+            OrderProcessed processed = store.newOrder(request.orderId(), request.articles());
             if (!processed.articlesHaveToGetOrdered().isEmpty()) {
                 service.requestArticles(new InventoryRequest(request.orderId(), request.storeId(), processed.articlesHaveToGetOrdered()));
             }

@@ -89,6 +89,10 @@ public final class StoreArticle {
         this.actualQuantity -= count;
     }
 
+    public void incrementQuantity(int count) {
+        this.actualQuantity += count;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
