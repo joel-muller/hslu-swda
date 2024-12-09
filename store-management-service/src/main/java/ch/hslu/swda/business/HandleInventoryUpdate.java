@@ -32,6 +32,8 @@ public class HandleInventoryUpdate implements Modifiable {
             if (!processed.articlesReady().isEmpty()) {
                 service.sendOrderUpdate(new OrderUpdate(processed.orderId(), processed.articlesReady(), true));
             }
+            databaseConnector.storeStore(store);
+            LOG.info("Inventory update received and stored successfully for the store {}", request.getStoreId());
         } catch (IOException e) {
             LOG.error("Exception occurred while trying to make an inventory update {}", e.getMessage());
         }

@@ -40,7 +40,7 @@ public final class Store {
     public void refillArticle(int id, int count) {
         StoreArticle article = getArticle(id);
         if (article == null) {
-            addArticle(new StoreArticle(id, count, 0, 0));
+            articleList.add(new StoreArticle(id, count, 0, 0));
         } else {
             article.incrementQuantity(count);
         }
