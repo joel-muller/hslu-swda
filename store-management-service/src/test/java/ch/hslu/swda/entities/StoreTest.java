@@ -3,6 +3,7 @@ package ch.hslu.swda.entities;
 import ch.hslu.swda.messagesIngoing.NewOrder;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -138,11 +139,9 @@ class StoreTest {
 
     @Test
     void testUpdateOrderNotValidID() {
-        Map<Integer, Integer> orders = new HashMap<>();
-        orders.put(1, 6);
-        orders.put(2, 30);
         Store store = new Store();
-        assertEquals(new OrderProcessed(new HashMap<>(), new ArrayList<>()), store.updateOrderStore(UUID.randomUUID(), orders));
+        UUID orderId = UUID.randomUUID();
+        assertEquals(new OrderProcessed(orderId, new HashMap<>(), new ArrayList<>()), store.updateOrderStore(orderId));
     }
 
     @Test
@@ -164,6 +163,10 @@ class StoreTest {
         assertEquals(1, processed.articlesReady().getFirst());
         assertEquals(2, processed.articlesReady().getLast());
         assertEquals(100, processed.articlesHaveToGetOrdered().get(1));
+
+        List<StoreArticle> articles = store.getCopyOfArticleList();
+        assertEquals(new StoreArticle(1, 4, 5, 100), articles.getFirst());
+        assertEquals(new StoreArticle(2, 0, 0, 6), articles.getLast());
     }
 
     @Test
@@ -251,5 +254,74 @@ class StoreTest {
     void testEqualsVerifier() {
         EqualsVerifier.simple().forClass(Store.class)
                 .verify();
+    }
+
+    @Test
+    void testCancelOrder() {
+        Store store = new Store();
+        StoreArticle article = new StoreArticle(1, 20, 0, 2);
+        StoreArticle article2 = new StoreArticle(2, 30, 0, 6);
+        store.addArticle(article);
+        store.addArticle(article2);
+
+        Map<Integer, Integer> orders = new HashMap<>();
+        orders.put(1, 8);
+        orders.put(2, 30);
+
+        UUID orderId = UUID.randomUUID();
+
+        store.newOrder(orderId, orders);
+
+        store.cancelOrder(orderId);
+
+        List<StoreArticle> articles = store.getCopyOfArticleList();
+        assertEquals(new StoreArticle(1, 20, 0, 2), articles.get(0));
+        assertEquals(new StoreArticle(2, 30, 0, 6), articles.get(1));
+        assertEquals(0, store.getCopyOfOpenOrders().size());
+    }
+
+    @Test
+    void handleInventoryUpdate() {
+        Store store = new Store();
+        StoreArticle article = new StoreArticle(1, 20, 0, 2);
+        StoreArticle article2 = new StoreArticle(2, 30, 0, 6);
+        store.addArticle(article);
+        store.addArticle(article2);
+
+        Map<Integer, Integer> orders = new HashMap<>();
+        orders.put(1, 8);
+        orders.put(2, 100);
+
+        UUID orderId = UUID.randomUUID();
+
+        store.newOrder(orderId, orders);
+
+        Map<Integer, Integer> invArticles = new HashMap<>();
+        invArticles.put(2, 100);
+        OrderProcessed processed = store.handleInventoryUpdate(orderId, invArticles);
+
+
+        List<StoreArticle> articles = store.getCopyOfArticleList();
+        assertEquals(new StoreArticle(1, 12, 0, 2), articles.get(0));
+        assertEquals(new StoreArticle(2, 30, 0, 6), articles.get(1));
+        assertTrue(store.getCopyOfOpenOrders().getFirst().getCopy().isReady());
+        assertEquals(2, processed.articlesReady().getFirst());
+    }
+
+    @Test
+    void handleInventoryUpdateNoOrder() {
+        Store store = new Store();
+        StoreArticle article = new StoreArticle(1, 20, 0, 2);
+        StoreArticle article2 = new StoreArticle(2, 30, 0, 6);
+        store.addArticle(article);
+        store.addArticle(article2);
+        Map<Integer, Integer> invArticles = new HashMap<>();
+        invArticles.put(2, 100);
+        invArticles.put(44, 55345);
+        store.handleInventoryUpdate(UUID.randomUUID(), invArticles);
+        List<StoreArticle> articles = store.getCopyOfArticleList();
+        assertEquals(new StoreArticle(1, 20, 0, 2), articles.get(0));
+        assertEquals(new StoreArticle(2, 130, 0, 6), articles.get(1));
+        assertEquals(new StoreArticle(44, 55345, 0, 0), articles.get(2));
     }
 }

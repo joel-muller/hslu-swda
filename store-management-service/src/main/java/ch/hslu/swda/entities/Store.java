@@ -1,5 +1,7 @@
 package ch.hslu.swda.entities;
 
+import io.micronaut.data.model.query.QueryModel;
+
 import java.util.*;
 
 public final class Store {
@@ -100,14 +102,17 @@ public final class Store {
         return id;
     }
 
-    public OrderProcessed updateOrderStore(UUID orderId, Map<Integer, Integer> articlesOrder) {
+    public OrderProcessed updateOrderStore(UUID orderId) {
         Order order = getOrder(orderId);
         Map<Integer, Integer> articleHaveToBeOrdered = new HashMap<>();
         List<Integer> articleReserved = new ArrayList<>();
         if (order == null) {
-            return new OrderProcessed(articleHaveToBeOrdered, articleReserved);
+            return new OrderProcessed(orderId, articleHaveToBeOrdered, articleReserved);
         }
         for (OrderArticle article : order.getCopyOfArticleOrderedList()) {
+            if (article.isReady()) {
+                continue;
+            }
             StoreArticle storeArticle = getArticle(article.getId());
             if (storeArticle == null) {
                 articleHaveToBeOrdered.put(article.getId(), article.getCount());
@@ -128,13 +133,24 @@ public final class Store {
                 }
             }
         }
-        return new OrderProcessed(articleHaveToBeOrdered, articleReserved);
+        return new OrderProcessed(orderId, articleHaveToBeOrdered, articleReserved);
+    }
+
+    public OrderProcessed handleInventoryUpdate(UUID orderId, Map<Integer, Integer> articles) {
+        for (Map.Entry<Integer, Integer> entry : articles.entrySet()) {
+            refillArticle(entry.getKey(), entry.getValue());
+        }
+        Order order = getOrder(orderId);
+        if (order != null) {
+            return updateOrderStore(orderId);
+        }
+        return new OrderProcessed(orderId, new HashMap<>(), new ArrayList<>());
     }
 
     public OrderProcessed newOrder(UUID orderId, Map<Integer, Integer> articlesOrder) {
         Order order = Order.createFromOrderRequest(orderId, articlesOrder);
         addOrder(order);
-        return updateOrderStore(orderId, articlesOrder);
+        return updateOrderStore(orderId);
     }
 
     @Override
