@@ -18,7 +18,6 @@ public class HandleNewOrder implements Modifiable {
     @Override
     public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
-            LOG.info("Handle new order");
             NewOrder request = (NewOrder) responseRaw;
             Store store = databaseConnector.getStore(request.getStoreId());
             OrderProcessed processed = store.newOrder(request.orderId(), request.articles());

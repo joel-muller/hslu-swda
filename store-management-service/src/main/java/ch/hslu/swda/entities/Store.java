@@ -1,7 +1,5 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.messagesIngoing.NewOrder;
-
 import java.util.*;
 
 public final class Store {
@@ -66,7 +64,18 @@ public final class Store {
     }
 
     public void cancelOrder(UUID orderId) {
-
+        List<Order> orders = Order.getCopyOfOrderList(openOrders);
+        for (Order order : orders) {
+            if (Objects.equals(orderId, order.getId())) {
+                List<OrderArticle> articles = order.getCopyOfArticleOrderedList();
+                for (OrderArticle a : articles) {
+                    if (a.isReady()) {
+                        refillArticle(a.getId(), a.getCount());
+                    }
+                }
+                openOrders.remove(order);
+            }
+        }
     }
 
     private StoreArticle getArticle(int id) {
