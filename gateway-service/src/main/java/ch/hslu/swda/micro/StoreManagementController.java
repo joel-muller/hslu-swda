@@ -81,10 +81,10 @@ public class StoreManagementController {
     }
 
     @Post("/create/")
-    public String createStore() {
+    public String createStore(@Body Store store) {
         try {
             bus.connect();
-            String reply = bus.talkSync(exchangeName, "store.create", "");
+            String reply = bus.talkSync(exchangeName, "store.create", mapper.writeValueAsString(store));
             if (reply == null) {
                 LOG.info("received no reply from service");
                 return "no reply from service";

@@ -1,12 +1,11 @@
 package ch.hslu.swda.model;
-import java.util.List;
-import java.util.UUID;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
+import java.util.Map;
+import java.util.UUID;
 
 @Introspected @Serdeable
-public record Store(boolean addDefaultArticle) {
-
+public record InternalOrderMessage(UUID storeId, Map<Integer, Integer> articles) {
 }
