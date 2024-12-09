@@ -14,8 +14,10 @@ public class HandleOrderCancelled implements Modifiable {
     public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
         OrderCancelled response = (OrderCancelled) responseRaw;
         Store store = databaseConnector.getStore(response.getStoreId());
-        store.cancelOrder(response.orderId());
-        LOG.info("Order cancelled with the id {}, articles reserved from order are now part of the order inventory", response.orderId());
-        databaseConnector.storeStore(store);
+        if (store != null) {
+            store.cancelOrder(response.orderId());
+            LOG.info("Order cancelled with the id {}, articles reserved from order are now part of the order inventory", response.orderId());
+            databaseConnector.storeStore(store);
+        }
     }
 }

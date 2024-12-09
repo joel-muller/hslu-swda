@@ -45,12 +45,12 @@ public class DatabaseConnector {
         datastore.save(dbStore);
     }
 
-    public Store getStore(UUID storeId) throws NoSuchElementException {
+    public Store getStore(UUID storeId) {
         DBStore dbStore = datastore.find(DBStore.class)
                 .filter(eq("_id", storeId))
                 .first();
         if (dbStore == null) {
-            throw new NoSuchElementException("Store with the following id does not exist:" + storeId.toString());
+            return null;
         }
         return StoreWrapper.getStore(dbStore);
     }
