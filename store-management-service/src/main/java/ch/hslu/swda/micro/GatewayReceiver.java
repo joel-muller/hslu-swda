@@ -36,9 +36,6 @@ public class GatewayReceiver<T extends IngoingMessage> implements MessageReceive
             ObjectMapper mapper = new ObjectMapper();
             T response = mapper.readValue(message, messageGenericClass);
             modifiable.modify(database, response, service);
-
-            LOG.info("Gatway responce received {}", response.toString());
-
             bus.reply(exchangeName, replyTo, corrId, "Request was valid and will be processed");
         } catch (IOException e) {
             LOG.error("Error occurred while mapping the validity reception data: {}", e.getMessage());
