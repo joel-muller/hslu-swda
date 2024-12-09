@@ -78,15 +78,26 @@ public final class Store {
         return null;
     }
 
+    private Order getOrder(UUID orderId) {
+        for (Order order : openOrders) {
+            if (Objects.equals(orderId, order.getId())) {
+                return order;
+            }
+        }
+        return null;
+    }
+
     public UUID getId() {
         return id;
     }
 
-    public OrderProcessed newOrder(UUID orderId, Map<Integer, Integer> articlesOrder) {
-        Order order = Order.createFromOrderRequest(orderId, articlesOrder);
-        addOrder(order);
+    public OrderProcessed updateOrderStore(UUID orderId, Map<Integer, Integer> articlesOrder) {
+        Order order = getOrder(orderId);
         Map<Integer, Integer> articleHaveToBeOrdered = new HashMap<>();
         List<Integer> articleReserved = new ArrayList<>();
+        if (order == null) {
+            return new OrderProcessed(articleHaveToBeOrdered, articleReserved);
+        }
         for (OrderArticle article : order.getCopyOfArticleOrderedList()) {
             StoreArticle storeArticle = getArticle(article.getId());
             if (storeArticle == null) {
@@ -109,6 +120,12 @@ public final class Store {
             }
         }
         return new OrderProcessed(articleHaveToBeOrdered, articleReserved);
+    }
+
+    public OrderProcessed newOrder(UUID orderId, Map<Integer, Integer> articlesOrder) {
+        Order order = Order.createFromOrderRequest(orderId, articlesOrder);
+        addOrder(order);
+        return updateOrderStore(orderId, articlesOrder);
     }
 
     @Override

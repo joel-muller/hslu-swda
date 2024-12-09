@@ -1,6 +1,7 @@
 package ch.hslu.swda.entities;
 
 import ch.hslu.swda.messagesIngoing.NewOrder;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -194,6 +195,26 @@ class StoreTest {
     }
 
     @Test
+    void testNewOrderNotEnoughOfSomething() {
+        Store store = new Store();
+        StoreArticle article = new StoreArticle(1, 4, 0, 2);
+        StoreArticle article2 = new StoreArticle(2, 30, 0, 6);
+        store.addArticle(article2);
+        store.addArticle(article);
+
+        Map<Integer, Integer> orders = new HashMap<>();
+        orders.put(1, 8);
+        orders.put(2, 30);
+
+        OrderProcessed processed = store.newOrder(UUID.randomUUID(), orders);
+
+        assertEquals(1, processed.articlesReady().size());
+        assertEquals(1, processed.articlesHaveToGetOrdered().size());
+        assertEquals(2, processed.articlesReady().getFirst());
+        assertEquals(8, processed.articlesHaveToGetOrdered().get(1));
+    }
+
+    @Test
     void testEqualsAndHashCode() {
         UUID id = UUID.randomUUID();
         List<StoreArticle> articles = List.of(new StoreArticle(1, 100, 10, 50));
@@ -214,5 +235,11 @@ class StoreTest {
         assertTrue(str.contains("id"));
         assertTrue(str.contains("articleList"));
         assertTrue(str.contains("openOrders"));
+    }
+
+    @Test
+    void testEqualsVerifier() {
+        EqualsVerifier.simple().forClass(Store.class)
+                .verify();
     }
 }
