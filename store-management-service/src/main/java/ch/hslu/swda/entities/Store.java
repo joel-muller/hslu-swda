@@ -44,6 +44,10 @@ public final class Store {
         openOrders.removeIf(order -> Objects.equals(order.getId(), orderId));
     }
 
+    public void cancelOrder(UUID orderId) {
+
+    }
+
     private StoreArticle getArticle(int id) {
         for (StoreArticle article : articleList) {
             if (article.getId() == id) {

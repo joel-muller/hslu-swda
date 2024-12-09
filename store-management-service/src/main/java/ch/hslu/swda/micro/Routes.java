@@ -28,6 +28,8 @@ public final class Routes {
     static final String STORE_CREATION = "store.create-create";
     static final String STORES_GET = "stores.get";
     static final String INTERNAL_ORDER = "store.internal-order";
+    static final String ORDER_CANCELLED = "store.order-cancelled";
+
  
     static final String INVENTORY_CHECK = "inventory.check";
 

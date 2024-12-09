@@ -3,7 +3,7 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.ZZZStoreStatusHandler;
-import ch.hslu.swda.messagesIngoing.StoreStatusRequest;
+import ch.hslu.swda.messagesIngoing.ZZZStoreStatusRequest;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class ZZZStoreStatusReceiver implements MessageReceiver {
-    private static final Logger LOG = LoggerFactory.getLogger(StoreStatusRequest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ZZZStoreStatusRequest.class);
 
     private final DatabaseConnector database;
     private final StoreManagementService service;
@@ -32,9 +32,9 @@ public class ZZZStoreStatusReceiver implements MessageReceiver {
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         LOG.info("Received Message on route: {}, replyTo: {}, corrId: {}, message:{}",route,replyTo,corrId,message);
         ObjectMapper mapper  = new ObjectMapper();
-        StoreStatusRequest storeStatusRequest = null;
+        ZZZStoreStatusRequest storeStatusRequest = null;
         try{
-            storeStatusRequest = mapper.readValue(message,StoreStatusRequest.class);
+            storeStatusRequest = mapper.readValue(message, ZZZStoreStatusRequest.class);
         }catch (IOException e){
             LOG.error("Error occurred while reading message: {}", e.getMessage());
         }

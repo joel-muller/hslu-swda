@@ -1,7 +1,7 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.Store;
-import ch.hslu.swda.messagesIngoing.StoreStatusRequest;
+import ch.hslu.swda.messagesIngoing.ZZZStoreStatusRequest;
 import ch.hslu.swda.persistence.DatabaseConnector;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ public class ZZZStoreStatusHandler {
     public ZZZStoreStatusHandler(DatabaseConnector database){
         this.database = database;
     }
-    public void get(StoreStatusRequest storeStatusRequest) {
+    public void get(ZZZStoreStatusRequest storeStatusRequest) {
         UUID storeId = storeStatusRequest.storeId();
         Store store = database.getStore(storeId);
 
