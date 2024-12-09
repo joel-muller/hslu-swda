@@ -7,25 +7,29 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class StoreArticle {
+public final class StoreArticle {
     private final int id;
     private int actualQuantity;
     private int minimumQuantity;
     private int refillCount;
-
-
-    public StoreArticle() {
-        this.id = 0;
-        this.actualQuantity = 0;
-        this.minimumQuantity = 0;
-        this.refillCount = 0;
-    }
 
     public StoreArticle(final int id, final int actualQuantity, final int minimumQuantity, final int refillCount) {
         this.id = id;
         this.actualQuantity = actualQuantity;
         this.minimumQuantity = minimumQuantity;
         this.refillCount = refillCount;
+    }
+
+    public StoreArticle getCopy() {
+        return new StoreArticle(id, actualQuantity, minimumQuantity, refillCount);
+    }
+
+    public static List<StoreArticle> getCopyOfList(List<StoreArticle> list) {
+        List<StoreArticle> newList = new ArrayList<>();
+        for (StoreArticle a : list) {
+            newList.add(a.getCopy());
+        }
+        return newList;
     }
 
     public static List<StoreArticle> createArticleList(Map<Integer, Integer> map) {
@@ -35,7 +39,6 @@ public class StoreArticle {
         }
         return list;
     }
-    
 
     /**
      * Get and article out of the store and get the refill value back

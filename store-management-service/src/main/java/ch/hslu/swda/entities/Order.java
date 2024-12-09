@@ -2,19 +2,20 @@ package ch.hslu.swda.entities;
 
 import ch.hslu.swda.messagesIngoing.OrderRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Order {
+public final class Order {
     private final UUID id;
     private final UUID storeId;
-    private List<OrderArticle> articleOrderedList;
+    private final List<OrderArticle> articleOrderedList;
 
     public Order(UUID id, UUID storeId, List<OrderArticle> articleOrderedList) {
         this.id = id;
         this.storeId = storeId;
-        this.articleOrderedList = articleOrderedList;
+        this.articleOrderedList = OrderArticle.getCopyOfArticleOrderedList(articleOrderedList);
     }
 
     public static Order createFromOrderRequest(OrderRequest request) {
@@ -30,8 +31,20 @@ public class Order {
         return storeId;
     }
 
-    public List<OrderArticle> getArticleOrderedList() {
-        return articleOrderedList;
+    public List<OrderArticle> getCopyOfArticleOrderedList() {
+        return OrderArticle.getCopyOfArticleOrderedList(articleOrderedList);
+    }
+
+    public Order getCopy() {
+        return new Order(id, storeId, getCopyOfArticleOrderedList());
+    }
+
+    public static List<Order> getCopyOfOrderList(List<Order> list) {
+        List<Order> newList = new ArrayList<>();
+        for (Order order : list) {
+            newList.add(order.getCopy());
+        }
+        return newList;
     }
 
     public boolean isReady() {

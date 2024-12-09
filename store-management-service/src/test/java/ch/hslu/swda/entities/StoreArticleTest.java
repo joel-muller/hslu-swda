@@ -1,6 +1,8 @@
 package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,16 +18,6 @@ class StoreArticleTest {
         assertEquals(50, article.getActualQuantity());
         assertEquals(10, article.getMinimumQuantity());
         assertEquals(5, article.getRefillCount());
-    }
-
-    @Test
-    void testDefaultConstructor() {
-        StoreArticle article = new StoreArticle();
-
-        assertEquals(0, article.getId());
-        assertEquals(0, article.getActualQuantity());
-        assertEquals(0, article.getMinimumQuantity());
-        assertEquals(0, article.getRefillCount());
     }
 
     @Test
@@ -89,6 +81,30 @@ class StoreArticleTest {
     }
 
     @Test
+    void getAndSetQuantity() {
+        StoreArticle article = new StoreArticle(1, 50, 5, 66);
+        assertEquals(50, article.getActualQuantity());
+        article.setActualQuantity(888);
+        assertEquals(888, article.getActualQuantity());
+    }
+
+    @Test
+    void getAndSetMinimumQuantity() {
+        StoreArticle article = new StoreArticle(1, 50, 5, 66);
+        assertEquals(5, article.getMinimumQuantity());
+        article.setMinimumQuantity(888);
+        assertEquals(888, article.getMinimumQuantity());
+    }
+
+    @Test
+    void getAndSetRefillCount() {
+        StoreArticle article = new StoreArticle(1, 50, 5, 66);
+        assertEquals(66, article.getRefillCount());
+        article.setRefillCount(888);
+        assertEquals(888, article.getRefillCount());
+    }
+
+    @Test
     void testEqualsAndHashCode() {
         StoreArticle article1 = new StoreArticle(1, 50, 10, 5);
         StoreArticle article2 = new StoreArticle(1, 50, 10, 5);
@@ -104,9 +120,36 @@ class StoreArticleTest {
     }
 
     @Test
+    void testEqualsVerifier() {
+        EqualsVerifier.simple().forClass(StoreArticle.class)
+                .verify();
+    }
+
+    @Test
     void testToString() {
         StoreArticle article = new StoreArticle(1, 50, 10, 5);
         String expectedString = "StoreArticle{id=1, actualQuantity=50, minimumQuantity=10, refillCount=5}";
         assertEquals(expectedString, article.toString());
+    }
+
+    @Test
+    void getCopy() {
+        StoreArticle article = new StoreArticle(1, 55, 66, 77);
+        assertEquals(new StoreArticle(1, 55, 66, 77), article.getCopy());
+    }
+
+    @Test
+    void getCopyOfList() {
+        StoreArticle article1 = new StoreArticle(1, 50, 10, 5);
+        StoreArticle article2 = new StoreArticle(1, 50, 10, 5);
+        StoreArticle article3 = new StoreArticle(2, 100, 20, 10);
+        List<StoreArticle> list = new ArrayList<>();
+        list.add(article1);
+        list.add(article2);
+        list.add(article3);
+        List<StoreArticle> listCopy = StoreArticle.getCopyOfList(list);
+        for (int i = 0; i < list.size(); i++) {
+            assertEquals(list.get(i), listCopy.get(i));
+        }
     }
 }

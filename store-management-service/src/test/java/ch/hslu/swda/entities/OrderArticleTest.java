@@ -1,8 +1,11 @@
 package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,5 +79,32 @@ class OrderArticleTest {
         assertFalse(article.isReady());
         article.setReady(true);
         assertTrue(article.isReady());
+    }
+
+    @Test
+    void testEqualsVerifier() {
+        EqualsVerifier.simple().forClass(OrderArticle.class)
+                .verify();
+    }
+
+    @Test
+    void getCopy() {
+        OrderArticle article = new OrderArticle(55, 66, false);
+        assertEquals(article, article.getCopy());
+    }
+
+    @Test
+    void getCopyOfArticleOrderedList() {
+        OrderArticle article1 = new OrderArticle(1, 10, false);
+        OrderArticle article2 = new OrderArticle(2, 15, false);
+        OrderArticle article3 = new OrderArticle(3, 5, true);
+        List<OrderArticle> articles = new ArrayList<>();
+        articles.add(article1);
+        articles.add(article2);
+        articles.add(article3);
+        List<OrderArticle> copyArticles = OrderArticle.getCopyOfArticleOrderedList(articles);
+        for (int i = 0; i < articles.size(); i++) {
+            assertEquals(articles.get(i), copyArticles.get(i));
+        }
     }
 }

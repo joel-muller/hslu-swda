@@ -7,20 +7,19 @@ import ch.hslu.swda.entities.StoreArticle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class StoreWrapper {
 
     public static DBStore createDBStore(final Store store) {
-        List<StoreArticle> storeArticles = store.getArticleList();
+        List<StoreArticle> storeArticles = store.getCopyOfArticleList();
         List<DBStoreArticle> dbStoreArticles = new ArrayList<>();
         for (StoreArticle storeArticle : storeArticles) {
             dbStoreArticles.add(new DBStoreArticle(storeArticle.getId(), storeArticle.getActualQuantity(), storeArticle.getMinimumQuantity(), storeArticle.getRefillCount()));
         }
-        List<Order> orders = store.getOpenOrders();
+        List<Order> orders = store.getCopyOfOpenOrders();
         List<DBOrder> dbOrders = new ArrayList<>();
         for (Order order : orders) {
-            List<OrderArticle> orderArticles = order.getArticleOrderedList();
+            List<OrderArticle> orderArticles = order.getCopyOfArticleOrderedList();
             List<DBOrderArticle> dbOrderArticles = new ArrayList<>();
             for (OrderArticle orderArticle : orderArticles) {
                 dbOrderArticles.add(new DBOrderArticle(orderArticle.getId(), orderArticle.getCount(), orderArticle.isReady()));

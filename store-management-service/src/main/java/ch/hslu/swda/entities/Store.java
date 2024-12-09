@@ -4,10 +4,10 @@ import ch.hslu.swda.messagesIngoing.OrderRequest;
 
 import java.util.*;
 
-public class Store {
+public final class Store {
     final private UUID id;
     private List<StoreArticle> articleList;
-    private List<Order> openOrders;
+    private final List<Order> openOrders;
 
     public Store() {
         this.id = UUID.randomUUID();
@@ -17,12 +17,12 @@ public class Store {
 
     public Store(final UUID id, List<StoreArticle> articleList, List<Order> openOrders) {
         this.id = id;
-        this.articleList = articleList;
-        this.openOrders = openOrders;
+        this.articleList = StoreArticle.getCopyOfList(articleList);
+        this.openOrders = Order.getCopyOfOrderList(openOrders);
     }
 
-    public List<StoreArticle> getArticleList() {
-        return articleList;
+    public List<StoreArticle> getCopyOfArticleList() {
+        return StoreArticle.getCopyOfList(articleList);
     }
 
     public void setDefaultArticleList() {
@@ -34,19 +34,19 @@ public class Store {
         this.articleList = articleList;
     }
 
-    public List<Order> getOpenOrders() {
-        return openOrders;
+    public List<Order> getCopyOfOpenOrders() {
+        return Order.getCopyOfOrderList(openOrders);
     }
 
     public void addOrder(Order order) {
-        openOrders.add(order);
+        openOrders.add(order.getCopy());
     }
 
     public void removeOrder(UUID orderId) {
         openOrders.removeIf(order -> Objects.equals(order.getId(), orderId));
     }
 
-    public StoreArticle getArticle(int id) {
+    private StoreArticle getArticle(int id) {
         for (StoreArticle article : articleList) {
             if (article.getId() == id) {
                 return article;
@@ -72,7 +72,7 @@ public class Store {
         addOrder(order);
         Map<Integer, Integer> articleHaveToBeOrdered = new HashMap<>();
         List<Integer> articleReserved = new ArrayList<>();
-        for (OrderArticle article : order.getArticleOrderedList()) {
+        for (OrderArticle article : order.getCopyOfArticleOrderedList()) {
             StoreArticle storeArticle = getArticle(article.getId());
             if (storeArticle == null) {
                 articleHaveToBeOrdered.put(article.getId(), article.getCount());

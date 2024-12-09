@@ -2,8 +2,10 @@ package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 import ch.hslu.swda.messagesIngoing.OrderRequest;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,7 +21,7 @@ class OrderTest {
 
         assertEquals(orderId, order.getId());
         assertEquals(storeId, order.getStoreId());
-        assertEquals(articles, order.getArticleOrderedList());
+        assertEquals(articles, order.getCopyOfArticleOrderedList());
     }
 
     @Test
@@ -36,10 +38,10 @@ class OrderTest {
 
         assertEquals(orderId, order.getId());
         assertEquals(storeId, order.getStoreId());
-        assertEquals(2, order.getArticleOrderedList().size());
+        assertEquals(2, order.getCopyOfArticleOrderedList().size());
 
         // Extract the article IDs and counts
-        List<OrderArticle> orderArticles = order.getArticleOrderedList();
+        List<OrderArticle> orderArticles = order.getCopyOfArticleOrderedList();
         assertTrue(orderArticles.stream().anyMatch(article -> article.getId() == 1 && article.getCount() == 5 && !article.isReady()));
         assertTrue(orderArticles.stream().anyMatch(article -> article.getId() == 2 && article.getCount() == 10 && !article.isReady()));
     }
@@ -100,5 +102,30 @@ class OrderTest {
         Order order = new Order(UUID.randomUUID(), UUID.randomUUID(), List.of());
         assertNotEquals(order, "SomeString");
         assertNotEquals(order, null);
+    }
+
+    @Test
+    void testEqualsVerifier() {
+        EqualsVerifier.simple().forClass(Order.class)
+                .verify();
+    }
+
+    @Test
+    void getCopy() {
+        UUID id = UUID.randomUUID();
+        UUID storeId = UUID.randomUUID();
+        OrderArticle article1 = new OrderArticle(1, 10, false);
+        OrderArticle article2 = new OrderArticle(2, 15, false);
+        OrderArticle article3 = new OrderArticle(3, 5, true);
+        List<OrderArticle> articles = new ArrayList<>();
+        articles.add(article1);
+        articles.add(article2);
+        articles.add(article3);
+        Order order = new Order(id, storeId, articles);
+        assertEquals(order, order.getCopy());
+    }
+
+    @Test
+    void getCopyOfOrderList() {
     }
 }

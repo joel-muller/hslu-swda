@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class OrderArticle {
+public final class OrderArticle {
     private final int id;
     private final int count;
     private boolean ready;
@@ -21,6 +21,18 @@ public class OrderArticle {
         ArrayList<OrderArticle> list = new ArrayList<>();
         for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
             list.add(new OrderArticle(pair.getKey(), pair.getValue(), false));
+        }
+        return list;
+    }
+
+    public OrderArticle getCopy() {
+        return new OrderArticle(id, count, ready);
+    }
+
+    public static List<OrderArticle> getCopyOfArticleOrderedList(List<OrderArticle> orderArticles) {
+        List<OrderArticle> list = new ArrayList<>();
+        for (OrderArticle o : orderArticles) {
+            list.add(o.getCopy());
         }
         return list;
     }
