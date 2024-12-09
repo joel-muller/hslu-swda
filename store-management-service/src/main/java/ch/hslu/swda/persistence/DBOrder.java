@@ -1,9 +1,6 @@
 package ch.hslu.swda.persistence;
 
-import ch.hslu.swda.entities.OrderArticle;
-import ch.hslu.swda.messagesIngoing.OrderRequest;
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
 
 import java.util.List;
 import java.util.UUID;

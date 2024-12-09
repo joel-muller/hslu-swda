@@ -1,7 +1,7 @@
 package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
-import ch.hslu.swda.messagesIngoing.OrderRequest;
+import ch.hslu.swda.messagesIngoing.NewOrder;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,7 @@ class OrderTest {
         Map<Integer, Integer> articlesMap = Map.of(1, 5, 2, 10); // Random order
 
         // Create the OrderRequest instance directly
-        OrderRequest request = new OrderRequest(orderId, employeeId, storeId, articlesMap);
+        NewOrder request = new NewOrder(orderId, employeeId, storeId, articlesMap);
 
         Order order = Order.createFromOrderRequest(request);
 

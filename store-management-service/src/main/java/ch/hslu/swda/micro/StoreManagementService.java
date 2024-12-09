@@ -59,11 +59,11 @@ public final class StoreManagementService implements AutoCloseable, Service {
         this.database = new DatabaseConnector();
 
 
-        this.generalReceiver(Routes.ORDER_READY, new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
-        this.generalReceiver(Routes.REQUEST_ARTICLES, new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
-        this.generalReceiver(Routes.INVENTORY_UPDATE, new GatewayReceiver<>(database, exchangeName, bus, new InventoryUpdateStore(), InventoryUpdate.class, this));
-        this.generalReceiver(Routes.INTERNAL_ORDER, new GatewayReceiver<>(database, exchangeName, bus, new InternalStoreOrderModifier(), InternalStoreOrder.class, this));
-        this.generalReceiver(Routes.STORE_CREATION, new GatewayReceiver<>(database, exchangeName, bus, new StoreCreateHandler(), CreateStore.class, this));
+        this.generalReceiver(Routes.ORDER_READY, new Receiver<>(database, new HandleOrderReady(), OrderReady.class, this));
+        this.generalReceiver(Routes.REQUEST_ARTICLES, new Receiver<>(database, new HandleNewOrder(), NewOrder.class, this));
+        this.generalReceiver(Routes.INVENTORY_UPDATE, new GatewayReceiver<>(database, exchangeName, bus, new HandleInventoryUpdate(), InventoryUpdate.class, this));
+        this.generalReceiver(Routes.INTERNAL_ORDER, new GatewayReceiver<>(database, exchangeName, bus, new HandleInternalOrder(), InternalOrder.class, this));
+        this.generalReceiver(Routes.STORE_CREATION, new GatewayReceiver<>(database, exchangeName, bus, new HandleStoreCreation(), StoreCreation.class, this));
         this.receiveStoreGetrequests();
 
 

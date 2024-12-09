@@ -1,6 +1,6 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.messagesIngoing.OrderRequest;
+import ch.hslu.swda.messagesIngoing.NewOrder;
 
 import java.util.*;
 
@@ -61,8 +61,8 @@ public final class Store {
         return id;
     }
 
-    public OrderProcessed newOrder(OrderRequest orderRequest) {
-        Order order = Order.createFromOrderRequest(orderRequest);
+    public OrderProcessed newOrder(NewOrder newOrder) {
+        Order order = Order.createFromOrderRequest(newOrder);
         addOrder(order);
         Map<Integer, Integer> articleHaveToBeOrdered = new HashMap<>();
         List<Integer> articleReserved = new ArrayList<>();

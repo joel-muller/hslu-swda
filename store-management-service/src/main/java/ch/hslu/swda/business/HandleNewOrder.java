@@ -2,7 +2,7 @@ package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.*;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
-import ch.hslu.swda.messagesIngoing.OrderRequest;
+import ch.hslu.swda.messagesIngoing.NewOrder;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
@@ -19,7 +19,7 @@ public class HandleNewOrder implements Modifiable {
     public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
             LOG.info("Handle new order");
-            OrderRequest request = (OrderRequest) responseRaw;
+            NewOrder request = (NewOrder) responseRaw;
             Store store = databaseConnector.getStore(request.getStoreId());
             OrderProcessed processed = store.newOrder(request);
             if (!processed.articlesHaveToGetOrdered().isEmpty()) {

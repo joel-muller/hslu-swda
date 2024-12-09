@@ -6,8 +6,8 @@ import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InventoryUpdateStore implements Modifiable {
-    private static final Logger LOG = LoggerFactory.getLogger(InventoryUpdateStore.class);
+public class HandleInventoryUpdate implements Modifiable {
+    private static final Logger LOG = LoggerFactory.getLogger(HandleInventoryUpdate.class);
 
 
     @Override

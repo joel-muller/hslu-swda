@@ -1,6 +1,5 @@
 package ch.hslu.swda.business;
 
-import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.Store;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesIngoing.OrderReady;
@@ -12,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class ProcessOrderReady implements Modifiable {
-    private static final Logger LOG = LoggerFactory.getLogger(ProcessOrderReady.class);
+public class HandleOrderReady implements Modifiable {
+    private static final Logger LOG = LoggerFactory.getLogger(HandleOrderReady.class);
 
     @Override
     public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {

@@ -1,6 +1,6 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.messagesIngoing.OrderRequest;
+import ch.hslu.swda.messagesIngoing.NewOrder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public final class Order {
         this.articleOrderedList = OrderArticle.getCopyOfArticleOrderedList(articleOrderedList);
     }
 
-    public static Order createFromOrderRequest(OrderRequest request) {
+    public static Order createFromOrderRequest(NewOrder request) {
         List<OrderArticle> articleOrdered = OrderArticle.createListArticle(request.articles());
         return new Order(request.orderId(), articleOrdered);
     }
