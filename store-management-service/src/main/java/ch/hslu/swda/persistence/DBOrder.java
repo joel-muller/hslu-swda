@@ -9,7 +9,6 @@ import java.util.UUID;
 public class DBOrder {
     private UUID id;
     private List<DBOrderArticle> articleOrderedList;
-    private boolean finished;
 
     public DBOrder(UUID id, List<DBOrderArticle> articleOrderedList) {
         this.id = id;
@@ -39,11 +38,4 @@ public class DBOrder {
         this.articleOrderedList = articleOrderedList;
     }
 
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
 }

@@ -48,6 +48,14 @@ public final class Order {
         return true;
     }
 
+    public void setArticleReady(int id) {
+        for (OrderArticle article : articleOrderedList) {
+            if (article.getId() == id) {
+                article.setReady(true);
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

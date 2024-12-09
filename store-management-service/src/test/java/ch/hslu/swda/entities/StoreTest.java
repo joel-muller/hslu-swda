@@ -1,6 +1,7 @@
 package ch.hslu.swda.entities;
 
 import ch.hslu.swda.messagesIngoing.NewOrder;
+import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -133,6 +134,15 @@ class StoreTest {
 
         store.removeOrder(orderId);
         assertTrue(store.getCopyOfOpenOrders().isEmpty());
+    }
+
+    @Test
+    void testUpdateOrderNotValidID() {
+        Map<Integer, Integer> orders = new HashMap<>();
+        orders.put(1, 6);
+        orders.put(2, 30);
+        Store store = new Store();
+        assertEquals(new OrderProcessed(new HashMap<>(), new ArrayList<>()), store.updateOrderStore(UUID.randomUUID(), orders));
     }
 
     @Test

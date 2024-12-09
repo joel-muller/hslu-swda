@@ -109,11 +109,11 @@ public final class Store {
                     articleHaveToBeOrdered.put(article.getId(), article.getCount());
                 } else if (refillBack == 0) {
                     // article is reserved, no refill needed
-                    article.setReady(true);
+                    order.setArticleReady(article.getId());
                     articleReserved.add(article.getId());
                 } else {
                     // article is reserved but a refill is needed
-                    article.setReady(true);
+                    order.setArticleReady(article.getId());
                     articleReserved.add(article.getId());
                     articleHaveToBeOrdered.put(article.getId(), refillBack);
                 }

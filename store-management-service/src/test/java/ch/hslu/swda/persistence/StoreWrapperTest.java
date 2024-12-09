@@ -24,5 +24,6 @@ class StoreWrapperTest {
         store.addOrder(new Order(orderId, orderArticleList));
         DBStore dbStore = StoreWrapper.createDBStore(store);
         Store newStore = StoreWrapper.getStore(dbStore);
+        assertEquals(store, newStore);
     }
 }
