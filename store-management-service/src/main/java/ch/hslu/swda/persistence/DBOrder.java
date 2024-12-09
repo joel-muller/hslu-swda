@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Entity("order")
 public class DBOrder {
-    @Id
     private UUID id;
     private List<DBOrderArticle> articleOrderedList;
     private boolean finished;

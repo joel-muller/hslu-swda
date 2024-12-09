@@ -5,7 +5,6 @@ import dev.morphia.annotations.Id;
 
 @Entity("storeArticle")
 public class DBStoreArticle {
-    @Id
     private int id;
     private int actualQuantity;
     private int minimumQuantity;

@@ -2,17 +2,16 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.business.StoreStatusHandler;
+import ch.hslu.swda.business.ZZZStoreStatusHandler;
 import ch.hslu.swda.messagesIngoing.StoreStatusRequest;
 import ch.hslu.swda.persistence.DatabaseConnector;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class StoreStatusReceiver implements MessageReceiver {
+public class ZZZStoreStatusReceiver implements MessageReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(StoreStatusRequest.class);
 
     private final DatabaseConnector database;
@@ -20,14 +19,14 @@ public class StoreStatusReceiver implements MessageReceiver {
     private final String exchangeName;
     private final BusConnector bus;
 
-    private final StoreStatusHandler storeStatusHandler;
+    private final ZZZStoreStatusHandler storeStatusHandler;
 
-    public StoreStatusReceiver(final DatabaseConnector database, final String exchangeName, final BusConnector bus, final StoreManagementService service) {
+    public ZZZStoreStatusReceiver(final DatabaseConnector database, final String exchangeName, final BusConnector bus, final StoreManagementService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
         this.database = database;
         this.service = service;
-        this.storeStatusHandler = new StoreStatusHandler(database);
+        this.storeStatusHandler = new ZZZStoreStatusHandler(database);
     }
     @Override
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {

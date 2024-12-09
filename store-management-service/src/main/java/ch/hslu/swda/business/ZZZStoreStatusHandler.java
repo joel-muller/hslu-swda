@@ -7,9 +7,9 @@ import ch.hslu.swda.persistence.DatabaseConnector;
 import java.util.Map;
 import java.util.UUID;
 
-public class StoreStatusHandler {
+public class ZZZStoreStatusHandler {
     private final DatabaseConnector database;
-    public StoreStatusHandler(DatabaseConnector database){
+    public ZZZStoreStatusHandler(DatabaseConnector database){
         this.database = database;
     }
     public void get(StoreStatusRequest storeStatusRequest) {

@@ -50,9 +50,7 @@ public class DatabaseConnector {
                 .filter(eq("_id", storeId))
                 .first();
         if (dbStore == null) {
-            LOG.info("No store detected for test case, we will return a default store");
-            return Store.createExampleStore(storeId);
-            //throw new NoSuchElementException("Store with the following id does not exist:" + storeId.toString());
+            throw new NoSuchElementException("Store with the following id does not exist:" + storeId.toString());
         }
         return StoreWrapper.getStore(dbStore);
     }

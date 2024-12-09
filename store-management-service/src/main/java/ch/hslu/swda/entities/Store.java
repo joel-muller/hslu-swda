@@ -6,14 +6,8 @@ import java.util.*;
 
 public final class Store {
     final private UUID id;
-    private List<StoreArticle> articleList;
+    private final List<StoreArticle> articleList;
     private final List<Order> openOrders;
-
-    public Store() {
-        this.id = UUID.randomUUID();
-        this.articleList = new ArrayList<>();
-        this.openOrders = new ArrayList<>();
-    }
 
     public Store(final UUID id, List<StoreArticle> articleList, List<Order> openOrders) {
         this.id = id;
@@ -21,17 +15,21 @@ public final class Store {
         this.openOrders = Order.getCopyOfOrderList(openOrders);
     }
 
+    public Store() {
+        this.id = UUID.randomUUID();
+        this.articleList = new ArrayList<>();
+        this.openOrders = new ArrayList<>();
+    }
+
     public List<StoreArticle> getCopyOfArticleList() {
         return StoreArticle.getCopyOfList(articleList);
     }
 
-    public void setDefaultArticleList() {
+    public void addDefaultInventory() {
         Random random = new Random();
-        List<StoreArticle> articleList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            articleList.add(new StoreArticle(100000 + random.nextInt(Integer.MAX_VALUE - 100000), random.nextInt(500), random.nextInt(200), random.nextInt(600)));
+        for (int i = 0; i < 100; i++) {
+            articleList.add(new StoreArticle((100000 + random.nextInt(100) + (i * 1000)), 100, 10, 100));
         }
-        this.articleList = articleList;
     }
 
     public List<Order> getCopyOfOpenOrders() {
@@ -53,14 +51,6 @@ public final class Store {
             }
         }
         return null;
-    }
-
-    public static Store createExampleStore(UUID id) {
-        List<StoreArticle> articles = new ArrayList<StoreArticle>();
-        articles.add(new StoreArticle(14, 200, 5, 5));
-        articles.add(new StoreArticle(12, 200, 3, 3));
-        articles.add(new StoreArticle(18, 200, 2, 3));
-        return new Store(id, articles, new ArrayList<>());
     }
 
     public UUID getId() {

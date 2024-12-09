@@ -6,22 +6,21 @@ import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.entities.Store;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class StoreDefaultCreationReciever implements MessageReceiver {
-    private static final Logger LOG = LoggerFactory.getLogger(StoreDefaultCreationReciever.class);
+public class ZZZStoreDefaultCreationReciever implements MessageReceiver {
+    private static final Logger LOG = LoggerFactory.getLogger(ZZZStoreDefaultCreationReciever.class);
 
     private final DatabaseConnector database;
     private final StoreManagementService service;
     private final String exchangeName;
     private final BusConnector bus;
 
-    public StoreDefaultCreationReciever(final DatabaseConnector database, final String exchangeName, final BusConnector bus,
-            final StoreManagementService service) {
+    public ZZZStoreDefaultCreationReciever(final DatabaseConnector database, final String exchangeName, final BusConnector bus,
+                                           final StoreManagementService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
         this.database = database;
@@ -34,7 +33,7 @@ public class StoreDefaultCreationReciever implements MessageReceiver {
             LOG.info("Creating default stores...");
             for (int i = 0; i < 10; i++) {
                 Store store = new Store();
-                store.setDefaultArticleList();
+                store.addDefaultInventory();
                 LOG.info("Store to be created: {}", store.toString());
                 database.storeStore(store);
                 LOG.info("Store with the id {} created and saved in the database", store.getId());

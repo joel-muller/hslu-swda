@@ -117,10 +117,10 @@ public final class StoreManagementService implements AutoCloseable, Service {
         LOG.debug("Starting listening for messages with routing [{}] and [{}]", Routes.STORE_CREATION,
                 Routes.STORE_DEFAULT_CREATION);
         bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_CREATION, Routes.STORE_CREATION,
-                new StoreCreationReciever(this.database, exchangeName, bus, this));
+                new StoreCreationReceiver(this.database, exchangeName, bus, this));
         bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_DEFAULT_CREATION,
                 Routes.STORE_DEFAULT_CREATION,
-                new StoreDefaultCreationReciever(this.database, exchangeName, bus, this));
+                new ZZZStoreDefaultCreationReciever(this.database, exchangeName, bus, this));
     }
 
     private void receiveStoreGetrequests(){
