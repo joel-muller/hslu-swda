@@ -6,12 +6,11 @@ import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InventoryUpdateStore implements Modifiable {
-    private static final Logger LOG = LoggerFactory.getLogger(InventoryUpdateStore.class);
-
+public class InternalStoreOrderModifier implements Modifiable {
+    private static final Logger LOG = LoggerFactory.getLogger(InternalStoreOrderModifier.class);
 
     @Override
     public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
-        LOG.info("Inventory store update {}", responseRaw.toString());
+        LOG.info("Internal store order modifier {}", responseRaw.toString());
     }
 }

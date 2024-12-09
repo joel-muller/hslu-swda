@@ -1,4 +1,10 @@
 package ch.hslu.swda.messagesIngoing;
 
-public record CreateStore(boolean addDefaultArticle) {
+import java.util.UUID;
+
+public record CreateStore(boolean addDefaultArticle) implements IngoingMessage {
+    @Override
+    public UUID getStoreId() {
+        return null;
+    }
 }

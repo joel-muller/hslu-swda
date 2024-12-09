@@ -18,14 +18,10 @@ package ch.hslu.swda.micro;
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
-import ch.hslu.swda.business.InventoryUpdateStore;
-import ch.hslu.swda.messagesIngoing.InventoryUpdate;
+import ch.hslu.swda.business.*;
+import ch.hslu.swda.messagesIngoing.*;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.persistence.DatabaseConnector;
-import ch.hslu.swda.business.ProcessOrderReady;
-import ch.hslu.swda.business.HandleNewOrder;
-import ch.hslu.swda.messagesIngoing.OrderReady;
-import ch.hslu.swda.messagesIngoing.OrderRequest;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.messagesOutgoing.OutgoingMessage;
@@ -63,12 +59,11 @@ public final class StoreManagementService implements AutoCloseable, Service {
         this.database = new DatabaseConnector();
 
 
-        this.generalReceiver(Routes.ORDER_READY,
-                new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
-        this.generalReceiver(Routes.REQUEST_ARTICLES,
-                new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
+        this.generalReceiver(Routes.ORDER_READY, new Receiver<>(database, new ProcessOrderReady(), OrderReady.class, this));
+        this.generalReceiver(Routes.REQUEST_ARTICLES, new Receiver<>(database, new HandleNewOrder(), OrderRequest.class, this));
         this.generalReceiver(Routes.INVENTORY_UPDATE, new GatewayReceiver<>(database, exchangeName, bus, new InventoryUpdateStore(), InventoryUpdate.class, this));
-        this.receiveStoreCreationRequests();
+        this.generalReceiver(Routes.INTERNAL_ORDER, new GatewayReceiver<>(database, exchangeName, bus, new InternalStoreOrderModifier(), InternalStoreOrder.class, this));
+        this.generalReceiver(Routes.STORE_CREATION, new GatewayReceiver<>(database, exchangeName, bus, new StoreCreateHandler(), CreateStore.class, this));
         this.receiveStoreGetrequests();
 
 
@@ -113,15 +108,6 @@ public final class StoreManagementService implements AutoCloseable, Service {
         bus.listenFor(exchangeName, "OrderService <- " + channel, channel, receiver);
     }
 
-    private void receiveStoreCreationRequests() throws IOException {
-        LOG.debug("Starting listening for messages with routing [{}] and [{}]", Routes.STORE_CREATION,
-                Routes.STORE_DEFAULT_CREATION);
-        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_CREATION, Routes.STORE_CREATION,
-                new StoreCreationReceiver(this.database, exchangeName, bus, this));
-        bus.listenFor(exchangeName, "StoreManagementService <- " + Routes.STORE_DEFAULT_CREATION,
-                Routes.STORE_DEFAULT_CREATION,
-                new ZZZStoreDefaultCreationReciever(this.database, exchangeName, bus, this));
-    }
 
     private void receiveStoreGetrequests(){
         LOG.debug("Starting listening for messages with routing [{}]", Routes.STORES_GET);

@@ -25,9 +25,9 @@ public final class Routes {
     static final String INVENTORY_UPDATE = "store.inventory-update";
     static final String ORDER_READY = "store.order-ready";
     static final String STORE_STATUS = "store.status";
-    static final String STORE_CREATION = "store.create";
-    static final String STORE_DEFAULT_CREATION = "store.create-default";
+    static final String STORE_CREATION = "store.create-create";
     static final String STORES_GET = "stores.get";
+    static final String INTERNAL_ORDER = "store.internal-order";
  
     static final String INVENTORY_CHECK = "inventory.check";
 
