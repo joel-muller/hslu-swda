@@ -19,6 +19,7 @@ import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.ArticleHandler;
 import ch.hslu.swda.business.CSVReader;
+import ch.hslu.swda.entities.Book;
 import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Validity;
 import com.fasterxml.jackson.core.JsonParser;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
@@ -104,22 +106,31 @@ public final class ArticleRegistryService implements AutoCloseable {
         bus.close();
     }
 
-    public void sendBooks(String replyTo, String corrId) {
+    public void sendBooks(String replyTo, String corrId, Integer page,Integer size) {
 
-        String books ="{\"books\":[]}";
         ObjectMapper mapper = new ObjectMapper();
         try {
-             books = "{\"books\":"+ mapper.writeValueAsString(articleHandler.getBooks())+"}";
-            LOG.info(books);
-        }catch (JsonProcessingException e){
-            LOG.error(e.getMessage());
-        }
-        try{
-            bus.reply(exchangeName,replyTo,corrId,books);
+            // Retrieve the full list of books from ArticleHandler
+            List<Book> allBooks = articleHandler.getBooks();
 
-        } catch (IOException e){
-            LOG.error(e.getMessage());
+            // Apply pagination logic
+            int totalBooks = allBooks.size();
+            int fromIndex = Math.min(page * size, totalBooks);
+            int toIndex = Math.min(fromIndex + size, totalBooks);
+            List<Book> paginatedBooks = allBooks.subList(fromIndex, toIndex);
+
+            // Serialize the paginated list to JSON
+            String books = mapper.writeValueAsString(paginatedBooks);
+            LOG.info("Sending paginated books: {}", books);
+
+            // Send the response via the bus
+            bus.reply(exchangeName, replyTo, corrId, books);
+        } catch (IOException e) {
+            LOG.error("Error serializing books: {}", e.getMessage());
+        } catch (Exception e) {
+            LOG.error("Unexpected error: {}", e.getMessage());
         }
+
 
     }
 }

@@ -20,9 +20,11 @@ import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.business.ArticleHandler;
 import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Validity;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,7 @@ public final class BookRequestReceiver implements MessageReceiver {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookRequestReceiver.class);
     private final ArticleRegistryService service;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public BookRequestReceiver(ArticleRegistryService service) {
         this.service = service;
@@ -46,10 +49,30 @@ public final class BookRequestReceiver implements MessageReceiver {
     public void onMessageReceived(final String route, final String replyTo, final String corrId, final String message) {
 
         // receive message and reply
-        LOG.debug("received chat message with replyTo property [{}]: [{}]", replyTo, message);
+        LOG.info("received chat message with replyTo property [{}]: [{}]", replyTo, message);
 
             LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
-            service.sendBooks(replyTo,corrId);
+
+            try{
+                JsonNode root= mapper.readTree(message);
+
+                int page = root.get("page").asInt(0);
+                int size = root.get("size").asInt(100);
+
+                // Validate pagination parameters
+                if (page < 0) {
+                    LOG.error("Page parameter must be a non-negative integer.");
+                    return;
+                }
+                if (size < 1) {
+                    LOG.error("Size parameter must be at least 1.");
+                    return;
+                }
+                service.sendBooks(replyTo,corrId, page, size);
+
+            }catch (JsonProcessingException e){
+                LOG.error(e.getMessage());
+            }
 
     }
 
