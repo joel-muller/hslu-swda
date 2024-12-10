@@ -12,13 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
-public class DatabaseConnector {
+public class DatabaseConnector implements Data {
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseConnector.class);
 
     private final Datastore datastore;
@@ -40,11 +39,13 @@ public class DatabaseConnector {
         datastore.ensureIndexes();
     }
 
+    @Override
     public void storeStore(Store store) {
         DBStore dbStore = StoreWrapper.createDBStore(store);
         datastore.save(dbStore);
     }
 
+    @Override
     public Store getStore(UUID storeId) {
         DBStore dbStore = datastore.find(DBStore.class)
                 .filter(eq("_id", storeId))
@@ -55,6 +56,7 @@ public class DatabaseConnector {
         return StoreWrapper.getStore(dbStore);
     }
 
+    @Override
     public List<Store> getAllStores() {
         List<Store> stores = new ArrayList<>();
         for (DBStore dbStore : datastore.find(DBStore.class)) {

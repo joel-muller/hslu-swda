@@ -5,6 +5,7 @@ import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesIngoing.OrderReady;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.micro.Service;
+import ch.hslu.swda.persistence.Data;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ public class HandleOrderReady implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(HandleOrderReady.class);
 
     @Override
-    public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
+    public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
             OrderReady response = (OrderReady) responseRaw;
             Store store = databaseConnector.getStore(response.getStoreId());

@@ -4,6 +4,7 @@ import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesIngoing.InternalOrder;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.micro.Service;
+import ch.hslu.swda.persistence.Data;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ public class HandleInternalOrder implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(HandleInternalOrder.class);
 
     @Override
-    public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
+    public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
             InternalOrder request = (InternalOrder) responseRaw;
             service.requestArticles(new InventoryRequest(UUID.randomUUID(), request.getStoreId(), request.articles()));

@@ -6,19 +6,19 @@ import ch.hslu.swda.messagesIngoing.NewOrder;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
+import ch.hslu.swda.persistence.Data;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 public class HandleNewOrder implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(HandleNewOrder.class);
 
     @Override
-    public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
+    public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
             NewOrder request = (NewOrder) responseRaw;
             Store store = databaseConnector.getStore(request.getStoreId());

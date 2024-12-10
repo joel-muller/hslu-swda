@@ -3,6 +3,7 @@ package ch.hslu.swda.entities;
 import ch.hslu.swda.messagesIngoing.NewOrder;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -11,15 +12,37 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StoreTest {
+    Store store;
+    UUID storeId;
+    List<StoreArticle> articles;
+    List<OrderArticle> orderArticles;
+    Order order;
+    List<Order> orders;
+    UUID orderId;
+
+
+    @BeforeEach
+    void setup() {
+        orderId = UUID.randomUUID();
+        orderArticles = new ArrayList<>();
+        orderArticles.add(new OrderArticle(3, 50, false));
+        orderArticles.add(new OrderArticle(4, 4, true));
+        order = new Order(orderId, orderArticles);
+        orders = new ArrayList<>();
+        orders.add(order);
+
+        storeId = UUID.randomUUID();
+        articles = new ArrayList<>();
+        articles.add(new StoreArticle(1, 10, 5, 10));
+        articles.add(new StoreArticle(2, 20, 3, 45));
+        articles.add(new StoreArticle(3, 50, 0, 0));
+
+        store = new Store(storeId, articles, orders);
+    }
+
     @Test
     void testConstructorWithParameters() {
-        UUID id = UUID.randomUUID();
-        List<StoreArticle> articles = List.of(new StoreArticle(1, 100, 10, 50));
-        List<Order> orders = List.of(new Order(UUID.randomUUID(), new ArrayList<>()));
-
-        Store store = new Store(id, articles, orders);
-
-        assertEquals(id, store.getId());
+        assertEquals(storeId, store.getId());
         assertEquals(articles, store.getCopyOfArticleList());
         assertEquals(orders, store.getCopyOfOpenOrders());
     }
@@ -27,7 +50,6 @@ class StoreTest {
     @Test
     void testDefaultConstructor() {
         Store store = new Store();
-
         assertNotNull(store.getId());
         assertTrue(store.getCopyOfArticleList().isEmpty());
         assertTrue(store.getCopyOfOpenOrders().isEmpty());
@@ -36,10 +58,8 @@ class StoreTest {
     @Test
     void testAddDefaultInventory() {
         Store store = new Store();
-
         store.addDefaultInventory();
         List<StoreArticle> inventory = store.getCopyOfArticleList();
-
         assertEquals(100, inventory.size());
         for (StoreArticle article : inventory) {
             assertTrue(article.getId() >= 100000);
@@ -48,68 +68,57 @@ class StoreTest {
 
     @Test
     void testAddArticle_NewArticle() {
-        Store store = new Store();
-        StoreArticle newArticle = new StoreArticle(1, 50, 10, 20);
-
+        StoreArticle newArticle = new StoreArticle(4, 50, 10, 20);
         store.addArticle(newArticle);
         List<StoreArticle> articles = store.getCopyOfArticleList();
 
-        assertEquals(1, articles.size());
-        assertEquals(newArticle.getId(), articles.get(0).getId());
-        assertEquals(newArticle.getActualQuantity(), articles.get(0).getActualQuantity());
+        assertEquals(4, articles.size());
+        assertEquals(newArticle.getId(), articles.get(3).getId());
+        assertEquals(newArticle.getActualQuantity(), articles.get(3).getActualQuantity());
+        assertEquals(newArticle.getMinimumQuantity(), articles.get(3).getMinimumQuantity());
+        assertEquals(newArticle.getRefillCount(), articles.get(3).getRefillCount());
     }
 
     @Test
     void testAddArticle_UpdateExistingArticle() {
-        Store store = new Store();
-        StoreArticle existingArticle = new StoreArticle(1, 30, 5, 10);
-        store.addArticle(existingArticle);
-
         StoreArticle updatedArticle = new StoreArticle(1, 20, 8, 15);
         store.addArticle(updatedArticle);
 
         List<StoreArticle> articles = store.getCopyOfArticleList();
-        assertEquals(1, articles.size());
-        StoreArticle article = articles.get(0);
+        assertEquals(3, articles.size());
+        StoreArticle article = articles.getFirst();
 
         assertEquals(1, article.getId());
-        assertEquals(50, article.getActualQuantity()); // 30 + 20
+        assertEquals(30, article.getActualQuantity()); // 10 + 20
         assertEquals(15, article.getRefillCount());
         assertEquals(8, article.getMinimumQuantity());
     }
 
     @Test
     void testRefillArticle_NewArticle() {
-        Store store = new Store();
-        store.refillArticle(1, 50);
+        store.refillArticle(10, 99);
 
-        List<StoreArticle> articles = store.getCopyOfArticleList();
+        assertEquals(4, store.getCopyOfArticleList().size());
+        StoreArticle article = store.getCopyOfArticleList().get(3);
 
-        assertEquals(1, articles.size());
-        StoreArticle article = articles.get(0);
-
-        assertEquals(1, article.getId());
-        assertEquals(50, article.getActualQuantity());
+        assertEquals(10, article.getId());
+        assertEquals(99, article.getActualQuantity());
         assertEquals(0, article.getRefillCount());
         assertEquals(0, article.getMinimumQuantity());
     }
 
     @Test
     void testRefillArticle_UpdateExistingArticle() {
-        Store store = new Store();
-        StoreArticle existingArticle = new StoreArticle(1, 30, 5, 10);
-        store.addArticle(existingArticle);
+        store.refillArticle(2, 99);
 
-        store.refillArticle(1, 20);
+        assertEquals(3, store.getCopyOfArticleList().size());
+        StoreArticle article = store.getCopyOfArticleList().get(1);
 
-        List<StoreArticle> articles = store.getCopyOfArticleList();
-        assertEquals(1, articles.size());
-        StoreArticle article = articles.get(0);
+        assertEquals(2, article.getId());
+        assertEquals(119, article.getActualQuantity());
+        assertEquals(45, article.getRefillCount());
+        assertEquals(3, article.getMinimumQuantity());
 
-        assertEquals(1, article.getId());
-        assertEquals(50, article.getActualQuantity()); // 30 + 20
-        assertEquals(10, article.getRefillCount());
-        assertEquals(5, article.getMinimumQuantity());
     }
 
     @Test

@@ -9,6 +9,7 @@ import ch.hslu.swda.messagesIngoing.NewOrder;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
+import ch.hslu.swda.persistence.Data;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class HandleInventoryUpdate implements Modifiable {
 
 
     @Override
-    public void modify(DatabaseConnector databaseConnector, IngoingMessage responseRaw, Service service) {
+    public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
             InventoryUpdate request = (InventoryUpdate) responseRaw;
             Store store = databaseConnector.getStore(request.getStoreId());
