@@ -1,10 +1,7 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.messagesIngoing.NewOrder;
-import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
