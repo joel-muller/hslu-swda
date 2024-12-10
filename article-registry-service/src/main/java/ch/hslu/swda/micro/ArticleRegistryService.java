@@ -21,6 +21,9 @@ import ch.hslu.swda.business.ArticleHandler;
 import ch.hslu.swda.business.CSVReader;
 import ch.hslu.swda.entities.LogMessage;
 import ch.hslu.swda.entities.Validity;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +92,8 @@ public final class ArticleRegistryService implements AutoCloseable {
     private void receiveValidityCheck() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
         bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.CHECK_ORDER_VALIDITY, Routes.CHECK_ORDER_VALIDITY, new ValidityReceiver(this.articleHandler, exchangeName, bus, this));
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.GET_BOOKS, Routes.GET_BOOKS, new ValidityReceiver(this.articleHandler, exchangeName, bus, this));
+
     }
 
     /**
@@ -97,5 +102,24 @@ public final class ArticleRegistryService implements AutoCloseable {
     @Override
     public void close() {
         bus.close();
+    }
+
+    public void sendBooks(String replyTo, String corrId) {
+
+        String books ="{\"books\":[]}";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+             books = "{\"books\":"+ mapper.writeValueAsString(articleHandler.getBooks())+"}";
+            LOG.info(books);
+        }catch (JsonProcessingException e){
+            LOG.error(e.getMessage());
+        }
+        try{
+            bus.reply(exchangeName,replyTo,corrId,books);
+
+        } catch (IOException e){
+            LOG.error(e.getMessage());
+        }
+
     }
 }

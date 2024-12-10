@@ -62,4 +62,8 @@ public class ArticleHandler {
         return null;
     }
 
+    public List<Book> getBooks(){
+        return articles;
+    }
+
 }

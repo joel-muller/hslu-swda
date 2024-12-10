@@ -23,6 +23,7 @@ public final class Routes {
     static final String CREATE_ARTICLE = "article.create";
     static final String DELETE_ARTICLE = "article.delete";
     static final String CHECK_ORDER_VALIDITY = "articles.check-validity";
+    static final String GET_BOOKS = "articles.books.get";
 
     // Imports
     static final String RECEIVE_ORDER_VALIDITY = "order.receive-validity";
