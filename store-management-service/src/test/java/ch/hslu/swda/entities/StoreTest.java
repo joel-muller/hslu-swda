@@ -307,14 +307,46 @@ class StoreTest {
 
         Map<Integer, Integer> invArticles = new HashMap<>();
         invArticles.put(2, 100);
+        invArticles.put(4, 55);
         OrderProcessed processed = store.handleInventoryUpdate(orderId, invArticles);
 
 
         List<StoreArticle> articles = store.getCopyOfArticleList();
         assertEquals(new StoreArticle(1, 12, 0, 2), articles.get(0));
         assertEquals(new StoreArticle(2, 30, 0, 6), articles.get(1));
+        assertEquals(new StoreArticle(4, 55, 0, 0), articles.get(2));
         assertTrue(store.getCopyOfOpenOrders().getFirst().getCopy().isReady());
         assertEquals(2, processed.articlesReady().getFirst());
+    }
+
+    @Test
+    void handleInventoryUpdate2() {
+        Store store = new Store();
+        StoreArticle article = new StoreArticle(1, 20, 0, 2);
+        StoreArticle article2 = new StoreArticle(2, 30, 0, 6);
+        store.addArticle(article);
+        store.addArticle(article2);
+
+        Map<Integer, Integer> orders = new HashMap<>();
+        orders.put(1, 8);
+        orders.put(4, 10);
+
+        UUID orderId = UUID.randomUUID();
+
+        store.newOrder(orderId, orders);
+
+        Map<Integer, Integer> invArticles = new HashMap<>();
+        invArticles.put(2, 100);
+        invArticles.put(4, 55);
+        OrderProcessed processed = store.handleInventoryUpdate(orderId, invArticles);
+
+
+        List<StoreArticle> articles = store.getCopyOfArticleList();
+        assertEquals(new StoreArticle(1, 12, 0, 2), articles.get(0));
+        assertEquals(new StoreArticle(2, 130, 0, 6), articles.get(1));
+        assertEquals(new StoreArticle(4, 45, 0, 0), articles.get(2));
+        assertTrue(store.getCopyOfOpenOrders().getFirst().getCopy().isReady());
+        assertEquals(4, processed.articlesReady().getFirst());
     }
 
     @Test

@@ -19,6 +19,7 @@ public class HandleInternalOrder implements Modifiable {
     public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
             InternalOrder request = (InternalOrder) responseRaw;
+            if (databaseConnector.getStore(request.getStoreId()) == null) return;
             service.requestArticles(new InventoryRequest(UUID.randomUUID(), request.getStoreId(), request.articles()));
             LOG.info("Inventory store update {}", responseRaw.toString());
         } catch (IOException e) {
