@@ -31,36 +31,72 @@ Hinweis: Passen Sie das Portmapping wenn nötig an.
 * Stoppen des Containers: `mvn docker:stop`
 Hinweis: Maven entfernt beim Stoppen auch gleich den Container.
 
-### Curls commands
 
-Create a order:
+## Curl commands crucial for demo on friday
 
-```json
+### Make order
+
+```shell
 curl -X POST http://localhost:8090/api/v1/orders \
 -H "Content-Type: application/json" \
 -d '{
   "articles": {
-    "12": 0,
-    "14": 0,
-    "18": 0
+    "100016": 5,
+    "101058": 3,
+    "102016": 44
   },
-  "storeId": 0,
-  "customerId": 0,
-  "employeeId": 0
+  "storeId": "a7f6c44a-2f5d-4d47-aa63-b7c17ab17961",
+  "customerId": "1601ce09-a907-47ad-8665-7b4705796c69",
+  "employeeId": "f9e3d909-4c94-43e1-b972-2ad519ebcfb9"
 }'
 ```
 
-```json
-curl -X POST http://localhost:8090/api/v1/orders \
+### Cancel Order
+
+```shell
+curl -X POST http://localhost:8090/api/v1/cancelOrders \
+-H "Content-Type: application/json" \
+-d '{
+  "orderId": "7341e496-3582-4d07-bbd1-2e292b54399e"
+}'
+```
+
+### Inventory update
+
+```shell
+curl -X POST http://localhost:8090/api/v1/invUpdate \
 -H "Content-Type: application/json" \
 -d '{
   "articles": {
-    "12": 10,
-    "14": 3,
-    "18": 44
+    "102016": 856487,
+    "101058": 356688
   },
-  "storeId": "100e14fa-614d-4ba7-9a3c-6d70b360a18e",
-  "customerId": "1601ce09-a907-47ad-8665-7b4705796c69",
-  "employeeId": "f9e3d909-4c94-43e1-b972-2ad519ebcfb9"
+  "orderId": "bae3be43-2655-4bbb-86be-d6213e66b1d3",
+  "storeId": "a7f6c44a-2f5d-4d47-aa63-b7c17ab17961"
+}'
+```
+
+### Internal Order
+
+```shell
+curl -X POST http://localhost:8090/api/v1/internalOrder \
+-H "Content-Type: application/json" \
+-d '{
+  "storeId": "1601ce09-a907-47ad-8665-7b4705796c69",
+  "articles": {
+    "120200": 10,
+    "144444": 3,
+    "185256": 44
+  }
+}'
+```
+
+### Create store
+
+```shell
+curl -X POST http://localhost:8090/api/v1/createCreate \
+-H "Content-Type: application/json" \
+-d '{
+  "addDefaultArticle": true
 }'
 ```
