@@ -20,10 +20,12 @@ public class HandleOrderReady implements Modifiable {
         try {
             OrderReady response = (OrderReady) responseRaw;
             Store store = databaseConnector.getStore(response.getStoreId());
-            store.removeOrder(response.orderId());
-            service.log(new LogMessage(response.orderId(), response.orderId(), "order finished", "Order with the id " + response.orderId().toString() + " is shipped"));
-            LOG.info("Order finalized id {}", response.orderId());
-            databaseConnector.storeStore(store);
+            if (store != null) {
+                store.removeOrder(response.orderId());
+                service.log(new LogMessage(response.orderId(), response.orderId(), "order finished", "Order with the id " + response.orderId().toString() + " is shipped"));
+                LOG.info("Order finalized id {}", response.orderId());
+                databaseConnector.storeStore(store);
+            }
         } catch (IOException e) {
             LOG.error("Exception occurred while trying to update the order {}", e.getMessage());
         }

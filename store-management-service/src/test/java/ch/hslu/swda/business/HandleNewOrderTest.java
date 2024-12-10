@@ -6,7 +6,6 @@ import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junitpioneer.jupiter.resource.New;
 
 import java.util.*;
 
