@@ -92,7 +92,7 @@ public final class ArticleRegistryService implements AutoCloseable {
     private void receiveValidityCheck() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
         bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.CHECK_ORDER_VALIDITY, Routes.CHECK_ORDER_VALIDITY, new ValidityReceiver(this.articleHandler, exchangeName, bus, this));
-        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.GET_BOOKS, Routes.GET_BOOKS, new ValidityReceiver(this.articleHandler, exchangeName, bus, this));
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.GET_BOOKS, Routes.GET_BOOKS, new BookRequestReceiver(this));
 
     }
 
