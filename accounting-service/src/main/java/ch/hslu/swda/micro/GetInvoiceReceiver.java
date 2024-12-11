@@ -34,10 +34,15 @@ public class GetInvoiceReceiver implements MessageReceiver {
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         try {
             LOG.debug("Received invoice send request with replyTo [{}]", replyTo);
+            LOG.info("received invoice get request with message: " + message);
             ObjectMapper mapper = new ObjectMapper();
-            UUID customerId = mapper.readValue(message, UUID.class);
-/*             String customerIdStr = mapper.readValue(message, String.class);
-            UUID customerId = UUID.fromString(customerIdStr); */
+            UUID customerId;
+            try {
+                customerId = UUID.fromString(message);
+            } catch (IllegalArgumentException e) {
+                customerId = reformatUUID(message);
+            }
+
             Invoice invoice = database.getInvoiceFromCustomerId(customerId);
             LogEntry logEntry = new LogEntry("accounting-service",
                     Instant.now().getEpochSecond(),
@@ -51,5 +56,18 @@ public class GetInvoiceReceiver implements MessageReceiver {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private UUID reformatUUID(String uuidStr) {
+        // Validate the length of the UUID string
+        if (uuidStr.length() != 32) {
+            throw new IllegalArgumentException("Invalid UUID string length: " + uuidStr.length());
+        }
+
+        // Reformat the UUID string to include hyphens
+        String formattedUUID = uuidStr.replaceFirst(
+                "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                "$1-$2-$3-$4-$5");
+        return UUID.fromString(formattedUUID);
     }
 }

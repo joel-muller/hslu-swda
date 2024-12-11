@@ -62,13 +62,13 @@ public class DatabaseConnector {
         return invoice;
     }
 
-        public Invoice getInvoiceFromCustomerId(UUID invoiceId) throws NoSuchElementException {
+        public Invoice getInvoiceFromCustomerId(UUID customerId) throws NoSuchElementException {
         Invoice invoice = datastore.find(Invoice.class)
-                .filter(eq("_id", invoiceId))
+                .filter(eq("customerId", customerId))
                 .first();
         if (invoice == null) {
             LOG.info("Invoice not found in the database.");
-            throw new NoSuchElementException("Invoice with the following id does not exist:" + invoiceId.toString());
+            throw new NoSuchElementException("Invoice with the following customer id does not exist:" + customerId.toString());
         }
         return invoice;
     }

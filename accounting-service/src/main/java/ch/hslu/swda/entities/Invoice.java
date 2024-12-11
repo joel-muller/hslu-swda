@@ -15,7 +15,8 @@ import dev.morphia.annotations.Id;
 
 @Entity("invoice")
 public class Invoice {
-
+    @Id
+    private UUID Id;
     private UUID orderId;
     private UUID customerId;
     private UUID employeeId;
@@ -23,8 +24,6 @@ public class Invoice {
     private Map<Integer, Integer> articlesCount;
     private Map<Integer, String> articlesPrices;
     private String totalPrice;
-    @Id
-    private UUID Id;
     private Boolean PaymentOverdue;
 
     public Invoice() {
