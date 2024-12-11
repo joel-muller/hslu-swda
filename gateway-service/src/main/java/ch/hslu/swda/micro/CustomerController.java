@@ -81,14 +81,18 @@ public class CustomerController {
 
     /**
      * Creates a new customer. The id property is overwritten on the service side.
-     * @param customer
+     * @param body
      * @return
      */
     @Post("/")
-    public Customer createCustomer(@Body Customer customer) {
+    public Customer createCustomer(@Body AuthenticatedRequest<Customer> body) {
+        ClaimValidation validation = TokenAuthenticator.validateClaims(body.jwt(), List.of("customer.crud_all", "customer.crud_nodelete"));
+        if (!validation.success()) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized to update customers");
+        }
         try {
             bus.connect();
-            String reply = bus.talkSync(exchangeName, "customer.create", mapper.writeValueAsString(customer));
+            String reply = bus.talkSync(exchangeName, "customer.create", mapper.writeValueAsString(body.body()));
             LOG.info(reply);
             Customer receivedCustomer = mapper.readValue(reply, Customer.class);
             return receivedCustomer;
