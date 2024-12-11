@@ -3,6 +3,7 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.micro.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ public class UpdateOrder implements Modifiable {
         order.handleOrderUpdate(update);
         try {
             if (order.isReady()) {
+                service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.is Ready", "order with the id " + order.getId().toString() + " is now ready"));
                 service.sendOrderReadyToStore(order.getOrderReady(), order.getInvoice());
             }
             if (order.isCancelled()) {
