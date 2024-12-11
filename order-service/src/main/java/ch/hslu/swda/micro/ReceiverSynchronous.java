@@ -37,6 +37,9 @@ public class ReceiverSynchronous<T extends IngoingMessage> implements MessageRec
             ObjectMapper mapper = new ObjectMapper();
             T response = mapper.readValue(message, messageGenericClass);
             Order order = database.getById(response.getOrderId());
+            if (order == null) {
+                return;
+            }
             if (!order.isCancelled()) {
                 modifiable.modify(order, response, service);
             }

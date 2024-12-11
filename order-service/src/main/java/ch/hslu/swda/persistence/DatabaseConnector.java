@@ -40,12 +40,12 @@ public class DatabaseConnector {
         datastore.save(DatabaseWrapper.createDBOrder(order));
     }
 
-    public Order getById(UUID id) throws IllegalArgumentException {
+    public Order getById(UUID id) {
         DBOrder dbOrder = datastore.find(DBOrder.class)
                 .filter(eq("_id", id))
                 .first();
         if (dbOrder == null) {
-            throw new IllegalArgumentException("Order with the following id does not exist: " + id.toString());
+            return null;
         }
         return DatabaseWrapper.createOrder(dbOrder);
     }
