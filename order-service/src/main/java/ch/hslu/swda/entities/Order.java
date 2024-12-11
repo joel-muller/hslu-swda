@@ -221,6 +221,14 @@ public final class Order {
         return new OrderCancelled(getId(), getStoreId());
     }
 
+    public OrderConfirmation getOrderConfirmation() {
+        List<ArticleOrderConfirmationDTO> articles = new ArrayList<>();
+        for (Article a : this.articles) {
+            articles.add(new ArticleOrderConfirmationDTO(a.getId(), a.getCount(), a.getPrice().getInvoiceString()));
+        }
+        return new OrderConfirmation(id, articles, date, storeId, customerId, employeeId, getTotalPrice().getInvoiceString());
+    }
+
     public Invoice getInvoice() {
         Map<Integer, Integer> articlesCount = new HashMap<>();
         Map<Integer, String> articlesPrices = new HashMap<>();

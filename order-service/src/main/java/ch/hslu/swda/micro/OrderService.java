@@ -66,6 +66,7 @@ public final class OrderService implements AutoCloseable, Service {
         this.generalReceiver(Routes.ORDER_UPDATE, new Receiver<>(this.database, new UpdateOrder(), OrderUpdate.class, this));
         this.generalReceiver(Routes.CUSTOMER_RECEIVE_VALIDITY, new Receiver<>(this.database, new UpdateCustomer(), CustomerResponse.class, this));
         this.generalReceiver(Routes.ORDER_CANCEL, new ReceiverSynchronous<>(this.database, exchangeName, bus, new CancelOrder(), OrderCancel.class, this));
+        this.generalReceiver(Routes.ORDER_CONFIRMATION, new ConfirmationReceiver(this.database, exchangeName, bus, this));
     }
 
     @Override

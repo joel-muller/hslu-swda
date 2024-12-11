@@ -17,14 +17,11 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.messagesIngoing.CreateOrder;
-import ch.hslu.swda.messagesOutgoing.OrderCreated;
-import ch.hslu.swda.persistence.DatabaseConnector;
-import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
+import ch.hslu.swda.messagesIngoing.CreateOrder;
+import ch.hslu.swda.messagesIngoing.OrderConfirmationRequest;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
+import ch.hslu.swda.persistence.DatabaseConnector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,15 +29,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 
-public final class OrderReceiver implements MessageReceiver {
+public final class ConfirmationReceiver implements MessageReceiver {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrderReceiver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfirmationReceiver.class);
     private final String exchangeName;
     private final BusConnector bus;
     private final OrderService service;
     private final DatabaseConnector database;
 
-    public OrderReceiver(final DatabaseConnector database, final String exchangeName, final BusConnector bus, final OrderService service) {
+    public ConfirmationReceiver(final DatabaseConnector database, final String exchangeName, final BusConnector bus, final OrderService service) {
         this.exchangeName = exchangeName;
         this.bus = bus;
         this.service = service;
@@ -59,17 +56,15 @@ public final class OrderReceiver implements MessageReceiver {
             LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
 
             ObjectMapper mapper = new ObjectMapper();
-            CreateOrder orderNode = mapper.readValue(message, CreateOrder.class);
+            OrderConfirmationRequest orderNode = mapper.readValue(message, OrderConfirmationRequest.class);
 
-            Order order = new Order(orderNode);
+            Order order = database.getById(orderNode.getOrderId());
 
-            this.database.storeOrder(order);
-
-            LOG.info("Following order received and stored: [{}]", order.toString());
-            service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
-
-            service.checkValidity(order.getVerifyRequest());
-            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(new OrderCreated(order.getId())));
+            if (order == null) {
+                bus.reply(exchangeName, replyTo, corrId, "null");
+            } else {
+                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(order.getOrderConfirmation()));
+            }
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
