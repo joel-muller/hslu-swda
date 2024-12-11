@@ -221,6 +221,10 @@ public final class Order {
         return new OrderCancelled(getId(), getStoreId());
     }
 
+    public OrderCreated getOrderCreated() {
+        return new OrderCreated(getId());
+    }
+
     public OrderConfirmation getOrderConfirmation() {
         List<ArticleOrderConfirmationDTO> articles = new ArrayList<>();
         for (Article a : this.articles) {

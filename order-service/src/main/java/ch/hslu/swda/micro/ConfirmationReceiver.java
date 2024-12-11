@@ -21,6 +21,7 @@ import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messagesIngoing.CreateOrder;
 import ch.hslu.swda.messagesIngoing.OrderConfirmationRequest;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
+import ch.hslu.swda.messagesOutgoing.OrderConfirmationWrapper;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -60,10 +61,10 @@ public final class ConfirmationReceiver implements MessageReceiver {
 
             Order order = database.getById(orderNode.getOrderId());
 
-            if (order == null) {
-                bus.reply(exchangeName, replyTo, corrId, "null");
+           if (order == null || !order.isArticlesValid() || order.isCancelled()) {
+                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(new OrderConfirmationWrapper(false, null)));
             } else {
-                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(order.getOrderConfirmation()));
+                bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(new OrderConfirmationWrapper(true, order.getOrderConfirmation())));
             }
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
