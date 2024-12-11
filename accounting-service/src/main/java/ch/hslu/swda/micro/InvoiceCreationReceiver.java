@@ -23,10 +23,10 @@ public class InvoiceCreationReceiver implements MessageReceiver {
     private final BusConnector bus;
     private DatabaseConnector database;
 
-    public InvoiceCreationReceiver(String exchangeName, BusConnector bus) {
+    public InvoiceCreationReceiver(String exchangeName, BusConnector bus, DatabaseConnector database) {
         this.exchangeName = exchangeName;
         this.bus = bus;
-        this.database = new DatabaseConnector();
+        this.database = database;
     }
 
     @Override

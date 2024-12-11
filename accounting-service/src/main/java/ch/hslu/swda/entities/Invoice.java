@@ -26,6 +26,14 @@ public class Invoice {
     private String totalPrice;
     private Boolean PaymentOverdue;
 
+    public Boolean getPaymentOverdue() {
+        return PaymentOverdue;
+    }
+
+    public void setPaymentOverdue(Boolean paymentOverdue) {
+        PaymentOverdue = paymentOverdue;
+    }
+
     public Invoice() {
         // default constructor for Morphia to work
     }
@@ -53,6 +61,19 @@ public class Invoice {
         this.articlesPrices = articlesPrices;
         this.totalPrice = totalPrice;
         this.PaymentOverdue = false;
+    }
+
+    public Invoice(UUID orderId, UUID customerId, UUID employeeId, UUID storeId, Map<Integer, Integer> articlesCount,
+            Map<Integer, String> articlesPrices, String totalPrice, Boolean PaymentOverdue) {
+        this.Id = UUID.randomUUID();
+        this.orderId = orderId;
+        this.customerId = customerId;
+        this.employeeId = employeeId;
+        this.storeId = storeId;
+        this.articlesCount = articlesCount;
+        this.articlesPrices = articlesPrices;
+        this.totalPrice = totalPrice;
+        this.PaymentOverdue = PaymentOverdue;
     }
 
     public UUID getOrderId() {

@@ -78,13 +78,13 @@ public final class AccountingService implements AutoCloseable {
     private void createInvoices() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.INVOICE_CREATE);
         bus.listenFor(exchangeName, "AccountingService <- " + Routes.INVOICE_CREATE, Routes.INVOICE_CREATE,
-                new InvoiceCreationReceiver(exchangeName, bus));
+                new InvoiceCreationReceiver(exchangeName, bus, this.database));
     }
 
     private void receivePaymentStatusRequest() throws IOException {
         LOG.debug("Starting listening for messages with routing [{}]", Routes.PAYMENTSTATUS_GET);
         bus.listenFor(exchangeName, "AccountingService <- " + Routes.PAYMENTSTATUS_GET, Routes.PAYMENTSTATUS_GET,
-                new PaymentStatusRequestReceiver(exchangeName, bus));
+                new PaymentStatusRequestReceiver(exchangeName, bus, this.database));
     }
 
     private void receiveInvoiceGetRequests() throws IOException {
@@ -106,7 +106,8 @@ public final class AccountingService implements AutoCloseable {
         for (int i = 0; i < 10; i++) {
             Invoice invoice = new Invoice(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
                     new HashMap<>(), new HashMap<>(),
-                    String.valueOf(ThreadLocalRandom.current().nextDouble(0, 10000.0)));
+                    String.valueOf(ThreadLocalRandom.current().nextDouble(0, 10000.0)),
+                    ThreadLocalRandom.current().nextBoolean());
             database.storeInvoice(invoice);
             LOG.debug("Created dummy invoice: {}", mapper.writeValueAsString(invoice));
         }
