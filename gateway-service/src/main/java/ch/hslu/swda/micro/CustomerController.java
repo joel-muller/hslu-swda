@@ -2,10 +2,15 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.business.TokenAuthenticator;
+import ch.hslu.swda.model.auth.AuthenticatedRequest;
+import ch.hslu.swda.model.auth.ClaimValidation;
 import ch.hslu.swda.model.customer.Customer;
 import ch.hslu.swda.model.log.LogEntry;
 import io.micronaut.core.type.Argument;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.*;
+import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.serde.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Nullable;
@@ -99,13 +104,17 @@ public class CustomerController {
     /**
      * Updates a customer. The id property on the customer body is not used.
      * @param id
-     * @param customer
+     * @param body
      * @return
      */
     @Put("/{id}")
-    public Boolean updateCustomer(@PathVariable UUID id, @Body Customer customer) {
+    public Boolean updateCustomer(@PathVariable UUID id, @Body AuthenticatedRequest<Customer> body) {
+        ClaimValidation validation = TokenAuthenticator.validateClaims(body.jwt(), List.of("customer.crud_all", "customer.crud_nodelete"));
+        if (!validation.success()) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized to update customers");
+        }
         try {
-            Customer reconstructedCustomer = new Customer(id, customer.firstname(), customer.lastname());
+            Customer reconstructedCustomer = new Customer(id, body.body().firstname(), body.body().lastname());
             bus.connect();
             String reply = bus.talkSync(exchangeName, "customer.update", mapper.writeValueAsString(reconstructedCustomer));
             LOG.info(reply);

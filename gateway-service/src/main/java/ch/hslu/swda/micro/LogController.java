@@ -2,14 +2,15 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.business.TokenAuthenticator;
+import ch.hslu.swda.model.auth.AuthenticatedRequestNoBody;
 import ch.hslu.swda.model.log.LogEntry;
 import ch.hslu.swda.model.log.LogFilter;
 import ch.hslu.swda.model.log.SortDirection;
 import io.micronaut.core.type.Argument;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.PathVariable;
-import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.annotation.*;
+import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.serde.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Nullable;
@@ -35,15 +36,19 @@ public class LogController {
     @Inject
     private ObjectMapper mapper;
 
-    @Get("/{?source,userId,eventType,objUuid,sort,amount}")
+    @Post("/{?source,userId,eventType,objUuid,sort,amount}")
     public List<LogEntry> getRecent(
             @QueryValue("source") @Nullable final String source,
             @QueryValue("userId") @Nullable final String userId,
             @QueryValue("eventType") @Nullable final String eventType,
             @QueryValue("objUuid") @Nullable final String objUuid,
             @QueryValue("sort") @Nullable final String sort,
-            @QueryValue("amount") @Nullable final Integer amount
+            @QueryValue("amount") @Nullable final Integer amount,
+            @Body AuthenticatedRequestNoBody body
     ) {
+        if (!TokenAuthenticator.validateClaims(body.jwt(), "logs.read").success()) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized to read logs");
+        }
         boolean filterSpecified = source != null || userId != null || eventType != null || objUuid != null || sort != null || amount != null;
         if (filterSpecified) {
             String finalSource = (source != null) ? source : "";
@@ -82,8 +87,11 @@ public class LogController {
         }
     }
 
-    @Get("/{id}")
-    public LogEntry getLog(@PathVariable UUID id) {
+    @Post("/{id}")
+    public LogEntry getLog(@PathVariable UUID id, @Body AuthenticatedRequestNoBody body) {
+        if (!TokenAuthenticator.validateClaims(body.jwt(), "logs.read").success()) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized to read logs");
+        }
         try {
             bus.connect();
             String reply = bus.talkSync(exchangeName, "logs.get", mapper.writeValueAsString(id));
