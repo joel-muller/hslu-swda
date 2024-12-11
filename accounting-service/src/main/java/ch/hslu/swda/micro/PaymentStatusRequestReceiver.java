@@ -33,6 +33,7 @@ public class PaymentStatusRequestReceiver implements MessageReceiver {
     @Override
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         try {
+            //TODO
             LOG.debug("Received invoice creation request with replyTo [{}]", replyTo);
             ObjectMapper mapper = new ObjectMapper();
             InvoiceRequest invoiceRequest = mapper.readValue(message, InvoiceRequest.class);

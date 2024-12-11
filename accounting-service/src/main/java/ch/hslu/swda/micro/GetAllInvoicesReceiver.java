@@ -14,37 +14,39 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
-public class InvoiceCreationReceiver implements MessageReceiver {
+/*Class to receive requests to send existing invoice from the gateway (synchronous communication). */
+public class GetAllInvoicesReceiver implements MessageReceiver {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InvoiceCreationReceiver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GetAllInvoicesReceiver.class);
     private final String exchangeName;
     private final BusConnector bus;
     private DatabaseConnector database;
 
-    public InvoiceCreationReceiver(String exchangeName, BusConnector bus) {
+    public GetAllInvoicesReceiver(String exchangeName, BusConnector bus, DatabaseConnector database) {
         this.exchangeName = exchangeName;
         this.bus = bus;
-        this.database = new DatabaseConnector();
+        this.database = database;
     }
 
     @Override
     public void onMessageReceived(String route, String replyTo, String corrId, String message) {
         try {
-            LOG.debug("Received invoice creation request with replyTo [{}]", replyTo);
             ObjectMapper mapper = new ObjectMapper();
-            InvoiceRequest invoiceRequest = mapper.readValue(message, InvoiceRequest.class);
-            Invoice invoice = new Invoice(invoiceRequest);
-            database.storeInvoice(invoice);
+            LOG.debug("Received invoices send request with replyTo [{}]", replyTo);
+            List<Invoice> invoices = database.getAllInvoices();
+            String invoiceListJson = mapper.writeValueAsString(invoices);
             LogEntry logEntry = new LogEntry("accounting-service",
                     Instant.now().getEpochSecond(),
                     UUID.randomUUID(),
-                    "invoice.create",
-                    invoice.getId(),
-                    "Invoice created for orderId " + invoiceRequest.orderId() + " and customer "
-                            + invoiceRequest.customerId());
+                    "invoices.get",
+                    UUID.randomUUID(),
+                    "Invoices sent to gateway. ");
             bus.talkAsync(exchangeName, "logs.new", mapper.writeValueAsString(logEntry));
+            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(invoiceListJson));
+            LOG.debug("Sent invoice to gateway with corrId [{}]", corrId);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

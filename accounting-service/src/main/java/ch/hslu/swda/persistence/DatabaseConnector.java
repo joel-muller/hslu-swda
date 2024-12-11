@@ -50,7 +50,7 @@ public class DatabaseConnector {
         datastore.save(invoice);
     }
 
-    public Invoice getInvoice(UUID invoiceId) throws NoSuchElementException {
+    public Invoice getInvoiceFromInvoiceId(UUID invoiceId) throws NoSuchElementException {
         Invoice invoice = datastore.find(Invoice.class)
                 .filter(eq("_id", invoiceId))
                 .first();
@@ -62,12 +62,23 @@ public class DatabaseConnector {
         return invoice;
     }
 
-/*     public List<Store> getAllStores() {
-        List<Store> stores = new ArrayList<>();
-        for (DBStore dbStore : datastore.find(DBStore.class)) {
-            stores.add(StoreWrapper.getStore(dbStore));
+        public Invoice getInvoiceFromCustomerId(UUID invoiceId) throws NoSuchElementException {
+        Invoice invoice = datastore.find(Invoice.class)
+                .filter(eq("_id", invoiceId))
+                .first();
+        if (invoice == null) {
+            LOG.info("Invoice not found in the database.");
+            throw new NoSuchElementException("Invoice with the following id does not exist:" + invoiceId.toString());
         }
-        return stores;
-    } */
+        return invoice;
+    }
+
+    public List<Invoice> getAllInvoices() {
+        List<Invoice> invoices = new ArrayList<>();
+        for (Invoice invoice : datastore.find(Invoice.class)) {
+            invoices.add(invoice);
+        }
+        return invoices;
+    }
 
 }

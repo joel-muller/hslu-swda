@@ -40,6 +40,7 @@ public final class AccountingService implements AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(AccountingService.class);
     private final String exchangeName;
     private final BusConnector bus;
+    private final DatabaseConnector database;
 
     /**
      * @throws IOException      IO-Fehler.
@@ -55,11 +56,15 @@ public final class AccountingService implements AutoCloseable {
         this.exchangeName = new RabbitMqConfig().getExchange();
         this.bus = new BusConnector();
         this.bus.connect();
+        this.database = new DatabaseConnector();
 
         this.initializeDummyData();
         // start message receivers
+        LOG.info("Listening for messages...");
         this.createInvoices();
         this.receivePaymentStatusRequest();
+        this.receiveInvoiceGetRequests();
+        this.receiveInvoiceGetAllRequests();
     }
 
     /**
@@ -81,6 +86,18 @@ public final class AccountingService implements AutoCloseable {
         bus.listenFor(exchangeName, "AccountingService <- " + Routes.PAYMENTSTATUS_GET, Routes.PAYMENTSTATUS_GET,
                 new PaymentStatusRequestReceiver(exchangeName, bus));
     }
+
+    private void receiveInvoiceGetRequests() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.INVOICE_GET);
+        bus.listenFor(exchangeName, "AccountingService <- " + Routes.INVOICE_GET, Routes.INVOICE_GET,
+                new GetInvoiceReceiver(exchangeName, bus, this.database));
+    }  
+
+    private void receiveInvoiceGetAllRequests() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.INVOICES_GET);
+        bus.listenFor(exchangeName, "AccountingService <- " + Routes.INVOICES_GET, Routes.INVOICES_GET,
+                new GetAllInvoicesReceiver(exchangeName, bus, this.database));
+    }  
 
     private void initializeDummyData() throws JsonProcessingException {
         // create some dummy data
