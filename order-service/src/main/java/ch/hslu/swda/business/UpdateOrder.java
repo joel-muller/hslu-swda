@@ -22,6 +22,7 @@ public class UpdateOrder implements Modifiable {
             if (order.isReady()) {
                 service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.is Ready", "order with the id " + order.getId().toString() + " is now ready"));
                 service.sendOrderReadyToStore(order.getOrderReady(), order.getInvoice());
+                service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.is Ready", "order invoice is sent for the order with the id " + order.getId().toString()));
             }
             if (order.isCancelled()) {
                 service.sendOrderCancelledToStore(order.getOrderCancelled());
