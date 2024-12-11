@@ -49,7 +49,7 @@ public class LogsDatabase implements Logs {
     @Override
     public boolean addLogEntry(LogEntry logEntry) {
         datastore.save(logEntry);
-        LOG.info("Log stored: " + logEntry);
+        LOG.debug("Log stored: " + logEntry);
         return false;
     }
 

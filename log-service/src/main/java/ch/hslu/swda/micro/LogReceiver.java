@@ -38,6 +38,7 @@ public class LogReceiver implements MessageReceiver {
 
         try {
             LogEntry logEntry = mapper.readValue(message, typeRef);
+            LOG.info(logEntry.getSource() + " " + logEntry.getMessage());
             logs.addLogEntry(logEntry);
         } catch (IOException e) {
             throw new RuntimeException(e);
