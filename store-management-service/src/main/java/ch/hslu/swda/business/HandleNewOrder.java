@@ -23,19 +23,21 @@ public class HandleNewOrder implements Modifiable {
         try {
             NewOrder request = (NewOrder) responseRaw;
             Store store = databaseConnector.getStore(request.getStoreId());
+            service.log(new LogMessage(request.orderId(), request.storeId(), "storemanagement.newOrder", "a new order arrived at the store with the id " + store.getId().toString()));
             if (store == null) {
                 service.sendOrderUpdate(new OrderUpdate(request.orderId(), new ArrayList<>(), false));
                 return;
             }
             OrderProcessed processed = store.newOrder(request.orderId(), request.articles());
             if (!processed.articlesHaveToGetOrdered().isEmpty()) {
+                service.log(new LogMessage(request.orderId(), request.storeId(), "storemangement.centralwarehouseOrder", "following articles have to get ordered from central warehouse" + processed.articlesHaveToGetOrdered().toString()));
                 service.requestArticles(new InventoryRequest(request.orderId(), request.storeId(), processed.articlesHaveToGetOrdered()));
             }
             if (!processed.articlesReady().isEmpty()) {
+                service.log(new LogMessage(request.orderId(), request.storeId(), "storemangement.articlesinstore", "following articles are in store" + processed.articlesReady().toString()));
                 service.sendOrderUpdate(new OrderUpdate(request.orderId(), processed.articlesReady(), true));
             }
             databaseConnector.storeStore(store);
-            service.log(new LogMessage(request.orderId(), request.storeId(), "storemanagement.newOrder", "a new order arrived at the store with the id " + store.getId().toString()));
             LOG.info("New order {} arrived for the store {}", request.orderId(), request.storeId());
         } catch (IOException e) {
             LOG.error("Exception occurred while trying to update the order {}", e.getMessage());
