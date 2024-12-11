@@ -12,6 +12,7 @@ services:
     image: $CICD_IMAGE_ID
     environment:
       - RMQ_HOST=bus
+      - PUBLIC_KEY=${PUBLIC_KEY}
     networks:
       - bus
       - ingress
