@@ -36,19 +36,15 @@ public class LogController {
     @Inject
     private ObjectMapper mapper;
 
-    @Post("/{?source,userId,eventType,objUuid,sort,amount}")
+    @Get("/{?source,userId,eventType,objUuid,sort,amount}")
     public List<LogEntry> getRecent(
             @QueryValue("source") @Nullable final String source,
             @QueryValue("userId") @Nullable final String userId,
             @QueryValue("eventType") @Nullable final String eventType,
             @QueryValue("objUuid") @Nullable final String objUuid,
             @QueryValue("sort") @Nullable final String sort,
-            @QueryValue("amount") @Nullable final Integer amount,
-            @Body AuthenticatedRequestNoBody body
+            @QueryValue("amount") @Nullable final Integer amount
     ) {
-        if (!TokenAuthenticator.validateClaims(body.jwt(), "logs.read").success()) {
-            throw new HttpStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized to read logs");
-        }
         boolean filterSpecified = source != null || userId != null || eventType != null || objUuid != null || sort != null || amount != null;
         if (filterSpecified) {
             String finalSource = (source != null) ? source : "";
@@ -87,11 +83,8 @@ public class LogController {
         }
     }
 
-    @Post("/{id}")
-    public LogEntry getLog(@PathVariable UUID id, @Body AuthenticatedRequestNoBody body) {
-        if (!TokenAuthenticator.validateClaims(body.jwt(), "logs.read").success()) {
-            throw new HttpStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized to read logs");
-        }
+    @Get("/{id}")
+    public LogEntry getLog(@PathVariable UUID id) {
         try {
             bus.connect();
             String reply = bus.talkSync(exchangeName, "logs.get", mapper.writeValueAsString(id));
