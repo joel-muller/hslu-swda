@@ -69,6 +69,8 @@ public class OrderController {
 
     ) {
 
+        LOG.info("Received orderConfirmationRequest with orderId {}",orderId);
+
 
         OrderConfirmationDTOWrapper wrapper;
         try {
