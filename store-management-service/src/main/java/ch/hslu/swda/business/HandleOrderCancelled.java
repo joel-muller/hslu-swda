@@ -3,6 +3,7 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.entities.Store;
 import ch.hslu.swda.messagesIngoing.OrderCancelled;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.micro.Service;
 import ch.hslu.swda.persistence.Data;
 import ch.hslu.swda.persistence.DatabaseConnector;

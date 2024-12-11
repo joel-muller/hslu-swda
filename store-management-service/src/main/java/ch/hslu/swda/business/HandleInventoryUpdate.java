@@ -7,6 +7,7 @@ import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesIngoing.InventoryUpdate;
 import ch.hslu.swda.messagesIngoing.NewOrder;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
 import ch.hslu.swda.persistence.Data;
@@ -33,6 +34,7 @@ public class HandleInventoryUpdate implements Modifiable {
             if (!processed.articlesReady().isEmpty()) {
                 service.sendOrderUpdate(new OrderUpdate(processed.orderId(), processed.articlesReady(), true));
             }
+            service.log(new LogMessage(request.orderId(), request.getStoreId(), "store.inventoryUpdate", "a inventory update occured with the order " + request.orderId().toString()));
             // The article which should be ordered are already ordered in the handle new order
             databaseConnector.storeStore(store);
             LOG.info("Inventory update received and stored successfully for the store {}", request.getStoreId());

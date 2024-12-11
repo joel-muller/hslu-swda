@@ -24,6 +24,7 @@ public class HandleOrderReady implements Modifiable {
                 store.removeOrder(response.orderId());
                 service.log(new LogMessage(response.orderId(), response.orderId(), "order finished", "Order with the id " + response.orderId().toString() + " is shipped"));
                 LOG.info("Order finalized id {}", response.orderId());
+                service.log(new LogMessage(response.orderId(), store.getId(), "storemanagement.orderReady", "order with the id " + response.orderId().toString() + " is ready and will get deleted in this service"));
                 databaseConnector.storeStore(store);
             }
         } catch (IOException e) {

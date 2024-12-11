@@ -3,6 +3,7 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesIngoing.InternalOrder;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.micro.Service;
 import ch.hslu.swda.persistence.Data;
 import ch.hslu.swda.persistence.DatabaseConnector;
@@ -20,7 +21,9 @@ public class HandleInternalOrder implements Modifiable {
         try {
             InternalOrder request = (InternalOrder) responseRaw;
             if (databaseConnector.getStore(request.getStoreId()) == null) return;
-            service.requestArticles(new InventoryRequest(UUID.randomUUID(), request.getStoreId(), request.articles()));
+            UUID orderId = UUID.randomUUID();
+            service.requestArticles(new InventoryRequest(orderId, request.getStoreId(), request.articles()));
+            service.log(new LogMessage(orderId, request.getStoreId(), "store.internalOrder", "Internal order created for the store with the id " + request.storeId().toString()));
             LOG.info("Inventory store update {}", responseRaw.toString());
         } catch (IOException e) {
             LOG.error("An exception occurred while trying to send a request to the central warehouse {}", e.getMessage());

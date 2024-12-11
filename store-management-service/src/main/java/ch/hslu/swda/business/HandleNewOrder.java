@@ -4,6 +4,7 @@ import ch.hslu.swda.entities.*;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesIngoing.NewOrder;
 import ch.hslu.swda.messagesOutgoing.InventoryRequest;
+import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
 import ch.hslu.swda.persistence.Data;
@@ -34,6 +35,7 @@ public class HandleNewOrder implements Modifiable {
                 service.sendOrderUpdate(new OrderUpdate(request.orderId(), processed.articlesReady(), true));
             }
             databaseConnector.storeStore(store);
+            service.log(new LogMessage(request.orderId(), request.storeId(), "storemanagement.newOrder", "a new order arrived at the store with the id " + store.getId().toString()));
             LOG.info("New order {} arrived for the store {}", request.orderId(), request.storeId());
         } catch (IOException e) {
             LOG.error("Exception occurred while trying to update the order {}", e.getMessage());
