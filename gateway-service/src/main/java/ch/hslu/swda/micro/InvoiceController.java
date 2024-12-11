@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-
 @Tag(name = "Invoice")
 
 @Controller("/api/v1/invoices")
@@ -57,6 +56,28 @@ public class InvoiceController {
         try {
             bus.connect();
             String reply = bus.talkSync(exchangeName, "invoice.get", id);
+            if (reply == null) {
+                LOG.info("received empty reply from service");
+                return "no reply from service";
+            } else {
+                LOG.info("received reply: " + reply);
+                return reply;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /* Receive the payment status of an invoice according to a customer UUID. */
+    @Get("/paymentstatus/{id}")
+    public String getPaymentStatusFromCustomerID(String id) {
+        try {
+            bus.connect();
+            String reply = bus.talkSync(exchangeName, "paymentstatus.get", id);
             if (reply == null) {
                 LOG.info("received empty reply from service");
                 return "no reply from service";
