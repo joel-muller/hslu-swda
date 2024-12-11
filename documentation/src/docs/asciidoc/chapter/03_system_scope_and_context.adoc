@@ -36,6 +36,36 @@ POST http://IP/api/v1/stores/createdefault (leerer Body): erstellt 10 default st
 POST http://IP/api/v1/stores/create (leerer Body): erstellt 1 stores mit zufälliger Store ID.
 GET http://IP/api/v1/stores/: gibt alle Stores zurück. 
 
+==== System Rights
+
+* user.crud_all
+* customer.crud_all
+* customer.crud_nodelete
+* order.crud_all
+* store.warehouse
+* store.status
+* store.all
+* logs.read
+
+==== User Roles with System Rights
+
+* sys_admin
+** user.crud_all
+** customer.crud_all
+** order.crud_all
+** store.all
+** logs.read
+* sales_personell
+** customer.crud_nodelete
+** order.crud_all
+* data_typist
+** store.warehouse
+* store_manager
+** customer.crud_all
+** order.crud_all
+** store.status
+** logs.read
+
 ==== Store Management
 
 store.request-articles
