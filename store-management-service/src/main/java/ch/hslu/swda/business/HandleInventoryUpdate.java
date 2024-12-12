@@ -1,22 +1,17 @@
 package ch.hslu.swda.business;
 
-import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.OrderProcessed;
 import ch.hslu.swda.entities.Store;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesIngoing.InventoryUpdate;
-import ch.hslu.swda.messagesIngoing.NewOrder;
-import ch.hslu.swda.messagesOutgoing.InventoryRequest;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
 import ch.hslu.swda.persistence.Data;
-import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 
 public class HandleInventoryUpdate implements Modifiable {
     private static final Logger LOG = LoggerFactory.getLogger(HandleInventoryUpdate.class);
