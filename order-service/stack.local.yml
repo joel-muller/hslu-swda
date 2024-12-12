@@ -1,0 +1,23 @@
+version: '3.5'
+
+networks:
+  order:
+    name: order
+
+
+services:
+  mongodborder:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/bitnami/mongodb:4.2.19
+    restart: always
+    networks:
+      - order
+
+  order:
+    image: swda-24hs/order-service:latest
+    restart: always
+    networks:
+      - order
+
+    environment:
+      MONGO_URI: mongodb://mongodborder:27017
+      RMQ_HOST: host.docker.internal
