@@ -1,0 +1,23 @@
+version: '3.5'
+
+networks:
+  customer:
+    name: customer
+
+
+services:
+  mongodbcustomer:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/bitnami/mongodb:4.2.19
+    restart: always
+    networks:
+      - customer
+
+  order:
+    image: swda-24hs/customer-management-service:latest
+    restart: always
+    networks:
+      - customer
+
+    environment:
+      MONGO_URI: mongodb://mongodbcustomer:27017
+      RMQ_HOST: host.docker.internal
