@@ -1,0 +1,23 @@
+version: '3.5'
+
+networks:
+  store:
+    name: store
+
+
+services:
+  mongodbstore:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/bitnami/mongodb:4.2.19
+    restart: always
+    networks:
+      - store
+
+  store:
+    image: swda-24hs/store-management-service:latest
+    restart: always
+    networks:
+      - store
+
+    environment:
+      MONGO_URI: mongodb://mongodbstore:27017
+      RMQ_HOST: host.docker.internal
