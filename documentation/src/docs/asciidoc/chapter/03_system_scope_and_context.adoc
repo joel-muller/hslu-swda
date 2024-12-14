@@ -8,7 +8,11 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-system-scope-and-context]]
 == System Scope and Context
 
-=== Business Context
+== Business Context
+
+=== Kontextdiagramm
+
+image::kontextdiagramm.png[Kontextdiagramm]
 
 **<Diagram or Table>**
 

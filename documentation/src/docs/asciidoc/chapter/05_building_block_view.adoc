@@ -28,6 +28,8 @@ _<Description of important interfaces>_
 
 ==== <Name black box 1>
 
+image:MicroserviceModel.drawio.png[Microservice Model]
+
 _<Purpose/Responsibility>_
 
 _<Interface(s)>_
@@ -60,15 +62,19 @@ _<black box template>_
 
 // TODO: Sicht auf Module, welche mehrere Komponenten umfassen (z.B. Teilsysteme oder Services).
 
-==== White Box _<building block 1>_
+==== Order Service
 
-_<white box template>_
+image:OrderService.drawio.png[Order Service]
 
-==== White Box _<building block 2>_
+Sowohl _ingoingMessages_ wie auch _outgoingMessages_ kommen über den _Bus_ in das _Micro_ Modul hinein.
+Dort wird eine Order (_entity_) aus dem _Persistence_ Modul geholt udn im _Business_ Modul beanbeitet.
 
-_<white box template>_
+==== Store Management Service
 
-...
+image:StoreManagementService.drawio.png[Store Management Service]
+
+Sowohl _ingoingMessages_ wie auch _outgoingMessages_ kommen über den _Bus_ in das _Micro_ Modul hinein.
+Von dort aus wird das _Business_ Modul aufgerugen, welches dass Entprechende _entity_ aus dem _Persistence_ Modul heraus holt.
 
 ==== White Box _<building block m>_
 
