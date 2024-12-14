@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
@@ -38,9 +37,33 @@ import java.util.concurrent.TimeoutException;
 public final class AccountingService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountingService.class);
-    private final String exchangeName;
-    private final BusConnector bus;
-    private final DatabaseConnector database;
+    private String exchangeName;
+    private BusConnector bus;
+    private DatabaseConnector database;
+
+    public String getExchangeName() {
+        return exchangeName;
+    }
+
+    public void setExchangeName(String exchangeName) {
+        this.exchangeName = exchangeName;
+    }
+
+    public BusConnector getBus() {
+        return bus;
+    }
+
+    public void setBus(BusConnector bus) {
+        this.bus = bus;
+    }
+
+    public DatabaseConnector getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(DatabaseConnector database) {
+        this.database = database;
+    }
 
     /**
      * @throws IOException      IO-Fehler.

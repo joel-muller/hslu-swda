@@ -2,10 +2,8 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.IncomingMessages.InvoiceRequest;
 import ch.hslu.swda.entities.Invoice;
 import ch.hslu.swda.entities.LogEntry;
-import ch.hslu.swda.entities.SimpleOrder;
 import ch.hslu.swda.persistence.DatabaseConnector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
