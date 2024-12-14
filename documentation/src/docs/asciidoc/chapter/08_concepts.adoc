@@ -32,3 +32,41 @@ _<explanation>_
 === _<Concept n>_
 
 _<explanation>_
+
+=== Wrapper Klassen
+
+Die Eingesetzte Technologie https://www.mongodb.com/resources/languages/morphia[Morphia] erlaubt es uns Klassen in Java direkt abzuspeichern.
+Es gibt aber gewise Vorgaben, welche eingehalten werden müssen.
+Zum Beispiel müssen die Klassen einen Default Constructor haben order für alle Variabeln getter und setter Methoden haben.
+Mit diesen Vorgaben ist es leider nicht möglich eine saubere Business Logik zu schreiben.
+Deshalb wurden in den beiden Microservices _Order_ und _Store Management_ Wrapper klassen geschrieben, welche die entities, welche in der Business Logik verwendet werden in Objekte umgewandelt werden, welche für Mophia lesbar sind.
+
+=== Strategy Pattern Modifier
+
+In den Microservices _Order_ und _Store Management_ wurde das Strategie Entwurfsmuster eingesetzt.
+Der Receiver ist generisch und kann für jede art von asynchronen Messages verwendet werden.
+Die Klassen, welche das _Modifiable_ interface implementeieren gehören zur business Logik und können so auch gut mit Integrationstests getestet werden.
+Dieses Entwurfsmuster wurde umgesetzt, weil sich so der Microservice beliebig mit neunen Modifier erweitern lässt (Siehe auch https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle[Open Closed Principle]).
+
+==== Order Strategie
+
+Sobald eine Message ankommt, wird die die _onMessageReceived_ methode ausgeführt.
+In dieser Methode wird dann die Order, um die es geht aus der Datenbank geholt.
+Die Order, die Mesasge und der Service werden dann der Strategie mitgegeben.
+In der Kokreten Strategie, wie im Beispiel _ModifyValidty_ wird folgendes gemacht:
+
+* Die _IngoingMessage_ kann gelesen werden
+* Die Bestellung (_Order_) kann gemäss der Nachricht verändert werden
+* Mit dem _Service_ können weitere nachrichten an andere Microservice gesendet werden
+
+Nach der ausführung von der Methode _modifier.modify()_ wird die geänderte Bestellung (_Order_) vom Receiver abgespeichert.
+
+image::OrderStrategie.drawio.png[Order Strategie]
+
+==== Store Management Strategie
+
+Die Store Management Strategie funktioniert fast gleich wie die Order Strategie.
+Der einzige unterschied besteht darin, das der Store nicht gleich mitgegeben wird, sondern die Verbindung zu der Datenbank.
+Dies erlaubt es uns, auch mit Eingehenden nachrichten umzughen, bei denen der Angeforderte _Store_ nicht existiert.
+
+image::StoreManagementStrategy.drawio.png[Store Management Strategie]
