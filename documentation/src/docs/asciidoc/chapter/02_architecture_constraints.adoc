@@ -3,7 +3,17 @@ ifndef::imagesdir[:imagesdir: ../images]
 // TODO: Randbedingungen, welche bei der Lösung eingehalten werden müssen, z.B. bestehende Systeme, welche unterstützt werden müssen oder spezielle Anforderungen, welche den Lösungsraum einschränken. 
 
 [[section-architecture-constraints]]
-== Architecture Constraints
+== Randbedingungen
 
+Folgende Randbedingungen müssen beim Bestellsystem Eingehalten werden:
 
-
+* Das Projekt muss vollständig mit der Programmiersprache Java, Version 21.0.4 entwickelt werden
+* Die Messages zwichen den Microservices sollten mit der Technologie RabbitMQ erfolgen (Wird zur verfügung gestellt)
+* Weiter muss das Projekt in den vorgegebenen Strukturen auf GitLab verwaltet und der Programmcode auf dem Buildserver laufend integriert werden.
+* Es soll nach den Prizipiel von https://en.wikipedia.org/wiki/CI/CD[CI/CD] entwickelt werden
+* Das Produkt sollte möglichst immer laufäig sein
+* Die einzelnen Microservices sollten als Docker Container auslieferbar sein und auf der VM Umgebung laufen
+* Das Projekt muss mittels einer Architekturbeschreibung gut dokumentiert sein.
+* Die vorgegebene Schnittstelle für den Zugriff auf das Zentrallager muss verwendet werden gemäss Kapitel 4 im Dokument https://elearning.hslu.ch/ilias/ilias.php?baseClass=ilrepositorygui&cmd=sendfile&ref_id=6393590[Filialbestellsystem (FBS): Anforderungen und Organisation]
+* Es sollte mit einer REST-API auf das Bestellsystem zugegriffen werden können
+* Es sollte ein Detailiertes nchvollziehbares technisched Logging existieren

@@ -3,33 +3,40 @@ ifndef::imagesdir[:imagesdir: ../images]
 // TODO: Übersicht über die Problemstellung (Auftrag und Ziel).
 
 [[section-introduction-and-goals]]
-== Einführung und Ziel
+== Einführung
 
+**Einleitung**
 
+Im Rahmen dieser Aufgabe wird ein skalierbares und effizientes System für die Bestell- und Lagerverwaltung entwickelt.
+Ziel ist es, praktische Erfahrungen in der Konzeption, Integration bestehender Systeme, Spezifikation, Design, Implementierung, Test, Dokumentation und Bereitstellung eines plattformübergreifenden Systems zu sammeln.
 
-=== Requirements Overview
+=== Anforderungen
 
-
-
-=== Quality Goals
-
-
+Siehe Kapitel 1 im Dokument https://elearning.hslu.ch/ilias/ilias.php?baseClass=ilrepositorygui&cmd=sendfile&ref_id=6393590[Filialbestellsystem (FBS): Anforderungen und Organisation]
 
 === Stakeholders
 
+* Roland Christen
+* Roland Gisler
+* Thorben Stangenberg
 
 === Annahmen
 
 1. Die Artikel, die im Microservice _Article Registry_ gespeichert werden können nur über das CSV im Microservice geändert werden. Es können keine Artikel hinzugefügt werden, noch können Artikel gelöscht werden. Es gibt keine Anbindung zum Gateway. Jeder Store kann aber selber über sein Sortiment entscheiden.
 2. Die Prüfung ob die Bestellung gültig ist geschiet im Backend asynchron. Eine Input Validierung im Frontend währe vorteilhaft, aber nicht zwingend nötig.
 
-=== Einschränkugen
-
-
-
-[options="header",cols="1,2,2"]
+=== Entwicklungs Team
 |===
-|Role/Name|Contact|Expectations
-| _<Role-1>_ | _<Contact-1>_ | _<Expectation-1>_
-| _<Role-2>_ | _<Contact-2>_ | _<Expectation-2>_
+|Role|Name
+| _Developer_
+| Jeremy Funke
+
+| _Developer_
+| Joel Müller
+
+| _Developer_
+| Celine Hamatschek
+
+| _Developer_
+| Patrick Franke
 |===

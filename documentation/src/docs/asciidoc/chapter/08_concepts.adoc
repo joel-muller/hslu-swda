@@ -11,62 +11,233 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 
 [[section-concepts]]
-== Cross-cutting Concepts
+== Querschnittsthemen
+
+=== Gateway
+
+==== Gateway Endpoints
+
+POST http://IP/api/v1/stores/createdefault (leerer Body): erstellt 10 default stores mit zufälliger Store ID.
+POST http://IP/api/v1/stores/create (leerer Body): erstellt 1 stores mit zufälliger Store ID.
+GET http://IP/api/v1/stores/: gibt alle Stores zurück.
+
+=== Benutzerrechte und Rollen
+
+==== System Rights
+
+* user.crud_all
+* customer.crud_all
+* customer.crud_nodelete
+* order.crud_all
+* store.warehouse
+* store.status
+* store.all
+* logs.read
+
+==== User Roles with System Rights
+
+* sys_admin
+** user.crud_all
+** customer.crud_all
+** order.crud_all
+** store.all
+** logs.read
+* sales_personell
+** customer.crud_nodelete
+** order.crud_all
+* data_typist
+** store.warehouse
+* store_manager
+** customer.crud_all
+** order.crud_all
+** store.status
+** logs.read
+
+=== Nachrichten zwischen den einzelnen Services
+
+==== Store Management
+
+store.request-articles
+store.inventory-update
+store.order-ready
+store.status
+store.create (leere message)
+store.create-default (leere message)
+stores.get
+
+==== Article Registry
+
+article.create
+
+* name : String
+* price : int
+* description : String
+
+article.delete
+
+* id : Integer
+
+articles.checkValidity
+
+* orderId : int
+* Articles : Map <idArticle : Integer, count : Integer>
+
+==== Central Warehouse
+
+central-warehouse.request
+
+* articles : Map <idArticle : Integer, count : Integer>
+* storeId: UUID
+* orderId: UUID
+
+central-warehouse.complete
+
+* orderId: UUID
+* storeId: UUID
 
 
 
+==== Authentication & User Management
 
+==== Logs
 
-=== _<Concept 1>_
+logs.new
 
-_<explanation>_
+* source : String
+* timestamp : long
+* userId : UUID
+* eventType : String
+* objUuid : UUID
+* message : String
 
+logs.get
 
+* id : UUID (optional)
 
-=== _<Concept 2>_
+logs.filter
 
-_<explanation>_
+* source : String
+* userId : String
+* eventType : String
+* objUuid : String
+* direction : String ("asc" or "desc")
+* amount : int
 
-...
+UUIDs in a filter are currently String to do .isEmpty() checks rather than null
 
-=== _<Concept n>_
+==== Order
 
-_<explanation>_
+order.create
 
-=== Wrapper Klassen
+* id: UUID
+* articles: Map <idArticle : Integer, count : Integer>
+* date : Date
+* status: Enum
+* storeId: Integer
+* employeeId: UUID
+* customerId: UUID
 
-Die Eingesetzte Technologie https://www.mongodb.com/resources/languages/morphia[Morphia] erlaubt es uns Klassen in Java direkt abzuspeichern.
-Es gibt aber gewise Vorgaben, welche eingehalten werden müssen.
-Zum Beispiel müssen die Klassen einen Default Constructor haben order für alle Variabeln getter und setter Methoden haben.
-Mit diesen Vorgaben ist es leider nicht möglich eine saubere Business Logik zu schreiben.
-Deshalb wurden in den beiden Microservices _Order_ und _Store Management_ Wrapper klassen geschrieben, welche die entities, welche in der Business Logik verwendet werden in Objekte umgewandelt werden, welche für Mophia lesbar sind.
+order.validate
 
-=== Strategy Pattern Modifier
+* oderId : int
+* validity : true
 
-In den Microservices _Order_ und _Store Management_ wurde das Strategie Entwurfsmuster eingesetzt.
-Der Receiver ist generisch und kann für jede art von asynchronen Messages verwendet werden.
-Die Klassen, welche das _Modifiable_ interface implementeieren gehören zur business Logik und können so auch gut mit Integrationstests getestet werden.
-Dieses Entwurfsmuster wurde umgesetzt, weil sich so der Microservice beliebig mit neunen Modifier erweitern lässt (Siehe auch https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle[Open Closed Principle]).
+==== Customer Management
 
-==== Order Strategie
+customer.create
 
-Sobald eine Message ankommt, wird die die _onMessageReceived_ methode ausgeführt.
-In dieser Methode wird dann die Order, um die es geht aus der Datenbank geholt.
-Die Order, die Mesasge und der Service werden dann der Strategie mitgegeben.
-In der Kokreten Strategie, wie im Beispiel _ModifyValidty_ wird folgendes gemacht:
+* firstname : String
+* lastname : String
 
-* Die _IngoingMessage_ kann gelesen werden
-* Die Bestellung (_Order_) kann gemäss der Nachricht verändert werden
-* Mit dem _Service_ können weitere nachrichten an andere Microservice gesendet werden
+customer.get
 
-Nach der ausführung von der Methode _modifier.modify()_ wird die geänderte Bestellung (_Order_) vom Receiver abgespeichert.
+* UUID (Optional)
 
-image::OrderStrategie.drawio.png[Order Strategie]
+customer.validate
 
-==== Store Management Strategie
+* UUID
 
-Die Store Management Strategie funktioniert fast gleich wie die Order Strategie.
-Der einzige unterschied besteht darin, das der Store nicht gleich mitgegeben wird, sondern die Verbindung zu der Datenbank.
-Dies erlaubt es uns, auch mit Eingehenden nachrichten umzughen, bei denen der Angeforderte _Store_ nicht existiert.
+customer.update
 
-image::StoreManagementStrategy.drawio.png[Store Management Strategie]
+* firstname : String (Optional)
+* lastname : String (Optional)
+
+customer.delete
+
+* UUID
+
+(customer.validate und customer.delete soll einfach das UUID haben, keine Wrapper-Klasse)
+
+==== Accounting
+
+invoice.create
+
+* orderId : UUID
+* customerId : UUID
+* employeeId : UUID
+* storeId : UUID
+* Artikel (Format TBD)
+* Preise (Format TBD)
+* Gesamtpreis : int
+
+invoice.get
+* customerId : UUID
+* invoiceId : UUID
+
+paymentwarning.get
+* customerId : UUID
+
+=== DB Einträge
+
+*TBD Json Prototypen bei Order, store management*
+
+Order (Order)
+
+* id: Integer
+* valid : boolean
+* articles: Map <idArticle : Integer, count : Integer>
+* date : Date
+* status: Enum
+* storeId: Integer
+* employeeId: UUID
+* customerId: UUID
+
+vielleicht nach 24 stunden checken ob es noch invalid gibt und checkArticleValidity() ereut senden
+
+Customer (Customer Management)
+
+* id : UUID
+* firstname : String
+* lastname : String
+
+Article (Article Registry)
+
+* id : int
+* name : String
+* price : int
+* description : String
+* unregistered : boolean
+
+Sortiment (Store Management)
+
+* articleId : int
+* actualCount : int
+* minCount : int
+* countAfterRefill : int
+
+Store (Store Management)
+
+* id: UUID
+* articleList : List<StoreArticle>
+* openOrders : List<Order>
+
+LogEntry (Log)
+
+* id : UUID
+* source : String
+* timestamp : long
+* userId : UUID
+* eventType : String
+* objUuid : UUID
+* message : String
+
