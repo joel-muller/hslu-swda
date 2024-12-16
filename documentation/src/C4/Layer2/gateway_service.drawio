@@ -1,4 +1,4 @@
-<mxfile host="drawio-plugin" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" modified="2024-12-16T21:23:00.327Z" etag="H-IO8mjmlI_3GI-tGbqW" version="22.1.22" type="embed">
+<mxfile host="drawio-plugin" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" modified="2024-12-16T21:27:19.060Z" etag="-qQydYPpUvWby48t_b8z" version="22.1.22" type="embed">
   <diagram name="Page-1" id="oB8MHlwppOr-tE6rPpJF">
     <mxGraphModel dx="533" dy="466" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
       <root>
@@ -33,7 +33,7 @@
             <mxPoint x="360" y="209.9999999999999" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="90" value="*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="81">
+        <mxCell id="90" value="*2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="81">
           <mxGeometry x="-0.1714" y="-1" relative="1" as="geometry">
             <mxPoint x="3" y="-11" as="offset" />
           </mxGeometry>
@@ -44,9 +44,9 @@
             <mxPoint x="360" y="239.9999999999999" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="93" value="*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="87">
+        <mxCell id="93" value="*2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="87">
           <mxGeometry x="-0.1333" y="2" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint y="-8" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="17" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;fillColor=#d5e8d4;strokeColor=#82b366;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" parent="1" edge="1">
@@ -61,7 +61,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="21" value="Java Application" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="455" y="681" width="120" height="80" as="geometry" />
+          <mxGeometry x="455" y="640" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="22" value="" style="endArrow=none;html=1;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;startArrow=open;startFill=0;endFill=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -78,26 +78,31 @@
           <mxGeometry x="280" y="640" width="80" height="30" as="geometry" />
         </mxCell>
         <mxCell id="27" value="Special Java&amp;nbsp; APIs / libraries /Frameworks" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="620" y="681" width="120" height="80" as="geometry" />
+          <mxGeometry x="620" y="640" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="55" value="" style="endArrow=none;html=1;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;startArrow=blockThin;startFill=0;endFill=0;dashed=1;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="390" y="779.52" as="sourcePoint" />
-            <mxPoint x="300" y="779.52" as="targetPoint" />
+            <mxPoint x="390" y="770" as="sourcePoint" />
+            <mxPoint x="300" y="770" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="56" value="HTTPS Request" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="55">
           <mxGeometry x="0.0845" y="-2" relative="1" as="geometry">
-            <mxPoint x="-5" y="-8" as="offset" />
+            <mxPoint x="-1" y="-8" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="78" value="Frontend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="120" y="510" width="120" height="60" as="geometry" />
+          <mxGeometry x="170" y="510" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="57" value="" style="endArrow=none;html=1;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;startArrow=blockThin;startFill=0;endFill=0;dashed=1;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="460" y="540" as="sourcePoint" />
-            <mxPoint x="250" y="540" as="targetPoint" />
+            <mxPoint x="300" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="95" value="*1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="57">
+          <mxGeometry x="-0.1292" y="-1" relative="1" as="geometry">
+            <mxPoint x="-10" y="-9" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="85" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=classic;endFill=1;fillColor=#d5e8d4;strokeColor=#82b366;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1">
@@ -110,6 +115,12 @@
           <mxGeometry x="0.066" y="1" relative="1" as="geometry">
             <mxPoint x="-3" y="-14" as="offset" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="94" value="*1: See requests in swagger UI or in&lt;br&gt;&amp;nbsp;Microservice description" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="420" y="733" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="96" value="*2: See messages in Microservice description" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="420" y="773" width="270" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
