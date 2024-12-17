@@ -241,3 +241,21 @@ LogEntry (Log)
 * objUuid : UUID
 * message : String
 
+=== Testkonzept
+Für dieses Projekt wurde kein Testkonzept erstellt. Weder zu Beginn, noch in der Definition of Done.
+
+==== Was getestet wird
+Mit dieser Grundlage sind die Microservices unterschiedlich getestet. Alle Microservices ausser dem Gateway und Auth Service enthalten mindestens Unit Tests. Die Microservices mit zentraker Business Logic sind mit hoher Coverage getestet worden und nutzen Stubs, Mocks oder Fakes für Integrationstests (Order Service, Article Registry Service, Store Management Service, Log Service). Der Central Warehouse Service und Customer Management Service nutzen Testcontainer für Persistenztests mit den jeweiligen Datenbanken.
+
+Die meisten Microservices wurden zusätzlich manuell mit Messages über den Bus oder über den Gateway-Service mit Curl oder Postman getestet, wobei Antworten, Logs und Datenbank-Einträge auf erwartete Werte geprüft wurden.
+
+
+=== Reflexion Testkonzept
+==== Weshalb wurde kein konsistenter Fokus auf Testing gesetzt?
+
+Das Team hat die Sprints mit vielen und grossen Backlog Items gefüllt. Ausserdem hat es den Fokus auf das Sprint-Review gesetzt. Für das Review war einzig relevant, was auf der Produktivumgebung erfolgreich läuft. Die für die Backlog items geplante Zeit wurde oft überschritten, um die Funktionalität zeigen zu können. Ein Teil davon ist sicher auf die fehlende Erfahrung mit der MoM zurückzuführen. Dafür machte das Team Abstriche beim Testing und auch das Sprint Planning litt darunter, was zur Wiederholung der Problematik führte.
+
+Die Grösse der Microservices war bei der Entwicklung eine grosse Hilfe. Denn immerhin waren Fehler bei der Verarbeitung innerhalb eines einzigen Services zu suchen.
+
+==== Wie wäre es anders gegangen?
+Es wäre definitiv möglich gewesen, den Fokus mehr auf Testing zu setzen. Dafür hätte das Team als Erstes den Sprint backlog verkleinern müssen und sich danach auf die wichtigsten Epics fokussieren sollen. Das hätte Druck genommen, viel am Sprint-Review zeigen zu müssen. Zudem hätte es mehr Luft gelassen für einen Test-First Approach sowie ausführlicheres Testing. Eine klare Definition of Done, sowie eine Priorisierung deren Einhaltung hätte ebenfalls geholfen.
