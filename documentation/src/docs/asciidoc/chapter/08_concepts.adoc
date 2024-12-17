@@ -262,7 +262,7 @@ These are the tables and fields of the central_warehouse MySQL Database
 Für dieses Projekt wurde kein Testkonzept erstellt. Weder zu Beginn, noch in der Definition of Done.
 
 ==== Was getestet wird
-Mit dieser Grundlage sind die Microservices unterschiedlich getestet. Alle Microservices ausser dem Gateway und Auth Service enthalten mindestens Unit Tests. Die Microservices mit zentraker Business Logic sind mit hoher Coverage getestet worden und nutzen Stubs, Mocks oder Fakes für Integrationstests (Order Service, Article Registry Service, Store Management Service, Log Service). Der Central Warehouse Service und Customer Management Service nutzen Testcontainer für Persistenztests mit den jeweiligen Datenbanken.
+Mit dieser Grundlage sind die Microservices unterschiedlich getestet. Alle Microservices ausser dem Gateway und Auth Service enthalten mindestens Unit Tests. Die Microservices mit zentraler Business Logic sind mit hoher Coverage getestet worden und nutzen Stubs, Mocks oder Fakes für Integrationstests (Order Service, Article Registry Service, Store Management Service, Log Service). Der Central Warehouse Service und Customer Management Service nutzen Testcontainer für Persistenztests mit den jeweiligen Datenbanken.
 
 Die meisten Microservices wurden zusätzlich manuell mit Messages über den Bus oder über den Gateway-Service mit Curl oder Postman getestet, wobei Antworten, Logs und Datenbank-Einträge auf erwartete Werte geprüft wurden.
 
