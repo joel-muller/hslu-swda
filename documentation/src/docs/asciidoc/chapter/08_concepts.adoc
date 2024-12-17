@@ -249,7 +249,7 @@ Mit dieser Grundlage sind die Microservices unterschiedlich getestet. Alle Micro
 
 Die meisten Microservices wurden zusätzlich manuell mit Messages über den Bus oder über den Gateway-Service mit Curl oder Postman getestet, wobei Antworten, Logs und Datenbank-Einträge auf erwartete Werte geprüft wurden.
 
-Systemtests werden komplett manuell durchgeführt anhand einer Liste an https requests, die nach und nach abgearbeitet wird.
+Systemtests werden komplett manuell durchgeführt. Für das Testen wird eine Liste an https requests nach und nach abgearbeitet.
 
 
 === Reflexion Testkonzept
