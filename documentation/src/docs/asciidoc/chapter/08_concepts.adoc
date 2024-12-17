@@ -241,6 +241,23 @@ LogEntry (Log)
 * objUuid : UUID
 * message : String
 
+==== Central Warehouse Service:
+These are the tables and fields of the central_warehouse MySQL Database
+
+===== Table warehouseOrder
+* id : int
+* uuid : varchar(50)
+* store_id : varchar(50)
+* customer_order_id : varchar(50)
+* cancelled : bit
+
+===== Table warehouseOrderArticle
+* warehouse_order : int (fk to warehouseOrder.id)
+* article : int
+* count :int
+* fulfilled : int
+* next_delivery_date : Date
+
 === Testkonzept
 Für dieses Projekt wurde kein Testkonzept erstellt. Weder zu Beginn, noch in der Definition of Done.
 
@@ -250,14 +267,3 @@ Mit dieser Grundlage sind die Microservices unterschiedlich getestet. Alle Micro
 Die meisten Microservices wurden zusätzlich manuell mit Messages über den Bus oder über den Gateway-Service mit Curl oder Postman getestet, wobei Antworten, Logs und Datenbank-Einträge auf erwartete Werte geprüft wurden.
 
 Systemtests werden komplett manuell durchgeführt. Für das Testen wird eine Liste an https requests nach und nach abgearbeitet.
-
-
-=== Reflexion Testkonzept
-==== Weshalb wurde kein konsistenter Fokus auf Testing gesetzt?
-
-Das Team hat die Sprints mit vielen und grossen Backlog Items gefüllt. Ausserdem hat es den Fokus auf das Sprint-Review gesetzt. Für das Review war einzig relevant, was auf der Produktivumgebung erfolgreich läuft. Die für die Backlog items geplante Zeit wurde oft überschritten, um die Funktionalität zeigen zu können. Ein Teil davon ist sicher auf die fehlende Erfahrung mit der MoM zurückzuführen. Dafür machte das Team Abstriche beim Testing und auch das Sprint Planning litt darunter, was zur Wiederholung der Problematik führte.
-
-Die Grösse der Microservices war bei der Entwicklung eine grosse Hilfe. Denn immerhin waren Fehler bei der Verarbeitung innerhalb eines einzigen Services zu suchen.
-
-==== Wie wäre es anders gegangen?
-Es wäre definitiv möglich gewesen, den Fokus mehr auf Testing zu setzen. Dafür hätte das Team als Erstes den Sprint backlog verkleinern müssen und sich danach auf die wichtigsten Epics fokussieren sollen. Das hätte Druck genommen, viel am Sprint-Review zeigen zu müssen. Zudem hätte es mehr Luft gelassen für einen Test-First Approach sowie ausführlicheres Testing. Eine klare Definition of Done, sowie eine Priorisierung deren Einhaltung und separate Backlog-Items für das Testing hätte ebenfalls geholfen.

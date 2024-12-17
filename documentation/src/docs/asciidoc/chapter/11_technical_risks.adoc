@@ -8,4 +8,12 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 TBD
 
-* Testabdeckungen
+=== Reflexion Testing
+==== Weshalb wurde kein konsistenter Fokus auf Testing gesetzt?
+
+Das Team hat die Sprints mit vielen und grossen Backlog Items gefüllt. Ausserdem hat es den Fokus auf das Sprint-Review gesetzt. Für das Review war einzig relevant, was auf der Produktivumgebung erfolgreich läuft. Die für die Backlog items geplante Zeit wurde oft überschritten, um die Funktionalität zeigen zu können. Ein Teil davon ist sicher auf die fehlende Erfahrung mit der MoM zurückzuführen. Dafür machte das Team Abstriche beim Testing und auch das Sprint Planning litt darunter, was zur Wiederholung der Problematik führte.
+
+Die Grösse der Microservices war bei der Entwicklung eine grosse Hilfe. Denn immerhin waren Fehler bei der Verarbeitung innerhalb eines einzigen Services zu suchen.
+
+==== Wie wäre es anders gegangen?
+Es wäre definitiv möglich gewesen, den Fokus mehr auf Testing zu setzen. Dafür hätte das Team als Erstes den Sprint backlog verkleinern müssen und sich danach auf die wichtigsten Epics fokussieren sollen. Das hätte Druck genommen, viel am Sprint-Review zeigen zu müssen. Zudem hätte es mehr Luft gelassen für einen Test-First Approach sowie ausführlicheres Testing. Eine klare Definition of Done, sowie eine Priorisierung deren Einhaltung und separate Backlog-Items für das Testing hätte ebenfalls geholfen.
