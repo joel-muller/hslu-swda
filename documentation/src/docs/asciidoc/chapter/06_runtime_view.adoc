@@ -19,8 +19,10 @@ Zudem werden auch die details dem Accounting Service geschickt (`invoice.create`
 
 image:Order_thorugh_services.png[OrderThroughServices]
 
-=== <Runtime Scenario 2>
+=== Order Service Validity Received
 
-=== ...
+Noch beschreiben
 
-=== <Runtime Scenario n>
+image:order_validity.png[OrderValidity]
+
+
