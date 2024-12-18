@@ -21,7 +21,13 @@ image:Order_thorugh_services.png[OrderThroughServices]
 
 === Order Service Validity Received
 
-Noch beschreiben
+Wenn der `OrderService` gestarted wird, erstellt er einen neuen `Reveiver`.
+Sobald dieser Reveiver eine neue Nachricht bekommt (`onMessageReveived(..)`), holt er von der Datenbank die Bestellung heraus, um die es geht (`getById(orderId)`).
+Wenn es die Bestellung gibt und diese auch nicht annuliert wurde, wird sie mit dem `Modifiable` verändert (`modify(order, message, service)`).
+Der Modifier kann dann sehen ob die Bestellung gültig ist oder nicht.
+Wenn die Bestellung gültig ist, werden die Artikel beim StoreManagement Service bestellt (`requestArticles(..)`) und es wird der Kunde gepruft (`checkCustomer(..)`).
+Wenn die Bestellung ungultig ist, wird die Bestellung annuliert (`order.setCancelled()`).
+Sobald die Bestellung Modifiziert wurde, wird die Bestellung abgespeichert (`storeOrder(order)`).
 
 image:order_validity.png[OrderValidity]
 
