@@ -5,5 +5,11 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-solution-strategy]]
 == Solution Strategy
 
-In einer umfangreichen Planungsphase wurden die Anforderungen an das System definiert und die Architektur festgelegt. Die vorgegebenen Anforderungen der Aufgabenstellung wurden erörtert, um ein gemeinsames Verständnis sicherzustellen. In einem Event Storming Process wurde das Domain Model erstellt, welches als Grundlage für die Definition der Microservices diente. In der Planungsphase waren stets alle Gruppenmitglieder gemeinsam involviert. In der Realisierungsphase, also bei der Implementierung der Microservices, wurde hauptsächlich in Einzelarbeit programmiert. Dies war sehr effizient, da die Aufgaben klar und die Schnittstellen zwischen den Microservices klar definiert waren. Für die Integration zwischen den Services gab es jeweils eine enge Zusammenarbeit zwischen den beteiligten Teammitgliedern.
+In einer umfangreichen Planungsphase wurden die Anforderungen an das System definiert und die Architektur festgelegt.
+Die vorgegebenen Anforderungen der Aufgabenstellung wurden erörtert, um ein gemeinsames Verständnis sicherzustellen.
+In einem Event Storming Process wurde das Domain Model erstellt, welches als Grundlage für die Definition der Microservices diente.
+In der Planungsphase waren stets alle Gruppenmitglieder gemeinsam involviert.
+In der Realisierungsphase, also bei der Implementierung der Microservices, wurde hauptsächlich in Einzelarbeit programmiert.
+Dies war sehr effizient, da die Aufgaben klar und die Schnittstellen zwischen den Microservices klar definiert waren.
+Für die Integration zwischen den Services gab es jeweils eine enge Zusammenarbeit zwischen den beteiligten Teammitgliedern.
 Am Gateway-Microservice haben alle Mitglieder gearbeitet, um ihre jeweiligen Microservices von aussen zugängig zu machen.
