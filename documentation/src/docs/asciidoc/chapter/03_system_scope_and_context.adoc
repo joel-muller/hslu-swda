@@ -8,5 +8,8 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-system-scope-and-context]]
 == Kontextabgrenzung
 
-image::kontextdiagramm.png[Kontextdiagramm]
+Ein Mitarbeiter (Employee) kann eine Bestellung ausführen (Place Order), sie stornieren (Cancel Order) order der Status einer Bestellung order Laden sehen (Check Availability).
+Wenn eine Bestellung ausgeführt wurde, bekommt
+
+image::context.png[Kontextdiagramm]
 
