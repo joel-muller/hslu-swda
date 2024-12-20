@@ -3,20 +3,20 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
-import ch.hslu.swda.messagesIngoing.VerifyResponse;
+import ch.hslu.swda.messagesIngoing.OrderReceiveValidity;
 import ch.hslu.swda.micro.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class ModifyValidity implements Modifiable {
-    private static final Logger LOG = LoggerFactory.getLogger(ModifyValidity.class);
+public class ReceiveValidity implements Modifiable {
+    private static final Logger LOG = LoggerFactory.getLogger(ReceiveValidity.class);
 
     @Override
     public void modify(Order order, IngoingMessage responseRaw, Service service) {
         try {
-            VerifyResponse response = (VerifyResponse) responseRaw;
+            OrderReceiveValidity response = (OrderReceiveValidity) responseRaw;
             order.handleVerifyResponse(response);
             if (!order.isCancelled()) {
                 service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.validate", "Order Validated, order id: " + order.getId().toString()));

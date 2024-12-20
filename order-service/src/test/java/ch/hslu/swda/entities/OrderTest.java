@@ -3,11 +3,11 @@ package ch.hslu.swda.entities;
 import static org.junit.jupiter.api.Assertions.*;
 
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
-import ch.hslu.swda.messagesIngoing.VerifyResponse;
-import ch.hslu.swda.messagesOutgoing.CustomerRequest;
-import ch.hslu.swda.messagesOutgoing.Invoice;
-import ch.hslu.swda.messagesOutgoing.StoreRequest;
-import ch.hslu.swda.messagesOutgoing.VerifyRequest;
+import ch.hslu.swda.messagesIngoing.OrderReceiveValidity;
+import ch.hslu.swda.messagesOutgoing.CustomerValidate;
+import ch.hslu.swda.messagesOutgoing.InvoiceCreate;
+import ch.hslu.swda.messagesOutgoing.StoreRequestArticles;
+import ch.hslu.swda.messagesOutgoing.ArticleCheckValidity;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,28 +85,28 @@ class OrderTest {
 
     @Test
     void testGetVerifyRequest() {
-        VerifyRequest verifyRequest = order.getVerifyRequest();
-        assertNotNull(verifyRequest, "getVerifyRequest should return a non-null VerifyRequest");
-        assertEquals(order.getId(), verifyRequest.orderId(), "VerifyRequest should contain the correct order ID");
-        assertEquals(order.getEmployeeId(), verifyRequest.employeeId(), "VerifyRequest should contain the correct employee ID");
+        ArticleCheckValidity articleCheckValidity = order.getVerifyRequest();
+        assertNotNull(articleCheckValidity, "getVerifyRequest should return a non-null VerifyRequest");
+        assertEquals(order.getId(), articleCheckValidity.orderId(), "VerifyRequest should contain the correct order ID");
+        assertEquals(order.getEmployeeId(), articleCheckValidity.employeeId(), "VerifyRequest should contain the correct employee ID");
     }
 
     @Test
     void testGetStoreRequest() {
-        StoreRequest storeRequest = order.getStoreRequest();
-        assertNotNull(storeRequest, "getStoreRequest should return a non-null StoreRequest");
-        assertEquals(order.getId(), storeRequest.getOrderId(), "StoreRequest should contain the correct order ID");
-        assertEquals(order.getEmployeeId(), storeRequest.getEmployeeId(), "StoreRequest should contain the correct employee ID");
-        assertEquals(order.getCopyOfArticles().size(), storeRequest.getArticles().size(), "Not all articles where given with the store request");
+        StoreRequestArticles storeRequestArticles = order.getStoreRequest();
+        assertNotNull(storeRequestArticles, "getStoreRequest should return a non-null StoreRequest");
+        assertEquals(order.getId(), storeRequestArticles.getOrderId(), "StoreRequest should contain the correct order ID");
+        assertEquals(order.getEmployeeId(), storeRequestArticles.getEmployeeId(), "StoreRequest should contain the correct employee ID");
+        assertEquals(order.getCopyOfArticles().size(), storeRequestArticles.getArticles().size(), "Not all articles where given with the store request");
     }
 
     @Test
     void testGetCustomerRequest() {
-        CustomerRequest customerRequest = order.getCustomerRequest();
-        assertNotNull(customerRequest, "getCustomerRequest should return a non-null CustomerRequest");
-        assertEquals(order.getId(), customerRequest.orderId(), "CustomerRequest should contain the correct customer ID");
-        assertEquals(order.getEmployeeId(), customerRequest.employeeId(), "CustomerRequest should contain the correct employee ID");
-        assertEquals(order.getCustomerId(), customerRequest.customerId(), "CustomerRequest should contain the correct order ID");
+        CustomerValidate customerValidate = order.getCustomerRequest();
+        assertNotNull(customerValidate, "getCustomerRequest should return a non-null CustomerRequest");
+        assertEquals(order.getId(), customerValidate.orderId(), "CustomerRequest should contain the correct customer ID");
+        assertEquals(order.getEmployeeId(), customerValidate.employeeId(), "CustomerRequest should contain the correct employee ID");
+        assertEquals(order.getCustomerId(), customerValidate.customerId(), "CustomerRequest should contain the correct order ID");
     }
 
 
@@ -162,7 +162,7 @@ class OrderTest {
 
     @Test
     void testHandleVerifyResponseInvalidResponse() {
-        VerifyResponse response = new VerifyResponse(orderId, false, new HashMap<>(), new HashMap<>());
+        OrderReceiveValidity response = new OrderReceiveValidity(orderId, false, new HashMap<>(), new HashMap<>());
         order.handleVerifyResponse(response);
         assertTrue(order.isCancelled());
         assertFalse(order.isArticlesValid());
@@ -174,7 +174,7 @@ class OrderTest {
         francsResponse.put(1, 4);
         Map<Integer, Integer> centimesResponse = new HashMap<>();
         centimesResponse.put(1, 10);
-        VerifyResponse response = new VerifyResponse(orderId, true, francsResponse, centimesResponse);
+        OrderReceiveValidity response = new OrderReceiveValidity(orderId, true, francsResponse, centimesResponse);
         order.handleVerifyResponse(response);
         assertTrue(order.isCancelled());
         assertFalse(order.isArticlesValid());
@@ -188,7 +188,7 @@ class OrderTest {
         Map<Integer, Integer> centimesResponse = new HashMap<>();
         centimesResponse.put(1, 10);
         centimesResponse.put(2, 50);
-        VerifyResponse response = new VerifyResponse(orderId, true, francsResponse, centimesResponse);
+        OrderReceiveValidity response = new OrderReceiveValidity(orderId, true, francsResponse, centimesResponse);
         order.handleVerifyResponse(response);
         assertFalse(order.isCancelled());
         assertTrue(order.isArticlesValid());
@@ -265,6 +265,6 @@ class OrderTest {
         count.put(2, 10);
         prices.put(1, "75.50");
         prices.put(2, "45.00");
-        assertEquals(new Invoice(orderId, customerId, employeeId, storeId, count, prices, order.getTotalPrice().getInvoiceString()), order.getInvoice());
+        assertEquals(new InvoiceCreate(orderId, customerId, employeeId, storeId, count, prices, order.getTotalPrice().getInvoiceString()), order.getInvoice());
     }
 }

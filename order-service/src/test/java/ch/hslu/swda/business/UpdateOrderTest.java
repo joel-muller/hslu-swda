@@ -6,8 +6,6 @@ import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.StateEnum;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
-import ch.hslu.swda.messagesOutgoing.OrderCancelled;
-import ch.hslu.swda.messagesOutgoing.OrderReady;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,9 +43,9 @@ class UpdateOrderTest {
         articles.add(44);
         articles.add(5);
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
-        assertEquals(order.getOrderReady(), serviceMock.orderReady);
-        assertEquals(order.getInvoice(), serviceMock.invoice);
-        assertNull(serviceMock.orderCancelled);
+        assertEquals(order.getOrderReady(), serviceMock.storeOrderReady);
+        assertEquals(order.getInvoice(), serviceMock.invoiceCreate);
+        assertNull(serviceMock.storeOrderCancelled);
     }
 
     @Test
@@ -58,9 +56,9 @@ class UpdateOrderTest {
         articles.add(44);
         articles.add(5);
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
-        assertNull(serviceMock.orderReady);
-        assertNull(serviceMock.orderCancelled);
-        assertNull(serviceMock.invoice);
+        assertNull(serviceMock.storeOrderReady);
+        assertNull(serviceMock.storeOrderCancelled);
+        assertNull(serviceMock.invoiceCreate);
     }
 
     @Test
@@ -69,9 +67,9 @@ class UpdateOrderTest {
         List<Integer> articles = new ArrayList<>();
         articles.add(11);
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
-        assertNull(serviceMock.orderReady);
-        assertNull(serviceMock.orderCancelled);
-        assertNull(serviceMock.invoice);
+        assertNull(serviceMock.storeOrderReady);
+        assertNull(serviceMock.storeOrderCancelled);
+        assertNull(serviceMock.invoiceCreate);
     }
 
     @Test
@@ -79,9 +77,9 @@ class UpdateOrderTest {
         order.setCustomerValid();
         List<Integer> articles = new ArrayList<>();
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, true), serviceMock);
-        assertNull(serviceMock.orderReady);
-        assertNull(serviceMock.orderCancelled);
-        assertNull(serviceMock.invoice);
+        assertNull(serviceMock.storeOrderReady);
+        assertNull(serviceMock.storeOrderCancelled);
+        assertNull(serviceMock.invoiceCreate);
     }
 
     @Test
@@ -89,8 +87,8 @@ class UpdateOrderTest {
         order.setCustomerValid();
         List<Integer> articles = new ArrayList<>();
         new UpdateOrder().modify(order, new OrderUpdate(order.getId(), articles, false), serviceMock);
-        assertNull(serviceMock.orderReady);
-        assertEquals(order.getOrderCancelled(), serviceMock.orderCancelled);
-        assertNull(serviceMock.invoice);
+        assertNull(serviceMock.storeOrderReady);
+        assertEquals(order.getOrderCancelled(), serviceMock.storeOrderCancelled);
+        assertNull(serviceMock.invoiceCreate);
     }
 }

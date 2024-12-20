@@ -5,9 +5,9 @@ import ch.hslu.swda.entities.Order;
 
 import ch.hslu.swda.entities.StateEnum;
 import ch.hslu.swda.messagesIngoing.*;
-import ch.hslu.swda.messagesOutgoing.CustomerRequest;
+import ch.hslu.swda.messagesOutgoing.CustomerValidate;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
-import ch.hslu.swda.messagesOutgoing.StoreRequest;
+import ch.hslu.swda.messagesOutgoing.StoreRequestArticles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ModifyValidityTest {
+class ReceiveValidityTest {
     Order order;
     UUID id = UUID.randomUUID();
     UUID storeId = UUID.randomUUID();
@@ -52,58 +52,58 @@ class ModifyValidityTest {
 
     @Test
     void testOrderValidState() {
-        VerifyResponse response = new VerifyResponse(id, true, francsResponse, centimesResponse);
-        new ModifyValidity().modify(order, response, serviceMock);
+        OrderReceiveValidity response = new OrderReceiveValidity(id, true, francsResponse, centimesResponse);
+        new ReceiveValidity().modify(order, response, serviceMock);
         assertEquals(StateEnum.ARTICLE_VALIDATED, order.getState());
     }
 
     @Test
     void testOrderValidStoreRequest() {
-        VerifyResponse response = new VerifyResponse(id, true, francsResponse, centimesResponse);
-        new ModifyValidity().modify(order, response, serviceMock);
-        assertEquals(new StoreRequest(id, articlesMap, employeeId, storeId), serviceMock.storeRequest);
+        OrderReceiveValidity response = new OrderReceiveValidity(id, true, francsResponse, centimesResponse);
+        new ReceiveValidity().modify(order, response, serviceMock);
+        assertEquals(new StoreRequestArticles(id, articlesMap, employeeId, storeId), serviceMock.storeRequestArticles);
     }
 
     @Test
     void testOrderValidCustomerRequest() {
-        VerifyResponse response = new VerifyResponse(id, true, francsResponse, centimesResponse);
-        new ModifyValidity().modify(order, response, serviceMock);
-        assertEquals(new CustomerRequest(customerId, employeeId, id), serviceMock.customerRequest);
+        OrderReceiveValidity response = new OrderReceiveValidity(id, true, francsResponse, centimesResponse);
+        new ReceiveValidity().modify(order, response, serviceMock);
+        assertEquals(new CustomerValidate(customerId, employeeId, id), serviceMock.customerValidate);
     }
 
     @Test
     void testOrderValidLogMessage() {
-        VerifyResponse response = new VerifyResponse(id, true, francsResponse, centimesResponse);
-        new ModifyValidity().modify(order, response, serviceMock);
+        OrderReceiveValidity response = new OrderReceiveValidity(id, true, francsResponse, centimesResponse);
+        new ReceiveValidity().modify(order, response, serviceMock);
         assertEquals(new LogMessage(id, employeeId, "order.validate", "Order Validated, order id: " + id.toString()), serviceMock.logMessage);
     }
 
     @Test
     void testOrderInvalidOrderState() {
-        VerifyResponse response = new VerifyResponse(id, false, francsResponse, centimesResponse);
-        new ModifyValidity().modify(order, response, serviceMock);
+        OrderReceiveValidity response = new OrderReceiveValidity(id, false, francsResponse, centimesResponse);
+        new ReceiveValidity().modify(order, response, serviceMock);
         assertTrue(order.isCancelled());
     }
 
 
     @Test
     void testOrderInvalidStoreRequest() {
-        VerifyResponse response = new VerifyResponse(id, false, new HashMap<>(), new HashMap<>());
-        new ModifyValidity().modify(order, response, serviceMock);
-        assertNull(serviceMock.storeRequest);
+        OrderReceiveValidity response = new OrderReceiveValidity(id, false, new HashMap<>(), new HashMap<>());
+        new ReceiveValidity().modify(order, response, serviceMock);
+        assertNull(serviceMock.storeRequestArticles);
     }
 
     @Test
     void testOrderInvalidCustomerRequest() {
-        VerifyResponse response = new VerifyResponse(id, false, new HashMap<>(), new HashMap<>());
-        new ModifyValidity().modify(order, response, serviceMock);
-        assertNull(serviceMock.customerRequest);
+        OrderReceiveValidity response = new OrderReceiveValidity(id, false, new HashMap<>(), new HashMap<>());
+        new ReceiveValidity().modify(order, response, serviceMock);
+        assertNull(serviceMock.customerValidate);
     }
 
     @Test
     void testOrderInvalidLogMessage() {
-        VerifyResponse response = new VerifyResponse(id, false, new HashMap<>(), new HashMap<>());
-        new ModifyValidity().modify(order, response, serviceMock);
+        OrderReceiveValidity response = new OrderReceiveValidity(id, false, new HashMap<>(), new HashMap<>());
+        new ReceiveValidity().modify(order, response, serviceMock);
         assertEquals(new LogMessage(id, employeeId, "order.validate", "Order not validated, order id: " + id.toString()), serviceMock.logMessage);
     }
 

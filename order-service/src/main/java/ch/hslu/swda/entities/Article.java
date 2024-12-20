@@ -1,10 +1,6 @@
 package ch.hslu.swda.entities;
 
 
-import ch.hslu.swda.micro.Application;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 public final class Article {

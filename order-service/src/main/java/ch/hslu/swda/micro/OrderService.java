@@ -20,7 +20,7 @@ import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.CancelOrder;
 import ch.hslu.swda.persistence.DatabaseConnector;
-import ch.hslu.swda.business.ModifyValidity;
+import ch.hslu.swda.business.ReceiveValidity;
 import ch.hslu.swda.business.UpdateCustomer;
 import ch.hslu.swda.business.UpdateOrder;
 import ch.hslu.swda.messagesIngoing.*;
@@ -61,17 +61,17 @@ public final class OrderService implements AutoCloseable, Service {
         // setup database
         this.database = new DatabaseConnector();
 
-        this.generalReceiver(Routes.RECEIVE_ORDER_VALIDITY, new Receiver<>(this.database, new ModifyValidity(), VerifyResponse.class, this));
-        this.generalReceiver(Routes.RECEIVE_ORDER, new OrderReceiver(this.database, exchangeName, bus, this));
+        this.generalReceiver(Routes.ORDER_RECEIVE_VALIDITY, new Receiver<>(this.database, new ReceiveValidity(), OrderReceiveValidity.class, this));
+        this.generalReceiver(Routes.ORDER_RECEIVE, new OrderReceiver(this.database, exchangeName, bus, this));
         this.generalReceiver(Routes.ORDER_UPDATE, new Receiver<>(this.database, new UpdateOrder(), OrderUpdate.class, this));
-        this.generalReceiver(Routes.CUSTOMER_RECEIVE_VALIDITY, new Receiver<>(this.database, new UpdateCustomer(), CustomerResponse.class, this));
+        this.generalReceiver(Routes.ORDER_CUSTOMER_VALIDITY, new Receiver<>(this.database, new UpdateCustomer(), OrderCustomerValidity.class, this));
         this.generalReceiver(Routes.ORDER_CANCEL, new ReceiverSynchronous<>(this.database, exchangeName, bus, new CancelOrder(), OrderCancel.class, this));
-        this.generalReceiver(Routes.ORDER_CONFIRMATION, new ConfirmationReceiver(this.database, exchangeName, bus, this));
+        this.generalReceiver(Routes.ORDER_CONFIRMATION_GET, new ConfirmationReceiver(this.database, exchangeName, bus, this));
     }
 
     @Override
-    public void checkValidity(VerifyRequest request) throws IOException {
-        sendMessageAsynchronous(request, Routes.CHECK_ORDER_VALIDITY);
+    public void checkValidity(ArticleCheckValidity request) throws IOException {
+        sendMessageAsynchronous(request, Routes.ARTICLES_CHECK_VALIDITY);
     }
 
     @Override
@@ -80,24 +80,24 @@ public final class OrderService implements AutoCloseable, Service {
     }
 
     @Override
-    public void requestArticlesFromStore(StoreRequest request) throws IOException {
-        sendMessageAsynchronous(request, Routes.REQUEST_ARTICLES);
+    public void requestArticlesFromStore(StoreRequestArticles request) throws IOException {
+        sendMessageAsynchronous(request, Routes.STORE_REQUEST_ARTICLES);
     }
 
     @Override
-    public void checkCustomerValidity(CustomerRequest request) throws IOException {
-        sendMessageAsynchronous(request, Routes.CHECK_CUSTOMER);
+    public void checkCustomerValidity(CustomerValidate request) throws IOException {
+        sendMessageAsynchronous(request, Routes.CUSTOMER_VALIDATE);
     }
 
     @Override
-    public void sendOrderReadyToStore(OrderReady ready, Invoice invoice) throws IOException {
-        sendMessageAsynchronous(ready, Routes.ORDER_READY);
-        sendMessageAsynchronous(invoice, Routes.INVOICE_CREATE);
+    public void sendOrderReadyToStore(StoreOrderReady ready, InvoiceCreate invoiceCreate) throws IOException {
+        sendMessageAsynchronous(ready, Routes.STORE_ORDER_READY);
+        sendMessageAsynchronous(invoiceCreate, Routes.INVOICE_CREATE);
     }
 
     @Override
-    public void sendOrderCancelledToStore(OrderCancelled cancelled) throws IOException {
-        sendMessageAsynchronous(cancelled, Routes.ORDER_CANCELLED);
+    public void sendOrderCancelledToStore(StoreOrderCancelled cancelled) throws IOException {
+        sendMessageAsynchronous(cancelled, Routes.STORE_ORDER_CANCELLED);
     }
 
     public void sendMessageAsynchronous(OutgoingMessage message, String route) throws IOException {

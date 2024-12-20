@@ -9,8 +9,10 @@ import ch.hslu.swda.micro.Service;
  */
 public interface Modifiable {
     /**
-     * Modifies an order
-     * @param order the order
+     * Modify an order with a modifiable
+     * @param order The order
+     * @param responseRaw The message which arrived in the service (IngoingMessage is an interface and you can get orderId out of it)
+     * @param service the service for sending further messages
      */
     void modify(Order order, IngoingMessage responseRaw, Service service);
 }

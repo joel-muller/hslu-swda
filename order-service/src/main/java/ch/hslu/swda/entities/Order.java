@@ -17,9 +17,12 @@ package ch.hslu.swda.entities;
 
 import java.util.*;
 
-import ch.hslu.swda.messagesIngoing.CreateOrder;
+import ch.hslu.swda.gatewayMessage.GatewayOrderConfirmation;
+import ch.hslu.swda.gatewayMessage.GatewayOrderConfirmationArticle;
+import ch.hslu.swda.gatewayMessage.GatewayOrderCreatedResponse;
+import ch.hslu.swda.gatewayMessage.GatewayOrderReceive;
 import ch.hslu.swda.messagesIngoing.OrderUpdate;
-import ch.hslu.swda.messagesIngoing.VerifyResponse;
+import ch.hslu.swda.messagesIngoing.OrderReceiveValidity;
 import ch.hslu.swda.messagesOutgoing.*;
 
 /**
@@ -47,8 +50,8 @@ public final class Order {
         this.stateEnum = stateEnum;
     }
 
-    public Order(CreateOrder createOrder) {
-        this(UUID.randomUUID(), Calendar.getInstance().getTime(), createOrder.storeId(), createOrder.customerId(), createOrder.employeeId(), Article.createListArticle(createOrder.articles()), StateEnum.STORED, false);
+    public Order(GatewayOrderReceive gatewayOrderReceive) {
+        this(UUID.randomUUID(), Calendar.getInstance().getTime(), gatewayOrderReceive.storeId(), gatewayOrderReceive.customerId(), gatewayOrderReceive.employeeId(), Article.createListArticle(gatewayOrderReceive.articles()), StateEnum.STORED, false);
     }
 
     public UUID getId() {
@@ -170,7 +173,7 @@ public final class Order {
     }
 
 
-    public void handleVerifyResponse(VerifyResponse response) {
+    public void handleVerifyResponse(OrderReceiveValidity response) {
         if (!response.valid()) {
             setCancelled();
             return;
@@ -201,46 +204,46 @@ public final class Order {
         tryToSetReady();
     }
 
-    public VerifyRequest getVerifyRequest() {
-        return new VerifyRequest(getId(), createMapOfArticles(), getEmployeeId());
+    public ArticleCheckValidity getVerifyRequest() {
+        return new ArticleCheckValidity(getId(), createMapOfArticles(), getEmployeeId());
     }
 
-    public StoreRequest getStoreRequest() {
-        return new StoreRequest(getId(), createMapOfArticles(), getEmployeeId(), getStoreId());
+    public StoreRequestArticles getStoreRequest() {
+        return new StoreRequestArticles(getId(), createMapOfArticles(), getEmployeeId(), getStoreId());
     }
 
-    public CustomerRequest getCustomerRequest() {
-        return new CustomerRequest(getCustomerId(), getEmployeeId(), getId());
+    public CustomerValidate getCustomerRequest() {
+        return new CustomerValidate(getCustomerId(), getEmployeeId(), getId());
     }
 
-    public OrderReady getOrderReady() {
-        return new OrderReady(getId(), getStoreId());
+    public StoreOrderReady getOrderReady() {
+        return new StoreOrderReady(getId(), getStoreId());
     }
 
-    public OrderCancelled getOrderCancelled() {
-        return new OrderCancelled(getId(), getStoreId());
+    public StoreOrderCancelled getOrderCancelled() {
+        return new StoreOrderCancelled(getId(), getStoreId());
     }
 
-    public OrderCreated getOrderCreated() {
-        return new OrderCreated(getId());
+    public GatewayOrderCreatedResponse getOrderCreated() {
+        return new GatewayOrderCreatedResponse(getId());
     }
 
-    public OrderConfirmation getOrderConfirmation() {
-        List<ArticleOrderConfirmationDTO> articles = new ArrayList<>();
+    public GatewayOrderConfirmation getOrderConfirmation() {
+        List<GatewayOrderConfirmationArticle> articles = new ArrayList<>();
         for (Article a : this.articles) {
-            articles.add(new ArticleOrderConfirmationDTO(a.getId(), a.getCount(), a.getPrice().getInvoiceString()));
+            articles.add(new GatewayOrderConfirmationArticle(a.getId(), a.getCount(), a.getPrice().getInvoiceString()));
         }
-        return new OrderConfirmation(id, articles, date, storeId, customerId, employeeId, getTotalPrice().getInvoiceString());
+        return new GatewayOrderConfirmation(id, articles, date, storeId, customerId, employeeId, getTotalPrice().getInvoiceString());
     }
 
-    public Invoice getInvoice() {
+    public InvoiceCreate getInvoice() {
         Map<Integer, Integer> articlesCount = new HashMap<>();
         Map<Integer, String> articlesPrices = new HashMap<>();
         for (Article article : articles) {
             articlesCount.put(article.getId(), article.getCount());
             articlesPrices.put(article.getId(), article.getTotalPrice().getInvoiceString());
         }
-        return new Invoice(getId(), getCustomerId(), getEmployeeId(), getStoreId(), articlesCount, articlesPrices, getTotalPrice().getInvoiceString());
+        return new InvoiceCreate(getId(), getCustomerId(), getEmployeeId(), getStoreId(), articlesCount, articlesPrices, getTotalPrice().getInvoiceString());
     }
 
     /**

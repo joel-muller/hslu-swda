@@ -3,10 +3,8 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.entities.StateEnum;
-import ch.hslu.swda.messagesIngoing.CustomerResponse;
-import ch.hslu.swda.messagesOutgoing.Invoice;
-import ch.hslu.swda.messagesOutgoing.OrderCancelled;
-import ch.hslu.swda.messagesOutgoing.OrderReady;
+import ch.hslu.swda.messagesIngoing.OrderCustomerValidity;
+import ch.hslu.swda.messagesOutgoing.StoreOrderCancelled;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,25 +41,25 @@ class UpdateCustomerTest {
         order.setArticleInStore(33);
         order.setArticleInStore(44);
         order.setArticleInStore(5);
-        new UpdateCustomer().modify(order, new CustomerResponse(order.getId(), true), serviceMock);
-        assertEquals(order.getOrderReady(), serviceMock.orderReady);
-        assertEquals(order.getInvoice(), serviceMock.invoice);
-        assertNull(serviceMock.orderCancelled);
+        new UpdateCustomer().modify(order, new OrderCustomerValidity(order.getId(), true), serviceMock);
+        assertEquals(order.getOrderReady(), serviceMock.storeOrderReady);
+        assertEquals(order.getInvoice(), serviceMock.invoiceCreate);
+        assertNull(serviceMock.storeOrderCancelled);
     }
 
     @Test
     void customerValidArticlesNotYet() {
-        new UpdateCustomer().modify(order, new CustomerResponse(order.getId(), true), serviceMock);
-        assertNull(serviceMock.orderReady);
-        assertNull(serviceMock.orderCancelled);
-        assertNull(serviceMock.invoice);
+        new UpdateCustomer().modify(order, new OrderCustomerValidity(order.getId(), true), serviceMock);
+        assertNull(serviceMock.storeOrderReady);
+        assertNull(serviceMock.storeOrderCancelled);
+        assertNull(serviceMock.invoiceCreate);
     }
 
     @Test
     void customerNotValid() {
-        new UpdateCustomer().modify(order, new CustomerResponse(order.getId(), false), serviceMock);
-        assertEquals(new OrderCancelled(order.getId(), order.getStoreId()), serviceMock.orderCancelled);
-        assertNull(serviceMock.orderReady);
-        assertNull(serviceMock.invoice);
+        new UpdateCustomer().modify(order, new OrderCustomerValidity(order.getId(), false), serviceMock);
+        assertEquals(new StoreOrderCancelled(order.getId(), order.getStoreId()), serviceMock.storeOrderCancelled);
+        assertNull(serviceMock.storeOrderReady);
+        assertNull(serviceMock.invoiceCreate);
     }
 }

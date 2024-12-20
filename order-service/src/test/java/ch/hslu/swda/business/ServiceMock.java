@@ -7,16 +7,16 @@ import java.io.IOException;
 
 public class ServiceMock implements Service {
     LogMessage logMessage;
-    VerifyRequest verifyRequest;
-    StoreRequest storeRequest;
-    CustomerRequest customerRequest;
-    OrderReady orderReady;
-    OrderCancelled orderCancelled;
-    Invoice invoice;
+    ArticleCheckValidity articleCheckValidity;
+    StoreRequestArticles storeRequestArticles;
+    CustomerValidate customerValidate;
+    StoreOrderReady storeOrderReady;
+    StoreOrderCancelled storeOrderCancelled;
+    InvoiceCreate invoiceCreate;
 
     @Override
-    public void checkValidity(VerifyRequest request) throws IOException {
-        this.verifyRequest = request;
+    public void checkValidity(ArticleCheckValidity request) throws IOException {
+        this.articleCheckValidity = request;
     }
 
     @Override
@@ -26,24 +26,24 @@ public class ServiceMock implements Service {
     }
 
     @Override
-    public void requestArticlesFromStore(StoreRequest request) throws IOException {
-        this.storeRequest = request;
+    public void requestArticlesFromStore(StoreRequestArticles request) throws IOException {
+        this.storeRequestArticles = request;
     }
 
     @Override
-    public void checkCustomerValidity(CustomerRequest request) throws IOException {
-        this.customerRequest = request;
+    public void checkCustomerValidity(CustomerValidate request) throws IOException {
+        this.customerValidate = request;
     }
 
     @Override
-    public void sendOrderReadyToStore(OrderReady ready, Invoice invoice) throws IOException {
-        this.orderReady = ready;
-        this.invoice = invoice;
+    public void sendOrderReadyToStore(StoreOrderReady ready, InvoiceCreate invoiceCreate) throws IOException {
+        this.storeOrderReady = ready;
+        this.invoiceCreate = invoiceCreate;
     }
 
     @Override
-    public void sendOrderCancelledToStore(OrderCancelled cancelled) throws IOException {
-        this.orderCancelled = cancelled;
+    public void sendOrderCancelledToStore(StoreOrderCancelled cancelled) throws IOException {
+        this.storeOrderCancelled = cancelled;
     }
 
 }

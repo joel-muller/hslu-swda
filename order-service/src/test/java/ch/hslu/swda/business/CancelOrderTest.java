@@ -38,7 +38,7 @@ class CancelOrderTest {
         order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.ARTICLE_VALIDATED, false);
         new CancelOrder().modify(order, null, serviceMock);
         assertTrue(order.isCancelled());
-        assertEquals(order.getOrderCancelled(), serviceMock.orderCancelled);
+        assertEquals(order.getOrderCancelled(), serviceMock.storeOrderCancelled);
     }
 
     @Test
@@ -46,6 +46,6 @@ class CancelOrderTest {
         order = new Order(id, Calendar.getInstance().getTime(), storeId, customerId, employeeId, articles, StateEnum.READY, false);
         new CancelOrder().modify(order, null, serviceMock);
         assertFalse(order.isCancelled());
-        assertNull(serviceMock.orderCancelled);
+        assertNull(serviceMock.storeOrderCancelled);
     }
 }

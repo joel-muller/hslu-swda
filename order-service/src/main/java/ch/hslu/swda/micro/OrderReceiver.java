@@ -17,14 +17,11 @@ package ch.hslu.swda.micro;
 
 import ch.hslu.swda.bus.BusConnector;
 import ch.hslu.swda.bus.MessageReceiver;
-import ch.hslu.swda.messagesIngoing.CreateOrder;
-import ch.hslu.swda.messagesOutgoing.OrderCreated;
+import ch.hslu.swda.gatewayMessage.GatewayOrderReceive;
+import ch.hslu.swda.gatewayMessage.GatewayOrderCreatedResponse;
 import ch.hslu.swda.persistence.DatabaseConnector;
-import ch.hslu.swda.entities.Article;
 import ch.hslu.swda.entities.Order;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +56,7 @@ public final class OrderReceiver implements MessageReceiver {
             LOG.debug("sending answer with topic [{}] according to replyTo-property", replyTo);
 
             ObjectMapper mapper = new ObjectMapper();
-            CreateOrder orderNode = mapper.readValue(message, CreateOrder.class);
+            GatewayOrderReceive orderNode = mapper.readValue(message, GatewayOrderReceive.class);
 
             Order order = new Order(orderNode);
 
@@ -69,7 +66,7 @@ public final class OrderReceiver implements MessageReceiver {
             service.log(new LogMessage(order.getId(), order.getEmployeeId(), "order.create", "Order Created: " + order.toString()));
 
             service.checkValidity(order.getVerifyRequest());
-            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(new OrderCreated(order.getId())));
+            bus.reply(exchangeName, replyTo, corrId, mapper.writeValueAsString(new GatewayOrderCreatedResponse(order.getId())));
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }

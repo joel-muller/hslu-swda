@@ -13,5 +13,5 @@ import java.util.UUID;
  * @param articlesPrices a map, where the key is the article id and the value is the price for how much the article multiplied with the count costs in a string with a format for example (15.45) for 15 Francs and 45 Centimes
  * @param totalPrice the price of all articles prices summed up and in the format for example 55.65 (55 Francs and 65 centimes)
  */
-public record Invoice(UUID orderId, UUID customerId, UUID employeeId, UUID storeId, Map<Integer, Integer> articlesCount, Map<Integer, String> articlesPrices, String totalPrice) implements OutgoingMessage {
+public record InvoiceCreate(UUID orderId, UUID customerId, UUID employeeId, UUID storeId, Map<Integer, Integer> articlesCount, Map<Integer, String> articlesPrices, String totalPrice) implements OutgoingMessage {
 }

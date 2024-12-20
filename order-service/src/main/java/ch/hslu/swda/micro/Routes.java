@@ -21,21 +21,22 @@ package ch.hslu.swda.micro;
 public final class Routes {
 
     // Ingoing Mesages
-    static final String RECEIVE_ORDER_VALIDITY = "order.receive-validity";
-    static final String RECEIVE_ORDER = "order.receive";
-    static final String CUSTOMER_RECEIVE_VALIDITY = "order.customer-validity";
+    static final String ORDER_RECEIVE_VALIDITY = "order.receive-validity";
+    static final String ORDER_RECEIVE = "order.receive";
+    static final String ORDER_CUSTOMER_VALIDITY = "order.customer-validity";
     static final String ORDER_UPDATE = "order.update";
     static final String ORDER_CANCEL = "order.cancel";
+    static final String ORDER_CONFIRMATION_GET = "order.confirmation.get";
 
     // Outgoing Messages
-    static final String CHECK_ORDER_VALIDITY = "articles.check-validity";
+    static final String ARTICLES_CHECK_VALIDITY = "articles.check-validity";
     static final String LOG = "logs.new";
-    static final String REQUEST_ARTICLES = "store.request-articles";
-    static final String CHECK_CUSTOMER = "customer.validate";
-    static final String ORDER_READY = "store.order-ready";
-    static final String ORDER_CANCELLED = "store.order-cancelled";
+    static final String STORE_REQUEST_ARTICLES = "store.request-articles";
+    static final String CUSTOMER_VALIDATE = "customer.validate";
+    static final String STORE_ORDER_READY = "store.order-ready";
+    static final String STORE_ORDER_CANCELLED = "store.order-cancelled";
     static final String INVOICE_CREATE = "invoice.create";
-    static final String ORDER_CONFIRMATION = "order.confirmation.get";
+
 
 
     /**
