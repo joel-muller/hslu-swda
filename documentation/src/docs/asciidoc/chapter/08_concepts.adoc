@@ -267,20 +267,72 @@ paymentwarning.get
 
 *TBD Json Prototypen bei Order, store management*
 
-Order (Order)
+==== Order Service
 
-* id: Integer
-* valid : boolean
-* articles: Map <idArticle : Integer, count : Integer>
-* date : Date
-* status: Enum
-* storeId: Integer
-* employeeId: UUID
-* customerId: UUID
+[source,txt]
+----
+{
+    _id: UUID("76895c82acd345909c007c24a70907f4"),
+    _t: 'DBOrder',
+    articles: [
+        {
+            _t: 'DBArticle',
+            id: 100016,
+            count: 5,
+            delivered: false,
+            francs: 17,
+            centimes: 35
+        }
+    ],
+    date: ISODate('2024-12-21T11:01:47.389Z'),
+    storeId: UUID("5788b73987ca416b804adb70f85d1f8c"),
+    customerId: UUID("1601ce09a90747ad86657b4705796c69"),
+    employeeId: UUID("f9e3d9094c9443e1b9722ad519ebcfb9"),
+    stateEnum: 2,
+    cancelled: false
+}
+----
 
-vielleicht nach 24 stunden checken ob es noch invalid gibt und checkArticleValidity() ereut senden
+States können sein:
+* STORED(1)
+* ARTICLE_VALIDATED(2)
+* CUSTOMER_VALID(3)
+* READY(4)
 
-Customer (Customer Management)
+==== Store Management Service
+
+[source,txt]
+----
+{
+    _id: UUID("5788b73987ca416b804adb70f85d1f8c"),
+    _t: 'DBStore',
+    articleList: [
+        {
+            _t: 'DBStoreArticle',
+            id: 100054,
+            actualQuantity: 100,
+            minimumQuantity: 10,
+            refillCount: 100
+        }
+    ],
+    openOrders: [
+        {
+            _t: 'DBOrder',
+            id: UUID("76895c82acd345909c007c24a70907f4"),
+            articleOrderedList: [
+                {
+                    _t: 'DBOrderArticle',
+                    id: 100016,
+                    count: 5,
+                    ready: false
+                }
+            ]
+        }
+    ]
+}
+----
+
+==== Customer (Customer Management)
 
 * id : UUID
 * firstname : String
