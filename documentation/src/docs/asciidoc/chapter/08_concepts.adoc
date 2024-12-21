@@ -55,76 +55,126 @@ GET http://IP/api/v1/stores/: gibt alle Stores zurück.
 
 === Nachrichten zwischen den einzelnen Services
 
-Die Este bezeichnung ist jeweils der Microservice, an den die Nachricht geschickt wird.
+Die Este bezeichnung ist jeweils der Microservice, an den die Nachricht geschickt wird (`IngoingMessage`).
 Zum Beispiel `ORDER_RECEIVE_VALIDITY` wird and den Microservice Order gesendet.
 
-ORDER_RECEIVE_VALIDITY = "order.receive-validity";
+==== Order Service
+
+[source,txt]
+----
+ORDER_RECEIVE_VALIDITY = "order.receive-validity"
 OrderReceiveValidity(UUID idOrder, boolean valid, Map<Integer, Integer> francsPerUnit, Map<Integer, Integer> centimesPerUnit)
+----
 
-ORDER_RECEIVE = "order.receive";
+[source,txt]
+----
+ORDER_RECEIVE = "order.receive"
 GatewayOrderReceive(Map<Integer, Integer> articles, UUID storeId, UUID customerId, UUID employeeId)
+----
 
-ORDER_CUSTOMER_VALIDITY = "order.customer-validity";
+[source,txt]
+----
+ORDER_CUSTOMER_VALIDITY = "order.customer-validity"
 OrderCustomerValidity(UUID orderId, boolean exists)
+----
 
-ORDER_UPDATE = "order.update";
+[source,txt]
+----
+ORDER_UPDATE = "order.update"
 OrderUpdate(UUID id, List<Integer> articles, boolean storeValid)
+----
 
-ORDER_CANCEL = "order.cancel";
+[source,txt]
+----
+ORDER_CANCEL = "order.cancel"
 OrderCancel(UUID orderId)
+----
 
-ORDER_CONFIRMATION_GET = "order.confirmation.get";
+[source,txt]
+----
+ORDER_CONFIRMATION_GET = "order.confirmation.get"
 OrderConfirmationRequest(UUID orderId)
+----
 
-ARTICLES_CHECK_VALIDITY = "articles.check-validity";
-ArticleCheckValidity(UUID orderId, Map<Integer, Integer> articles, UUID employeeId)
+==== Store Management Service
 
-LOG = "logs.new";
-LogMessage(String source, long timestamp, UUID userId, String eventType, UUID objUuid, String message)
-
-STORE_REQUEST_ARTICLES = "store.request-articles";
+[source,txt]
+----
+STORE_REQUEST_ARTICLES = "store.request-articles"
 StoreRequestArticles(UUID orderId, UUID employeeId, UUID storeId, Map<Integer, Integer> articles)
+----
 
-CUSTOMER_VALIDATE = "customer.validate";
-CustomerValidate(UUID customerId, UUID employeeId, UUID orderId)
+[source,txt]
+----
+STORE_INVENTORY_UPDATE = "store.inventory-update"
+StoreInventoryUpdate(Map<Integer, Integer> articles, UUID orderId, UUID storeId)
+----
 
-STORE_ORDER_READY = "store.order-ready";
+[source,txt]
+----
+STORE_ORDER_READY = "store.order-ready"
 StoreOrderReady(UUID orderId, UUID storeId)
+----
 
-STORE_ORDER_CANCELLED = "store.order-cancelled";
+[source,txt]
+----
+STORE_ORDER_CANCELLED = "store.order-cancelled"
 StoreOrderCancelled(UUID orderId, UUID storeId)
+----
 
-INVOICE_CREATE = "invoice.create";
+[source,txt]
+----
+STORE_INTERNAL_ORDER = "store.internal-order"
+StoreInternalOrder(UUID storeId, Map<Integer, Integer> articles)
+----
+
+[source,txt]
+----
+STORE_CREATION = "store.create-create"
+StoreCreation(boolean addDefaultArticle)
+----
+
+==== Customer Service
+
+[source,txt]
+----
+CUSTOMER_VALIDATE = "customer.validate"
+CustomerValidate(UUID customerId, UUID employeeId, UUID orderId)
+----
+
+==== Accounting Service
+
+[source,txt]
+----
+INVOICE_CREATE = "invoice.create"
 InvoiceCreate(UUID orderId, UUID customerId, UUID employeeId, UUID storeId, Map<Integer, Integer> articlesCount, Map<Integer, String> articlesPrices, String totalPrice)
+----
 
-==== Store Management
+==== Central Warehouse Service
 
-store.request-articles
-store.inventory-update
-store.order-ready
-store.status
-store.create (leere message)
-store.create-default (leere message)
-stores.get
+[source,txt]
+----
+WAREHOUSE_REQUEST = "central-warehouse.request"
+WarehouseRequest(UUID orderId, UUID storeId, Map<Integer, Integer> articles)
+----
 
-==== Article Registry
+==== Article Registry Service
 
-article.create
+[source,txt]
+----
+ARTICLES_CHECK_VALIDITY = "articles.check-validity"
+ArticleCheckValidity(UUID orderId, Map<Integer, Integer> articles, UUID employeeId)
+----
 
-* name : String
-* price : int
-* description : String
+==== Log Service
 
-article.delete
+[source,txt]
+----
+LOG = "logs.new"
+LogMessage(String source, long timestamp, UUID userId, String eventType, UUID objUuid, String message)
+----
 
-* id : Integer
-
-articles.checkValidity
-
-* orderId : int
-* Articles : Map <idArticle : Integer, count : Integer>
-
-==== Central Warehouse
+==== Central Warehouse (TODO Make code format)
 
 central-warehouse.request
 
@@ -139,9 +189,9 @@ central-warehouse.complete
 
 
 
-==== Authentication & User Management
+==== Authentication & User Management (TODO Make code format)
 
-==== Logs
+==== Logs (TODO Make code format)
 
 logs.new
 
@@ -167,24 +217,8 @@ logs.filter
 
 UUIDs in a filter are currently String to do .isEmpty() checks rather than null
 
-==== Order
 
-order.create
-
-* id: UUID
-* articles: Map <idArticle : Integer, count : Integer>
-* date : Date
-* status: Enum
-* storeId: Integer
-* employeeId: UUID
-* customerId: UUID
-
-order.validate
-
-* oderId : int
-* validity : true
-
-==== Customer Management
+==== Customer Management (TODO Make code format)
 
 customer.create
 
@@ -210,7 +244,7 @@ customer.delete
 
 (customer.validate und customer.delete soll einfach das UUID haben, keine Wrapper-Klasse)
 
-==== Accounting
+==== Accounting (TODO Make code format)
 
 invoice.create
 
