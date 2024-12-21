@@ -2,13 +2,12 @@ package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.*;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
-import ch.hslu.swda.messagesIngoing.NewOrder;
-import ch.hslu.swda.messagesOutgoing.InventoryRequest;
+import ch.hslu.swda.messagesIngoing.StoreRequestArticles;
+import ch.hslu.swda.messagesOutgoing.WarehouseRequest;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
 import ch.hslu.swda.persistence.Data;
-import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ public class HandleNewOrder implements Modifiable {
     @Override
     public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
-            NewOrder request = (NewOrder) responseRaw;
+            StoreRequestArticles request = (StoreRequestArticles) responseRaw;
             Store store = databaseConnector.getStore(request.getStoreId());
             if (store == null) {
                 service.sendOrderUpdate(new OrderUpdate(request.orderId(), new ArrayList<>(), false));
@@ -31,7 +30,7 @@ public class HandleNewOrder implements Modifiable {
             OrderProcessed processed = store.newOrder(request.orderId(), request.articles());
             if (!processed.articlesHaveToGetOrdered().isEmpty()) {
                 service.log(new LogMessage(request.orderId(), request.storeId(), "storemangement.centralwarehouseOrder", "following articles have to get ordered from central warehouse" + processed.articlesHaveToGetOrdered().toString()));
-                service.requestArticles(new InventoryRequest(request.orderId(), request.storeId(), processed.articlesHaveToGetOrdered()));
+                service.requestArticles(new WarehouseRequest(request.orderId(), request.storeId(), processed.articlesHaveToGetOrdered()));
             }
             if (!processed.articlesReady().isEmpty()) {
                 service.log(new LogMessage(request.orderId(), request.storeId(), "storemangement.articlesinstore", "following articles are in store" + processed.articlesReady().toString()));

@@ -3,7 +3,7 @@ package ch.hslu.swda.business;
 import ch.hslu.swda.entities.OrderProcessed;
 import ch.hslu.swda.entities.Store;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
-import ch.hslu.swda.messagesIngoing.InventoryUpdate;
+import ch.hslu.swda.messagesIngoing.StoreInventoryUpdate;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
@@ -20,7 +20,7 @@ public class HandleInventoryUpdate implements Modifiable {
     @Override
     public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
-            InventoryUpdate request = (InventoryUpdate) responseRaw;
+            StoreInventoryUpdate request = (StoreInventoryUpdate) responseRaw;
             Store store = databaseConnector.getStore(request.getStoreId());
             if (store == null) {
                 return;

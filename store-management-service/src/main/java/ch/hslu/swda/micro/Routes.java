@@ -21,23 +21,19 @@ package ch.hslu.swda.micro;
 public final class Routes {
 
     // Ingoing Mesasges
-    static final String REQUEST_ARTICLES = "store.request-articles";
-    static final String INVENTORY_UPDATE = "store.inventory-update";
-    static final String ORDER_READY = "store.order-ready";
-    static final String STORE_STATUS = "store.status";
+    static final String STORE_REQUEST_ARTICLES = "store.request-articles";
+    static final String STORE_INVENTORY_UPDATE = "store.inventory-update";
+    static final String STORE_ORDER_READY = "store.order-ready";
     static final String STORE_CREATION = "store.create-create";
     static final String STORES_GET = "stores.get";
-    static final String INTERNAL_ORDER = "store.internal-order";
-    static final String ORDER_CANCELLED = "store.order-cancelled";
+    static final String STORE_INTERNAL_ORDER = "store.internal-order";
+    static final String STORE_ORDER_CANCELLED = "store.order-cancelled";
 
  
-    static final String INVENTORY_CHECK = "inventory.check";
-
     // Outgoing Messages
     static final String ORDER_UPDATE = "order.update";
-    static final String INVENTORY_REQUEST = "central-warehouse.request";
+    static final String WAREHOUSE_REQUEST = "central-warehouse.request";
     static final String LOG = "logs.new";
-    static final String ORDER_FROM_CENTRAL_WAREHOUSE = "warehouse.order";
 
 
     /**

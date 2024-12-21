@@ -1,7 +1,5 @@
 package ch.hslu.swda.entities;
 
-import ch.hslu.swda.messagesIngoing.NewOrder;
-
 import java.util.*;
 
 public final class Order {

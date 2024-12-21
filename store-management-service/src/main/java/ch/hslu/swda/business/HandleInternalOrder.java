@@ -1,12 +1,11 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
-import ch.hslu.swda.messagesIngoing.InternalOrder;
-import ch.hslu.swda.messagesOutgoing.InventoryRequest;
+import ch.hslu.swda.messagesIngoing.StoreInternalOrder;
+import ch.hslu.swda.messagesOutgoing.WarehouseRequest;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.micro.Service;
 import ch.hslu.swda.persistence.Data;
-import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +18,10 @@ public class HandleInternalOrder implements Modifiable {
     @Override
     public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
-            InternalOrder request = (InternalOrder) responseRaw;
+            StoreInternalOrder request = (StoreInternalOrder) responseRaw;
             if (databaseConnector.getStore(request.getStoreId()) == null) return;
             UUID orderId = UUID.randomUUID();
-            service.requestArticles(new InventoryRequest(orderId, request.getStoreId(), request.articles()));
+            service.requestArticles(new WarehouseRequest(orderId, request.getStoreId(), request.articles()));
             service.log(new LogMessage(orderId, request.getStoreId(), "store.internalOrder", "Internal order created for the store with the id " + request.storeId().toString()));
             LOG.info("Inventory store update {}", responseRaw.toString());
         } catch (IOException e) {

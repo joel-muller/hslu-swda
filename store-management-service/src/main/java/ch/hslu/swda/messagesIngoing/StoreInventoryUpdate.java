@@ -3,7 +3,7 @@ package ch.hslu.swda.messagesIngoing;
 import java.util.Map;
 import java.util.UUID;
 
-public record NewOrder(UUID orderId, UUID employeeId, UUID storeId, Map<Integer, Integer> articles) implements IngoingMessage {
+public record StoreInventoryUpdate(Map<Integer, Integer> articles, UUID orderId, UUID storeId) implements IngoingMessage {
     @Override
     public UUID getStoreId() {
         return storeId;

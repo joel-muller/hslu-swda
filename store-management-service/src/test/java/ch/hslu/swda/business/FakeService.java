@@ -1,6 +1,6 @@
 package ch.hslu.swda.business;
 
-import ch.hslu.swda.messagesOutgoing.InventoryRequest;
+import ch.hslu.swda.messagesOutgoing.WarehouseRequest;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
 import ch.hslu.swda.micro.Service;
@@ -10,7 +10,7 @@ import java.io.IOException;
 public class FakeService implements Service {
     LogMessage lastLogMessage;
     OrderUpdate lastOrderUpdate;
-    InventoryRequest lastInventoryRequest;
+    WarehouseRequest lastWarehouseRequest;
 
     @Override
     public void log(LogMessage message) throws IOException {
@@ -23,7 +23,7 @@ public class FakeService implements Service {
     }
 
     @Override
-    public void requestArticles(InventoryRequest request) throws IOException {
-        this.lastInventoryRequest = request;
+    public void requestArticles(WarehouseRequest request) throws IOException {
+        this.lastWarehouseRequest = request;
     }
 }

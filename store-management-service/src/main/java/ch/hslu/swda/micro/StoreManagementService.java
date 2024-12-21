@@ -20,7 +20,7 @@ import ch.hslu.swda.bus.MessageReceiver;
 import ch.hslu.swda.bus.RabbitMqConfig;
 import ch.hslu.swda.business.*;
 import ch.hslu.swda.messagesIngoing.*;
-import ch.hslu.swda.messagesOutgoing.InventoryRequest;
+import ch.hslu.swda.messagesOutgoing.WarehouseRequest;
 import ch.hslu.swda.persistence.DatabaseConnector;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.messagesOutgoing.OrderUpdate;
@@ -59,12 +59,12 @@ public final class StoreManagementService implements AutoCloseable, Service {
         this.database = new DatabaseConnector();
 
 
-        this.generalReceiver(Routes.ORDER_READY, new Receiver<>(database, new HandleOrderReady(), OrderReady.class, this));
-        this.generalReceiver(Routes.REQUEST_ARTICLES, new Receiver<>(database, new HandleNewOrder(), NewOrder.class, this));
-        this.generalReceiver(Routes.INVENTORY_UPDATE, new GatewayReceiver<>(database, exchangeName, bus, new HandleInventoryUpdate(), InventoryUpdate.class, this));
-        this.generalReceiver(Routes.INTERNAL_ORDER, new GatewayReceiver<>(database, exchangeName, bus, new HandleInternalOrder(), InternalOrder.class, this));
+        this.generalReceiver(Routes.STORE_ORDER_READY, new Receiver<>(database, new HandleOrderReady(), StoreOrderReady.class, this));
+        this.generalReceiver(Routes.STORE_REQUEST_ARTICLES, new Receiver<>(database, new HandleNewOrder(), StoreRequestArticles.class, this));
+        this.generalReceiver(Routes.STORE_INVENTORY_UPDATE, new GatewayReceiver<>(database, exchangeName, bus, new HandleInventoryUpdate(), StoreInventoryUpdate.class, this));
+        this.generalReceiver(Routes.STORE_INTERNAL_ORDER, new GatewayReceiver<>(database, exchangeName, bus, new HandleInternalOrder(), StoreInternalOrder.class, this));
         this.generalReceiver(Routes.STORE_CREATION, new GatewayReceiver<>(database, exchangeName, bus, new HandleStoreCreation(), StoreCreation.class, this));
-        this.generalReceiver(Routes.ORDER_CANCELLED, new Receiver<>(database, new HandleOrderCancelled(), OrderCancelled.class, this));
+        this.generalReceiver(Routes.STORE_ORDER_CANCELLED, new Receiver<>(database, new HandleOrderCancelled(), StoreOrderCancelled.class, this));
         this.receiveStoreGetrequests();
 
 
@@ -83,8 +83,8 @@ public final class StoreManagementService implements AutoCloseable, Service {
 
 
     @Override
-    public void requestArticles(InventoryRequest request) throws IOException {
-        sendMessageAsynchronous(request, Routes.INVENTORY_REQUEST);
+    public void requestArticles(WarehouseRequest request) throws IOException {
+        sendMessageAsynchronous(request, Routes.WAREHOUSE_REQUEST);
     }
 
 

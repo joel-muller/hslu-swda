@@ -1,7 +1,7 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.StoreArticle;
-import ch.hslu.swda.messagesIngoing.OrderCancelled;
+import ch.hslu.swda.messagesIngoing.StoreOrderReady;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class HandleOrderCancelledTest {
+class HandleStoreOrderReadyTest {
     UUID storeId;
     UUID existingOrderId;
     FakeDatabaseConnector databaseConnector;
@@ -25,30 +25,29 @@ class HandleOrderCancelledTest {
 
     @Test
     void cancelOrder() {
-        new HandleOrderCancelled().modify(databaseConnector, new OrderCancelled(databaseConnector.orderId, storeId), service);
+        new HandleOrderReady().modify(databaseConnector, new StoreOrderReady(databaseConnector.orderId, storeId), service);
         assertEquals(0, databaseConnector.lastSavedStore.getCopyOfOpenOrders().size());
         assertNull(service.lastOrderUpdate);
-        //assertNull(service.lastLogMessage);
-        assertNull(service.lastInventoryRequest);
-        assertEquals(new StoreArticle(3, 100, 0, 0), databaseConnector.lastSavedStore.getCopyOfArticleList().get(2));
+        //assertNotNull(service.lastLogMessage);
+        assertNull(service.lastWarehouseRequest);
+        assertEquals(new StoreArticle(3, 50, 0, 0), databaseConnector.lastSavedStore.getCopyOfArticleList().get(2));
     }
 
     @Test
     void cancelOrderStoreNotExisting() {
-        new HandleOrderCancelled().modify(databaseConnector, new OrderCancelled(databaseConnector.orderId, UUID.randomUUID()), service);
+        new HandleOrderReady().modify(databaseConnector, new StoreOrderReady(databaseConnector.orderId, UUID.randomUUID()), service);
         assertNull(databaseConnector.lastSavedStore);
         assertNull(service.lastOrderUpdate);
         //assertNull(service.lastLogMessage);
-        assertNull(service.lastInventoryRequest);
+        assertNull(service.lastWarehouseRequest);
     }
 
     @Test
     void cancelOrderOrderNotExisting() {
-        new HandleOrderCancelled().modify(databaseConnector, new OrderCancelled(UUID.randomUUID(), storeId), service);
+        new HandleOrderReady().modify(databaseConnector, new StoreOrderReady(UUID.randomUUID(), storeId), service);
         assertEquals(databaseConnector.getStore(storeId), databaseConnector.lastSavedStore);
         assertNull(service.lastOrderUpdate);
-        //assertNull(service.lastLogMessage);
-        assertNull(service.lastInventoryRequest);
+        //assertNotNull(service.lastLogMessage);
+        assertNull(service.lastWarehouseRequest);
     }
-
 }

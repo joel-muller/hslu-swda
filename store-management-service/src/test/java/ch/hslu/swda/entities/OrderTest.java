@@ -1,7 +1,7 @@
 package ch.hslu.swda.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
-import ch.hslu.swda.messagesIngoing.NewOrder;
+
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 

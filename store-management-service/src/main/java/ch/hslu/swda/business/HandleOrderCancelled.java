@@ -1,12 +1,11 @@
 package ch.hslu.swda.business;
 
 import ch.hslu.swda.entities.Store;
-import ch.hslu.swda.messagesIngoing.OrderCancelled;
+import ch.hslu.swda.messagesIngoing.StoreOrderCancelled;
 import ch.hslu.swda.messagesIngoing.IngoingMessage;
 import ch.hslu.swda.messagesOutgoing.LogMessage;
 import ch.hslu.swda.micro.Service;
 import ch.hslu.swda.persistence.Data;
-import ch.hslu.swda.persistence.DatabaseConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +16,7 @@ public class HandleOrderCancelled implements Modifiable {
     @Override
     public void modify(Data databaseConnector, IngoingMessage responseRaw, Service service) {
         try {
-            OrderCancelled response = (OrderCancelled) responseRaw;
+            StoreOrderCancelled response = (StoreOrderCancelled) responseRaw;
             Store store = databaseConnector.getStore(response.getStoreId());
             if (store != null) {
                 store.cancelOrder(response.orderId());
