@@ -57,3 +57,9 @@ Im Order Service wurde das Microservice Architektur Muster https://microservices
 Dabei wurde auf das https://microservices.io/patterns/data/saga.html#example-choreography-based-saga[Choreography based Saga] gesetzt.
 Wenn eine Order im Order service erstellt wird, müsste eigentlich eine Transaktion stattfinden, welche mehrere Services betrifft.
 Stadtdessen wird die Order abgespeichert mit dem Zustand _Stored_ und geht dann durch jeden Zuastand bis sie schlussendlich _Ready_ oder _Cancelled_ ist.
+
+=== Messaging Patterns
+
+* Fire and Forget (z.B. Order Service sendet Rechnung zu Acounting Service)
+* Request Responce (alle Synchronen aufrufe über das Gateway)
+* Dead Letter Queue (ist in RabbitMQ implementiert)
