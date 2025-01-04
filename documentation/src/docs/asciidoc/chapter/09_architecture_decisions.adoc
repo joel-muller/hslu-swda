@@ -50,3 +50,10 @@ image::StoreManagementStrategy.drawio.png[Store Management Strategie]
 Um die Modifier, welche im Kapitel <<Strategy-Pattern-Modifier, Strategie Pattern Modifier>> beschrieben wurde gut zu Testen wurde https://en.wikipedia.org/wiki/Dependency_injection[Dependency Injection] verwendet.
 Es den Modifiern wurde nämmlich nur das Interface vom _Service_ und vom _DatabaseConnector_ mitgeben und nicht die Konkreten Klassen.
 So wurden bei den Tests einen _FakeDataBaseConnector_ und ein _FakeService_ gebaut, damit die _Modifier_ gut getestet werden können.
+
+=== Saga Pattern
+
+Im Order Service wurde das Microservice Architektur Muster https://microservices.io/patterns/data/saga.html[Saga] implementiert.
+Dabei wurde auf das https://microservices.io/patterns/data/saga.html#example-choreography-based-saga[Choreography based Saga] gesetzt.
+Wenn eine Order im Order service erstellt wird, müsste eigentlich eine Transaktion stattfinden, welche mehrere Services betrifft.
+Stadtdessen wird die Order abgespeichert mit dem Zustand _Stored_ und geht dann durch jeden Zuastand bis sie schlussendlich _Ready_ oder _Cancelled_ ist.
