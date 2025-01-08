@@ -241,7 +241,35 @@ LOGS_FILTER = "logs.filter"
 * direction : String ("asc" or "desc")
 
 
-==== Authentication & User Management (TODO Make code format)
+==== Authentication Service
+
+[source,txt]
+----
+USER_CREATE = "user.create"
+----
+
+[source,txt]
+----
+USER_GET = "user.get"
+----
+
+[source,txt]
+----
+USER_UPDATE = "user.update"
+UserUpsert(UUID id, String username, String password, String role, UUID employeeId)
+----
+
+[source,txt]
+----
+USER_DELETE = "user.delete"
+UserDelete(UUID userId, UUID employeeId)
+----
+
+[source,txt]
+----
+USER_LOGIN = "user.login"
+UserLogin(String username, String password)
+----
 
 === DB Einträge
 
@@ -272,6 +300,7 @@ LOGS_FILTER = "logs.filter"
 ----
 
 States können sein:
+
 * STORED(1)
 * ARTICLE_VALIDATED(2)
 * CUSTOMER_VALID(3)
