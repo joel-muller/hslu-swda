@@ -55,8 +55,8 @@ GET http://IP/api/v1/stores/: gibt alle Stores zurück.
 
 === Nachrichten zwischen den einzelnen Services
 
-Die Este bezeichnung ist jeweils der Microservice, an den die Nachricht geschickt wird (`IngoingMessage`).
-Zum Beispiel `ORDER_RECEIVE_VALIDITY` wird and den Microservice Order gesendet.
+Die erste Bezeichnung ist jeweils der Microservice, an den die Nachricht geschickt wird (`IngoingMessage`).
+Zum Beispiel `ORDER_RECEIVE_VALIDITY` wird and den Microservice `Order` gesendet.
 
 ==== Order Service
 
@@ -139,7 +139,31 @@ StoreCreation(boolean addDefaultArticle)
 [source,txt]
 ----
 CUSTOMER_VALIDATE = "customer.validate"
-CustomerValidate(UUID customerId, UUID employeeId, UUID orderId)
+CustomerValidate(UUID customerId, UUID employeeId, UUID orderId) (in Order Service)
+----
+
+[source,txt]
+----
+CUSTOMER_CREATE = "customer.create"
+?(String firstname, String lastname)
+----
+
+[source,txt]
+----
+CUSTOMER_GET = "customer.get"
+?(UUID customerId)
+----
+
+[source,txt]
+----
+CUSTOMER_UPDATE  = "customer.update"
+?(UUID customerId, String firstname, String lastname)
+----
+
+[source,txt]
+----
+CUSTOMER_DELETE = "customer.delete"
+?(UUID cutomerId)
 ----
 
 ==== Accounting Service
@@ -148,6 +172,33 @@ CustomerValidate(UUID customerId, UUID employeeId, UUID orderId)
 ----
 INVOICE_CREATE = "invoice.create"
 InvoiceCreate(UUID orderId, UUID customerId, UUID employeeId, UUID storeId, Map<Integer, Integer> articlesCount, Map<Integer, String> articlesPrices, String totalPrice)
+----
+
+[source,txt]
+----
+CONFIRMATION_CREATE = "confirmation.create"
+----
+
+[source,txt]
+----
+INVOICE_CREATE = "invoice.create"
+----
+
+[source,txt]
+----
+PAYMENTSTATUS_GET = "paymentstatus.get"
+?(UUID customerId)
+----
+
+[source,txt]
+----
+INVOICE_GET = "invoice.get"
+?(UUID customerId, UUID invoiceId)
+----
+
+[source,txt]
+----
+INVOICES_GET = "invoices.get"
 ----
 
 ==== Central Warehouse Service
@@ -174,98 +225,25 @@ LOG = "logs.new"
 LogMessage(String source, long timestamp, UUID userId, String eventType, UUID objUuid, String message)
 ----
 
-==== Central Warehouse (TODO Make code format)
+[source,txt]
+----
+LOGS_GET = "logs.get"
+?(UUID: id) (optional)
+----
 
-central-warehouse.request
+[source,txt]
+----
+LOGS_FILTER = "logs.filter"
+?(String source, String userId, String eventType, String objUuid, String directions, int amount)
+----
 
-* articles : Map <idArticle : Integer, count : Integer>
-* storeId: UUID
-* orderId: UUID
-
-central-warehouse.complete
-
-* orderId: UUID
-* storeId: UUID
-
+* UUIDs in a filter are currently String to do .isEmpty() checks rather than null
+* direction : String ("asc" or "desc")
 
 
 ==== Authentication & User Management (TODO Make code format)
 
-==== Logs (TODO Make code format)
-
-logs.new
-
-* source : String
-* timestamp : long
-* userId : UUID
-* eventType : String
-* objUuid : UUID
-* message : String
-
-logs.get
-
-* id : UUID (optional)
-
-logs.filter
-
-* source : String
-* userId : String
-* eventType : String
-* objUuid : String
-* direction : String ("asc" or "desc")
-* amount : int
-
-UUIDs in a filter are currently String to do .isEmpty() checks rather than null
-
-
-==== Customer Management (TODO Make code format)
-
-customer.create
-
-* firstname : String
-* lastname : String
-
-customer.get
-
-* UUID (Optional)
-
-customer.validate
-
-* UUID
-
-customer.update
-
-* firstname : String (Optional)
-* lastname : String (Optional)
-
-customer.delete
-
-* UUID
-
-(customer.validate und customer.delete soll einfach das UUID haben, keine Wrapper-Klasse)
-
-==== Accounting (TODO Make code format)
-
-invoice.create
-
-* orderId : UUID
-* customerId : UUID
-* employeeId : UUID
-* storeId : UUID
-* Artikel (Format TBD)
-* Preise (Format TBD)
-* Gesamtpreis : int
-
-invoice.get
-* customerId : UUID
-* invoiceId : UUID
-
-paymentwarning.get
-* customerId : UUID
-
 === DB Einträge
-
-*TBD Json Prototypen bei Order, store management*
 
 ==== Order Service
 
@@ -338,28 +316,25 @@ States können sein:
 * firstname : String
 * lastname : String
 
-Article (Article Registry)
+==== Article (Article Registry)
 
-* id : int
-* name : String
-* price : int
-* description : String
-* unregistered : boolean
+Article Registry hat fixe CSV-Dateien, welche nicht verändert werden.
 
-Sortiment (Store Management)
+prices.csv:
 
-* articleId : int
-* actualCount : int
-* minCount : int
-* countAfterRefill : int
+[source,txt]
+----
+ID,Francs,Rappen
+----
 
-Store (Store Management)
+books.csv:
 
-* id: UUID
-* articleList : List<StoreArticle>
-* openOrders : List<Order>
+[source,txt]
+----
+"ISBN";"Book-Title";"Book-Author";"Year-Of-Publication";"Publisher";"Image-URL-S";"Image-URL-M";"Image-URL-L"
+----
 
-LogEntry (Log)
+==== LogEntry (Log)
 
 * id : UUID
 * source : String
