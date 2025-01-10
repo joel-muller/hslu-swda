@@ -1,65 +1,62 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
-// TODO: Entwurfsentscheide auflisten.
-// Hinweis: Hier die verwendeten Patterns (z.B. Adapter, Strategy) dokumentieren (jeweils mit Diagramm und kurzer Beschreibung).
-
 [[section-design-decisions]]
 == Entwurfsentscheidungen
 
 === Wrapper Klassen
 
-Die Eingesetzte Technologie https://www.mongodb.com/resources/languages/morphia[Morphia] erlaubt es uns Klassen in Java direkt abzuspeichern.
-Es gibt aber gewise Vorgaben, welche eingehalten werden müssen.
-Zum Beispiel müssen die Klassen einen Default Constructor haben order für alle Variabeln getter und setter Methoden haben.
-Mit diesen Vorgaben ist es leider nicht möglich eine saubere Business Logik zu schreiben.
-Deshalb wurden in den beiden Microservices _Order_ und _Store Management_ Wrapper klassen geschrieben, welche die entities, welche in der Business Logik verwendet werden in Objekte umgewandelt werden, welche für Mophia lesbar sind.
+Die eingesetzte Technologie https://www.mongodb.com/resources/languages/morphia[Morphia] erlaubt es uns, Klassen in Java direkt abzuspeichern.
+Es gibt aber gewisse Vorgaben, welche eingehalten werden müssen.
+Zum Beispiel müssen die Klassen einen Default Constructor haben oder für alle Variablen Getter- und Setter-Methoden bereitstellen.
+Mit diesen Vorgaben ist es leider nicht möglich, eine saubere Business-Logik zu schreiben.
+Deshalb wurden in den beiden Microservices _Order_ und _Store Management_ Wrapper-Klassen geschrieben, welche die Entities, die in der Business-Logik verwendet werden, in Objekte umwandeln, die für Morphia lesbar sind.
 
 [[Strategy-Pattern-Modifier]]
 === Strategy Pattern Modifier
 
-In den Microservices _Order_ und _Store Management_ wurde das Strategie Entwurfsmuster eingesetzt.
-Der Receiver ist generisch und kann für jede art von asynchronen Messages verwendet werden.
-Die Klassen, welche das _Modifiable_ interface implementeieren gehören zur business Logik und können so auch gut mit Integrationstests getestet werden.
-Dieses Entwurfsmuster wurde umgesetzt, weil sich so der Microservice beliebig mit neunen Modifier erweitern lässt (Siehe auch https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle[Open Closed Principle]).
+In den Microservices _Order_ und _Store Management_ wurde das Strategie-Entwurfsmuster eingesetzt.
+Der Receiver ist generisch und kann für jede Art von asynchronen Messages verwendet werden.
+Die Klassen, welche das _Modifiable_-Interface implementieren, gehören zur Business-Logik und können so auch gut mit Integrationstests getestet werden.
+Dieses Entwurfsmuster wurde umgesetzt, weil sich so der Microservice beliebig mit neuen Modifiers erweitern lässt (siehe auch https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle[Open Closed Principle]).
 
 ==== Order Strategie
 
-Sobald eine Message ankommt, wird die die _onMessageReceived_ methode ausgeführt.
-In dieser Methode wird dann die Order, um die es geht aus der Datenbank geholt.
-Die Order, die Mesasge und der Service werden dann der Strategie mitgegeben.
-In der Kokreten Strategie, wie im Beispiel _ModifyValidty_ wird folgendes gemacht:
+Sobald eine Message ankommt, wird die _onMessageReceived_-Methode ausgeführt.
+In dieser Methode wird die Order, um die es geht, aus der Datenbank geholt.
+Die Order, die Message und der Service werden dann der Strategie mitgegeben.
+In der konkreten Strategie, wie im Beispiel _ModifyValidity_, wird folgendes gemacht:
 
-* Die _IngoingMessage_ kann gelesen werden
-* Die Bestellung (_Order_) kann gemäss der Nachricht verändert werden
-* Mit dem _Service_ können weitere nachrichten an andere Microservice gesendet werden
+* Die _IngoingMessage_ kann gelesen werden.
+* Die Bestellung (_Order_) kann gemäss der Nachricht verändert werden.
+* Mit dem _Service_ können weitere Nachrichten an andere Microservices gesendet werden.
 
-Nach der ausführung von der Methode _modifier.modify()_ wird die geänderte Bestellung (_Order_) vom Receiver abgespeichert.
+Nach der Ausführung der Methode _modifier.modify()_ wird die geänderte Bestellung (_Order_) vom Receiver abgespeichert.
 
 image::OrderStrategie.drawio.png[Order Strategie]
 
 ==== Store Management Strategie
 
 Die Store Management Strategie funktioniert fast gleich wie die Order Strategie.
-Der einzige unterschied besteht darin, das der Store nicht gleich mitgegeben wird, sondern die Verbindung zu der Datenbank.
-Dies erlaubt es uns, auch mit Eingehenden nachrichten umzughen, bei denen der Angeforderte _Store_ nicht existiert.
+Der einzige Unterschied besteht darin, dass der Store nicht direkt mitgegeben wird, sondern die Verbindung zur Datenbank.
+Dies erlaubt es uns, auch mit eingehenden Nachrichten umzugehen, bei denen der angeforderte _Store_ nicht existiert.
 
 image::StoreManagementStrategy.drawio.png[Store Management Strategie]
 
 === Dependency Injection
 
-Um die Modifier, welche im Kapitel <<Strategy-Pattern-Modifier, Strategie Pattern Modifier>> beschrieben wurde gut zu Testen wurde https://en.wikipedia.org/wiki/Dependency_injection[Dependency Injection] verwendet.
-Es den Modifiern wurde nämmlich nur das Interface vom _Service_ und vom _DatabaseConnector_ mitgeben und nicht die Konkreten Klassen.
-So wurden bei den Tests einen _FakeDataBaseConnector_ und ein _FakeService_ gebaut, damit die _Modifier_ gut getestet werden können.
+Um die Modifier, welche im Kapitel <<Strategy-Pattern-Modifier, Strategie Pattern Modifier>> beschrieben wurden, gut zu testen, wurde https://en.wikipedia.org/wiki/Dependency_injection[Dependency Injection] verwendet.
+Den Modifiern wurde nämlich nur das Interface vom _Service_ und vom _DatabaseConnector_ mitgegeben, nicht die konkreten Klassen.
+So wurden bei den Tests ein _FakeDatabaseConnector_ und ein _FakeService_ gebaut, damit die _Modifier_ gut getestet werden können.
 
 === Saga Pattern
 
-Im Order Service wurde das Microservice Architektur Muster https://microservices.io/patterns/data/saga.html[Saga] implementiert.
-Dabei wurde auf das https://microservices.io/patterns/data/saga.html#example-choreography-based-saga[Choreography based Saga] gesetzt.
-Wenn eine Order im Order service erstellt wird, müsste eigentlich eine Transaktion stattfinden, welche mehrere Services betrifft.
-Stadtdessen wird die Order abgespeichert mit dem Zustand _Stored_ und geht dann durch jeden Zuastand bis sie schlussendlich _Ready_ oder _Cancelled_ ist.
+Im Order Service wurde das Microservice-Architektur-Muster https://microservices.io/patterns/data/saga.html[Saga] implementiert.
+Dabei wurde auf das https://microservices.io/patterns/data/saga.html#example-choreography-based-saga[Choreography-based Saga] gesetzt.
+Wenn eine Order im Order Service erstellt wird, müsste eigentlich eine Transaktion stattfinden, welche mehrere Services betrifft.
+Stattdessen wird die Order abgespeichert mit dem Zustand _Stored_ und durchläuft dann jeden Zustand, bis sie schlussendlich _Ready_ oder _Cancelled_ ist.
 
 === Messaging Patterns
 
-* Fire and Forget (z.B. Order Service sendet Rechnung zu Acounting Service)
-* Request Responce (alle Synchronen aufrufe über das Gateway)
+* Fire and Forget (z. B. Order Service sendet Rechnung an Accounting Service)
+* Request Response (alle synchronen Aufrufe über das Gateway)
 * Dead Letter Queue (ist in RabbitMQ implementiert)

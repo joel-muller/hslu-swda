@@ -12,7 +12,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-quality-scenarios]]
 == Qualitätsanforderungen
 
-* Wenn ein Microservice gerade nicht Funktioniert, sollten die anderen Trozdem noch funktionieren
+* Wenn ein Microservice gerade nicht funktioniert, sollten die anderen trotzdem noch funktionieren
 
 
 

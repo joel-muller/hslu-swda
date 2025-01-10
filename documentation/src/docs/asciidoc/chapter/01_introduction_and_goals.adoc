@@ -23,7 +23,7 @@ Siehe Kapitel 1 im Dokument https://elearning.hslu.ch/ilias/ilias.php?baseClass=
 === Annahmen
 
 1. Die Artikel, die im Microservice _Article Registry_ gespeichert werden, können nur über das CSV im Microservice geändert werden. Es können keine Artikel hinzugefügt werden, noch können Artikel gelöscht werden. Es gibt keine Anbindung zum Gateway. Jeder Store kann aber selber über sein Sortiment entscheiden.
-2. Die Prüfung ob die Bestellung gültig ist geschieht im Backend asynchron. Eine Input Validierung im Frontend währe vorteilhaft, aber nicht zwingend nötig.
+2. Die Prüfung, ob die Bestellung gültig ist, geschieht im Backend asynchron. Eine Input-Validierung im Frontend wäre vorteilhaft, aber nicht zwingend nötig.
 
 === Entwicklungs Team
 |===
@@ -38,5 +38,5 @@ Siehe Kapitel 1 im Dokument https://elearning.hslu.ch/ilias/ilias.php?baseClass=
 | Celine Hamatschek
 
 | _Developer_
-| Patrick Franke
+| Patrick Francke
 |===

@@ -1,34 +1,27 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
-// TODO: Wo sinnvoll, Laufzeitsichten (z.B. mittels Sequenzdiagrammen) von interessanten oder kritischen Abläufen dokumentieren. 
-
 [[section-runtime-view]]
 == Runtime View
 
-
-
-
 === Bestellung Microservices
 
-Wenn eine Bestellung getätigt wird (`order.new`), kommt eine Bestätigung zurück über das Gatway (`order.created`), dass die Order getätigt wurde.
-Als nächstes wird geprüft, ob die artikel gültig sind (`articles.check-validity`).
-Wenn dies der Fall ist (`order.receive-validty`), wird paralell der Kunde bestätigt (`customer.validate`) und die Altikel werden dem zugehörigen store (`store.request-articles`) geschickt.
-Wenn Artikel nachbestellt werden müssen, werden diese automatisch beim Central Warehouse bestellt (`central-warehouse.request`) und vom Datentypist über das Gateway eingetragen (`store.inventory-update`).
-Wenn der Kunde geprüft wurde (`customer.ready`) und alle artikel geprüft wurden (`order.update`), wird der Store über die bereite Bestellung informiert (`store.order-ready`).
-Zudem werden auch die details dem Accounting Service geschickt (`invoice.create`).
+Wenn eine Bestellung getätigt wird (`order.new`), kommt eine Bestätigung über das Gateway zurück (`order.created`), dass die Order getätigt wurde.
+Als nächstes wird geprüft, ob die Artikel gültig sind (`articles.check-validity`).
+Wenn dies der Fall ist (`order.receive-validity`), wird parallel der Kunde validiert (`customer.validate`), und die Artikel werden dem zugehörigen Store zugewiesen (`store.request-articles`).
+Falls Artikel nachbestellt werden müssen, werden diese automatisch beim Central Warehouse bestellt (`central-warehouse.request`) und vom Datentypisten über das Gateway eingetragen (`store.inventory-update`).
+Wenn der Kunde geprüft wurde (`customer.ready`) und alle Artikel geprüft wurden (`order.update`), wird der Store über die bereite Bestellung informiert (`store.order-ready`).
+Zudem werden die Details dem Accounting Service übermittelt (`invoice.create`).
 
 image:Order_thorugh_services.png[OrderThroughServices]
 
 === Order Service Validity Received
 
-Wenn der `OrderService` gestarted wird, erstellt er einen neuen `Reveiver`.
-Sobald dieser Reveiver eine neue Nachricht bekommt (`onMessageReveived(..)`), holt er von der Datenbank die Bestellung heraus, um die es geht (`getById(orderId)`).
-Wenn es die Bestellung gibt und diese auch nicht annuliert wurde, wird sie mit dem `Modifiable` verändert (`modify(order, message, service)`).
-Der Modifier kann dann sehen ob die Bestellung gültig ist oder nicht.
-Wenn die Bestellung gültig ist, werden die Artikel beim StoreManagement Service bestellt (`requestArticles(..)`) und es wird der Kunde gepruft (`checkCustomer(..)`).
-Wenn die Bestellung ungultig ist, wird die Bestellung annuliert (`order.setCancelled()`).
-Sobald die Bestellung Modifiziert wurde, wird die Bestellung abgespeichert (`storeOrder(order)`).
+Wenn der `OrderService` gestartet wird, erstellt er einen neuen `Receiver`.
+Sobald dieser Receiver eine neue Nachricht erhält (`onMessageReceived(..)`), holt er von der Datenbank die zugehörige Bestellung heraus (`getById(orderId)`).
+Wenn die Bestellung existiert und nicht annulliert wurde, wird sie mit dem `Modifiable` verändert (`modify(order, message, service)`).
+Der Modifier prüft, ob die Bestellung gültig ist.
+Wenn die Bestellung gültig ist, werden die Artikel beim Store Management Service bestellt (`requestArticles(..)`), und der Kunde wird geprüft (`checkCustomer(..)`).
+Wenn die Bestellung ungültig ist, wird sie annulliert (`order.setCancelled()`).
+Sobald die Bestellung modifiziert wurde, wird sie abgespeichert (`storeOrder(order)`).
 
 image:order_validity.png[OrderValidity]
-
-

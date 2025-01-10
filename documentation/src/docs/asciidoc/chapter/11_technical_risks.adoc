@@ -11,7 +11,7 @@ TBD
 ===  Testing
 ==== Weshalb wurde kein konsistenter Fokus auf Testing gesetzt?
 
-Das Team hat die Sprints mit vielen und grossen Backlog Items gefüllt. Ausserdem hat es den Fokus auf das Sprint-Review gesetzt. Für das Review war einzig relevant, was auf der Produktivumgebung erfolgreich läuft. Die für die Backlog items geplante Zeit wurde oft überschritten, um die Funktionalität zeigen zu können. Ein Teil davon ist sicher auf die fehlende Erfahrung mit der MoM zurückzuführen. Dafür machte das Team Abstriche beim Testing und auch das Sprint Planning litt darunter, was zur Wiederholung der Problematik führte.
+Das Team hat die Sprints mit vielen und grossen Backlog Items gefüllt. Ausserdem hat es den Fokus auf das Sprint-Review gesetzt. Die für die Backlog items geplante Zeit wurde oft überschritten, um die Funktionalität zeigen zu können. Ein Teil davon ist sicher auf die fehlende Erfahrung mit der MoM zurückzuführen. Dafür machte das Team Abstriche beim Testing und auch das Sprint Planning litt darunter, was zur Wiederholung der Problematik führte.
 
 Die Grösse der Microservices war bei der Entwicklung eine grosse Hilfe. Denn immerhin waren Fehler bei der Verarbeitung innerhalb eines einzigen Services zu suchen.
 
