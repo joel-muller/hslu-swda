@@ -1,45 +1,32 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
-// TODO: Beschreibung der Zuordnung von Komponenten zu den Systemen, auf welchen diese eingesetzt werden (auch genannt Deployment- oder Zielsysteme) sowie die Anforderungen an diese Zielsystem(e). Ggf. verschiedene Szenarios.
-
 [[section-deployment-view]]
 
 == Deployment View
 
+image::verteilungswda.drawio.png[Deployment View]
 
+[cols="1,1"]
+|===
+|Node / Artifakt |Beschreibung
 
-=== Infrastructure Level 1
+|Docker Image
+|Java-Applikation in einem Docker-Image verpackt. Verwendet die von Maven-erstellte Binary.
 
+|GitLab Repository
+|Beinhaltet die Codebase und führt gleichzeitig das Deployment mit einer GitLab CI Pipeline aus.
 
+|Database
+|Datenbankimplementierung, die in der stack.deploy.yml-Datei spezifiert wird.
 
-_**<Overview Diagram>**_
+|Java Application
+|Deployte Java-Applikation als Docker-Container in der Produktionsumgebung.
 
-Motivation::
+|Docker Swarm Stack
+|Die Produktionsumgebung für die Applikation, die mit Docker Swarm realisiert wird.
 
-_<explanation in text form>_
+|External RabbitMQ Bus
+|Externes Netzwerk, das innerhalb der gesamten Docker Swarm-Instanz zur Verfügung gestellt wird. Es ermöglicht die Kommunikation zwischen Stacks.
+|===
 
-Quality and/or Performance Features::
-
-_<explanation in text form>_
-
-Mapping of Building Blocks to Infrastructure::
-_<description of the mapping>_
-
-
-=== Infrastructure Level 2
-
-
-
-==== _<Infrastructure Element 1>_
-
-_<diagram + explanation>_
-
-==== _<Infrastructure Element 2>_
-
-_<diagram + explanation>_
-
-...
-
-==== _<Infrastructure Element n>_
-
-_<diagram + explanation>_
+Die drei Haupt-Nodes sind über das Internet miteinander verbunden. Der Docker Swarm Stack und der externen RabbitMQ-Bus sind innerhalb der Docker-Swarm-Instanz über Docker-Netzwerke verbunden.
