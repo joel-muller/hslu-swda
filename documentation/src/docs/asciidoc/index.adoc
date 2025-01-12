@@ -6,6 +6,21 @@ V0.0.1, 2023-09-07
 :toc-title: Inhaltsverzeichnis
 :toclevels: 1
 
+|===
+|Role|Name
+| _Developer_
+| Jeremy Funke
+
+| _Developer_
+| Joel Müller
+
+| _Developer_
+| Celine Hamatschek
+
+| _Developer_
+| Patrick Francke
+|===
+
 // numbering from here on
 :numbered:
 

@@ -24,19 +24,3 @@ Siehe Kapitel 1 im Dokument https://elearning.hslu.ch/ilias/ilias.php?baseClass=
 
 1. Die Artikel, die im Microservice _Article Registry_ gespeichert werden, können nur über das CSV im Microservice geändert werden. Es können keine Artikel hinzugefügt werden, noch können Artikel gelöscht werden. Es gibt keine Anbindung zum Gateway. Jeder Store kann aber selber über sein Sortiment entscheiden.
 2. Die Prüfung, ob die Bestellung gültig ist, geschieht im Backend asynchron. Eine Input-Validierung im Frontend wäre vorteilhaft, aber nicht zwingend nötig.
-
-=== Entwicklungs Team
-|===
-|Role|Name
-| _Developer_
-| Jeremy Funke
-
-| _Developer_
-| Joel Müller
-
-| _Developer_
-| Celine Hamatschek
-
-| _Developer_
-| Patrick Francke
-|===
