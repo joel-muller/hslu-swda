@@ -6,12 +6,6 @@ V0.0.1, 2023-09-07
 :toc-title: Inhaltsverzeichnis
 :toclevels: 1
 
-== tbd
-
-- scnittstellen beschreiben und dokumentieren
-- externe und interne schnittstellen
-- Risiken definieren
-
 // numbering from here on
 :numbered:
 
@@ -58,7 +52,3 @@ include::chapter/10_quality_requirements.adoc[]
 <<<<
 // 11. Technical Risks
 include::chapter/11_technical_risks.adoc[]
-
-<<<<
-// 12. Glossary
-include::chapter/12_glossary.adoc[]
