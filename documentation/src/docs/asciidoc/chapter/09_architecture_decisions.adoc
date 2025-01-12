@@ -19,6 +19,8 @@ Der Receiver ist generisch und kann für jede Art von asynchronen Messages verwe
 Die Klassen, welche das _Modifiable_-Interface implementieren, gehören zur Business-Logik und können so auch gut mit Integrationstests getestet werden.
 Dieses Entwurfsmuster wurde umgesetzt, weil sich so der Microservice beliebig mit neuen Modifiers erweitern lässt (siehe auch https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle[Open Closed Principle]).
 
+<<<<
+
 ==== Order Strategie
 
 Sobald eine Message ankommt, wird die _onMessageReceived_-Methode ausgeführt.
@@ -34,6 +36,8 @@ Nach der Ausführung der Methode _modifier.modify()_ wird die geänderte Bestell
 
 image::OrderStrategie.drawio.png[Order Strategie]
 
+<<<<
+
 ==== Store Management Strategie
 
 Die Store Management Strategie funktioniert fast gleich wie die Order Strategie.
@@ -41,6 +45,8 @@ Der einzige Unterschied besteht darin, dass der Store nicht direkt mitgegeben wi
 Dies erlaubt es uns, auch mit eingehenden Nachrichten umzugehen, bei denen der angeforderte _Store_ nicht existiert.
 
 image::StoreManagementStrategy.drawio.png[Store Management Strategie]
+
+<<<<
 
 === Dependency Injection
 

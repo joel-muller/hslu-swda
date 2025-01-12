@@ -7,24 +7,35 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Domain Model
 image:domain_model.jpg[Domain Model]
 
+<<<<
+
 === Whitebox Overall System
 
 image:MicroserviceModel.drawio.png[Microservice Model]
 
+<<<<
+
 === Level 2
 
 ==== Order Service
-
 image:C4_L2_OrderService.jpg[Order Service]
+
+<<<<
 
 ==== Store Management Service
 image:C4_L2_StoreManagementService.jpg[Store Management Service]
 
+<<<<
+
 ==== Article Registry Service
 image:C4_L2_ArticleRegistryService.jpg[Article Registry Service]
 
+<<<<
+
 ==== Central Warehouse Service
 image:C4_L2_central_warehouse_service.jpg[Central Warehouse Service]
+
+<<<<
 
 ==== Gateway Service
 image:C4_L2_gateway_service.jpg[Gateway Service]

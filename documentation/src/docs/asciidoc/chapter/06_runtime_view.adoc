@@ -14,6 +14,8 @@ Zudem werden die Details dem Accounting Service übermittelt (`invoice.create`).
 
 image:Order_thorugh_services.png[OrderThroughServices]
 
+<<<<
+
 === Order Service Validity Received
 
 Wenn der `OrderService` gestartet wird, erstellt er einen neuen `Receiver`.

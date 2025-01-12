@@ -14,13 +14,3 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 * Wenn ein Microservice gerade nicht funktioniert, sollten die anderen trotzdem noch funktionieren
 
-
-
-
-=== Quality Tree
-
-
-
-=== Quality Scenarios
-
-
