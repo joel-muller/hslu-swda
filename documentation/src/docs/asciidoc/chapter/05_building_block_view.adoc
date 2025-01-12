@@ -3,6 +3,10 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-building-block-view]]
 == Building Block View
 
+
+=== Domain Model
+image:domain_model.jpg[Domain Model]
+
 === Whitebox Overall System
 
 image:MicroserviceModel.drawio.png[Microservice Model]
@@ -11,14 +15,17 @@ image:MicroserviceModel.drawio.png[Microservice Model]
 
 ==== Order Service
 
-image:OrderService.drawio.png[Order Service]
-
-Sowohl _ingoingMessages_ wie auch _outgoingMessages_ kommen über den _Bus_ in das _Micro_ Modul hinein.
-Dort wird eine Order (_entity_) aus dem _Persistence_ Modul geholt und im _Business_ Modul bearbeitet.
+image:C4_L2_OrderService.jpg[Order Service]
 
 ==== Store Management Service
+image:C4_L2_StoreManagementService.jpg[Store Management Service]
 
-image:StoreManagementService.drawio.png[Store Management Service]
+==== Article Registry Service
+image:C4_L2_ArticleRegistryService.jpg[Article Registry Service]
 
-Sowohl _ingoingMessages_ wie auch _outgoingMessages_ kommen über den _Bus_ in das _Micro_ Modul hinein.
-Von dort aus wird das _Business_ Modul aufgerufen, welches das entsprechende _entity_ aus dem _Persistence_ Modul herausholt.
+==== Central Warehouse Service
+image:C4_L2_central_warehouse_service.jpg[Central Warehouse Service]
+
+==== Gateway Service
+image:C4_L2_gateway_service.jpg[Gateway Service]
+
