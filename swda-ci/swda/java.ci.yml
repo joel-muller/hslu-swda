@@ -4,7 +4,7 @@ include:
     file:
       - /edu/workflow/default/workflow.yml
       - /templates/ci/dkc.yml
-      - edu/config/swda.yml
+      - /edu/config/swda.yml
   - /swda/config/config.yml
   - /templates/ci/java.yml
 
