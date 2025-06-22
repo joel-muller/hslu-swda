@@ -1,0 +1,23 @@
+version: '3.5'
+
+networks:
+  log:
+    name: log
+
+
+services:
+  mongodblog:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/bitnami/mongodb:4.2.19
+    restart: always
+    networks:
+      - log
+
+  order:
+    image: swda-24hs/log-service:latest
+    restart: always
+    networks:
+      - log
+
+    environment:
+      MONGO_URI: mongodb://mongodblog:27017
+      RMQ_HOST: host.docker.internal
