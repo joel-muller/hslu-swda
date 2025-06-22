@@ -1,0 +1,136 @@
+/*
+ * Copyright 2024 Roland Christen, HSLU Informatik, Switzerland
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package ch.hslu.swda.micro;
+
+import ch.hslu.swda.bus.BusConnector;
+import ch.hslu.swda.bus.RabbitMqConfig;
+import ch.hslu.swda.business.ArticleHandler;
+import ch.hslu.swda.business.CSVReader;
+import ch.hslu.swda.entities.Book;
+import ch.hslu.swda.entities.LogMessage;
+import ch.hslu.swda.entities.Validity;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeoutException;
+
+
+/**
+ * Beispielcode für Implementation eines Servcies mit RabbitMQ.
+ */
+public final class ArticleRegistryService implements AutoCloseable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ArticleRegistryService.class);
+    private final String exchangeName;
+    private final BusConnector bus;
+    private final ArticleHandler articleHandler;
+
+    /**
+     * @throws IOException      IO-Fehler.
+     * @throws TimeoutException Timeout.
+     */
+    ArticleRegistryService() throws IOException, TimeoutException {
+
+        // thread info
+        String threadName = Thread.currentThread().getName();
+        LOG.debug("[Thread: {}] Service started", threadName);
+
+        // setup rabbitmq connection
+        this.exchangeName = new RabbitMqConfig().getExchange();
+        this.bus = new BusConnector();
+        this.bus.connect();
+
+        // load the articles
+        try {
+            this.articleHandler = new ArticleHandler(CSVReader.getBooks());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        // start message receivers
+        this.receiveValidityCheck();
+    }
+
+    public void sendValidity(Validity validity) throws IOException, InterruptedException {
+        ObjectMapper mapper = new ObjectMapper();
+        String data = mapper.writeValueAsString(validity);
+
+        LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.RECEIVE_ORDER_VALIDITY);
+        bus.talkAsync(exchangeName, Routes.RECEIVE_ORDER_VALIDITY, data);
+    }
+
+    public void log(LogMessage message) throws IOException, InterruptedException {
+        ObjectMapper mapper = new ObjectMapper();
+        String data = mapper.writeValueAsString(message);
+
+        LOG.debug("Sending asynchronous message to broker with routing [{}]", Routes.LOG);
+        bus.talkAsync(exchangeName, Routes.LOG, data);
+
+        LOG.debug("Create log");
+    }
+
+
+
+    private void receiveValidityCheck() throws IOException {
+        LOG.debug("Starting listening for messages with routing [{}]", Routes.CHECK_ORDER_VALIDITY);
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.CHECK_ORDER_VALIDITY, Routes.CHECK_ORDER_VALIDITY, new ValidityReceiver(this.articleHandler, exchangeName, bus, this));
+        bus.listenFor(exchangeName, "ArticleRegistry <- " + Routes.GET_BOOKS, Routes.GET_BOOKS, new BookRequestReceiver(this));
+
+    }
+
+    /**
+     * @see java.lang.AutoCloseable#close()
+     */
+    @Override
+    public void close() {
+        bus.close();
+    }
+
+    public void sendBooks(String replyTo, String corrId, Integer page,Integer size) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            // Retrieve the full list of books from ArticleHandler
+            List<Book> allBooks = articleHandler.getBooks();
+
+            // Apply pagination logic
+            int totalBooks = allBooks.size();
+            int fromIndex = Math.min(page * size, totalBooks);
+            int toIndex = Math.min(fromIndex + size, totalBooks);
+            List<Book> paginatedBooks = allBooks.subList(fromIndex, toIndex);
+
+            // Serialize the paginated list to JSON
+            String books = mapper.writeValueAsString(paginatedBooks);
+            LOG.info("Sending paginated books: {}", books);
+
+            // Send the response via the bus
+            bus.reply(exchangeName, replyTo, corrId, books);
+        } catch (IOException e) {
+            LOG.error("Error serializing books: {}", e.getMessage());
+        } catch (Exception e) {
+            LOG.error("Unexpected error: {}", e.getMessage());
+        }
+
+
+    }
+}
