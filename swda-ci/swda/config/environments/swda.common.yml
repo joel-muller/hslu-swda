@@ -1,0 +1,34 @@
+.configSwda:
+  variables:
+
+    # vault secret store
+    VAULT_ADDR: https://vault.sys.hslu-rnd.ch
+    CICD_VT_ADDR: https://vault.sys.hslu-rnd.ch
+    CICD_TRANSIT_VT_ADDR: https://transit-vault.sys.hslu-rnd.ch
+    CICD_VT_AUTH: auth/jwt/switch/login
+    CICD_VT_DEFAULT_ROLE: edu.service.cicd.dev
+
+    # shared resources
+    CICD_DEVOPS_PATH: ${CI_REGISTRY}/hslu/shared/devops
+    CICD_DIND_IMAGE_VER: 27.3.1
+
+    # runner settings
+    CICD_RUNNER: hslu
+    CICD_K8_AGENT: ${CI_REGISTRY}/hslu/shared/devops/ci-agents/k8:890464c4
+
+    #DOCKER_HOST: "tcp://docker:2376"
+    #DOCKER_TLS_CERTDIR: /certs
+    #DOCKER_TLS_VERIFY: 1
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+
+    # registry
+    CICD_VT_PULL_REGISTRIES: 'secret/sys/cicd/docker-registries/hslu-shared-devops secret/edu/cicd/docker-registries/hslu-edu'
+
+    # deploy default
+    CICD_VT_DEFAULT_CD_TARGET: secret/edu/apps/bsc-it/swda/cicd/hosts/swda-g11
+
+  id_tokens:
+    CICD_VAULT_JWT:
+      aud: https://vault.sys.hslu-rnd.ch/

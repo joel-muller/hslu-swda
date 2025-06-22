@@ -1,0 +1,10 @@
+include:
+  - /swda/config/filters.yml
+  - /swda/config/stages.yml
+  - /swda/config/environments/swda.common.yml
+
+# job templates with environment config
+.job:
+  extends: .configSwda
+  tags:
+    - $CICD_RUNNER

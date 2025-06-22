@@ -1,0 +1,27 @@
+########
+# BUILD
+########
+.filterFastCI:
+  rules:
+
+    - if: $CICD_FAST
+      when: never
+
+    # auto run
+    - when: on_success
+
+.filterBuild:
+  rules:
+
+    # auto run
+    - when: on_success
+
+##########
+# PUBLISH
+##########
+.filterPublish:
+  rules:
+
+    # only on main branch
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
