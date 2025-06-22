@@ -1,0 +1,401 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+// TODO: Konzepte, welche mehrere Komponenten betreffen (z.B. Schnittstellen, Datenmodell, Testing, Sicherheit) beschreiben.
+// Hinweise:
+// - Hier die proprietäre Schnittstelle zwischen LoggerComponent und LoggerServer dokumentieren.
+// - Hier die Teststrategie dokumentieren (ca. ½ A4-Seite):
+//   - Auf welchem Level (System, Komponente, Unit) wird welche Funktionalität getestet mit Begründung der Wahl.
+//   - Welche Funktionalität wird automatisch getestet und welche manuell mit Begründung der Wahl.
+//   - Welche Funktionalität wird nicht getestet mit Begründung, warum dies kein Problem ist.
+//   - Zusätzliche Informationen, z.B. ob und für welche Funktionalitäten Test-First eingesetzt wird mit Begründung.
+
+
+[[section-concepts]]
+== Querschnittsthemen
+
+=== Gateway
+
+==== Gateway Endpoints
+
+POST http://IP/api/v1/stores/createdefault (leerer Body): erstellt 10 default stores mit zufälliger Store ID.
+POST http://IP/api/v1/stores/create (leerer Body): erstellt 1 stores mit zufälliger Store ID.
+GET http://IP/api/v1/stores/: gibt alle Stores zurück.
+
+=== Benutzerrechte und Rollen
+
+==== System Rights
+
+* user.crud_all
+* customer.crud_all
+* customer.crud_nodelete
+* order.crud_all
+* store.warehouse
+* store.status
+* store.all
+* logs.read
+
+==== User Roles with System Rights
+
+* sys_admin
+** user.crud_all
+** customer.crud_all
+** order.crud_all
+** store.all
+** logs.read
+* sales_personell
+** customer.crud_nodelete
+** order.crud_all
+* data_typist
+** store.warehouse
+* store_manager
+** customer.crud_all
+** order.crud_all
+** store.status
+** logs.read
+
+=== Nachrichten zwischen den einzelnen Services
+
+Die erste Bezeichnung ist jeweils der Microservice, an den die Nachricht geschickt wird (`IngoingMessage`).
+Zum Beispiel `ORDER_RECEIVE_VALIDITY` wird and den Microservice `Order` gesendet.
+
+==== Order Service
+
+[source,txt]
+----
+ORDER_RECEIVE_VALIDITY = "order.receive-validity"
+OrderReceiveValidity(UUID idOrder, boolean valid, Map<Integer, Integer> francsPerUnit, Map<Integer, Integer> centimesPerUnit)
+----
+
+[source,txt]
+----
+ORDER_RECEIVE = "order.receive"
+GatewayOrderReceive(Map<Integer, Integer> articles, UUID storeId, UUID customerId, UUID employeeId)
+----
+
+[source,txt]
+----
+ORDER_CUSTOMER_VALIDITY = "order.customer-validity"
+OrderCustomerValidity(UUID orderId, boolean exists)
+----
+
+[source,txt]
+----
+ORDER_UPDATE = "order.update"
+OrderUpdate(UUID id, List<Integer> articles, boolean storeValid)
+----
+
+[source,txt]
+----
+ORDER_CANCEL = "order.cancel"
+OrderCancel(UUID orderId)
+----
+
+[source,txt]
+----
+ORDER_CONFIRMATION_GET = "order.confirmation.get"
+OrderConfirmationRequest(UUID orderId)
+----
+
+==== Store Management Service
+
+[source,txt]
+----
+STORE_REQUEST_ARTICLES = "store.request-articles"
+StoreRequestArticles(UUID orderId, UUID employeeId, UUID storeId, Map<Integer, Integer> articles)
+----
+
+[source,txt]
+----
+STORE_INVENTORY_UPDATE = "store.inventory-update"
+StoreInventoryUpdate(Map<Integer, Integer> articles, UUID orderId, UUID storeId)
+----
+
+[source,txt]
+----
+STORE_ORDER_READY = "store.order-ready"
+StoreOrderReady(UUID orderId, UUID storeId)
+----
+
+[source,txt]
+----
+STORE_ORDER_CANCELLED = "store.order-cancelled"
+StoreOrderCancelled(UUID orderId, UUID storeId)
+----
+
+[source,txt]
+----
+STORE_INTERNAL_ORDER = "store.internal-order"
+StoreInternalOrder(UUID storeId, Map<Integer, Integer> articles)
+----
+
+[source,txt]
+----
+STORE_CREATION = "store.create-create"
+StoreCreation(boolean addDefaultArticle)
+----
+
+==== Customer Service
+
+[source,txt]
+----
+CUSTOMER_VALIDATE = "customer.validate"
+CustomerValidate(UUID customerId, UUID employeeId, UUID orderId) (in Order Service)
+----
+
+[source,txt]
+----
+CUSTOMER_CREATE = "customer.create"
+?(String firstname, String lastname)
+----
+
+[source,txt]
+----
+CUSTOMER_GET = "customer.get"
+?(UUID customerId)
+----
+
+[source,txt]
+----
+CUSTOMER_UPDATE  = "customer.update"
+?(UUID customerId, String firstname, String lastname)
+----
+
+[source,txt]
+----
+CUSTOMER_DELETE = "customer.delete"
+?(UUID cutomerId)
+----
+
+==== Accounting Service
+
+[source,txt]
+----
+INVOICE_CREATE = "invoice.create"
+InvoiceCreate(UUID orderId, UUID customerId, UUID employeeId, UUID storeId, Map<Integer, Integer> articlesCount, Map<Integer, String> articlesPrices, String totalPrice)
+----
+
+[source,txt]
+----
+CONFIRMATION_CREATE = "confirmation.create"
+----
+
+[source,txt]
+----
+INVOICE_CREATE = "invoice.create"
+----
+
+[source,txt]
+----
+PAYMENTSTATUS_GET = "paymentstatus.get"
+?(UUID customerId)
+----
+
+[source,txt]
+----
+INVOICE_GET = "invoice.get"
+?(UUID customerId, UUID invoiceId)
+----
+
+[source,txt]
+----
+INVOICES_GET = "invoices.get"
+----
+
+==== Central Warehouse Service
+
+[source,txt]
+----
+WAREHOUSE_REQUEST = "central-warehouse.request"
+WarehouseRequest(UUID orderId, UUID storeId, Map<Integer, Integer> articles)
+----
+
+==== Article Registry Service
+
+[source,txt]
+----
+ARTICLES_CHECK_VALIDITY = "articles.check-validity"
+ArticleCheckValidity(UUID orderId, Map<Integer, Integer> articles, UUID employeeId)
+----
+
+==== Log Service
+
+[source,txt]
+----
+LOG = "logs.new"
+LogMessage(String source, long timestamp, UUID userId, String eventType, UUID objUuid, String message)
+----
+
+[source,txt]
+----
+LOGS_GET = "logs.get"
+?(UUID: id) (optional)
+----
+
+[source,txt]
+----
+LOGS_FILTER = "logs.filter"
+?(String source, String userId, String eventType, String objUuid, String directions, int amount)
+----
+
+* UUIDs in a filter are currently String to do .isEmpty() checks rather than null
+* direction : String ("asc" or "desc")
+
+
+==== Authentication Service
+
+[source,txt]
+----
+USER_CREATE = "user.create"
+----
+
+[source,txt]
+----
+USER_GET = "user.get"
+----
+
+[source,txt]
+----
+USER_UPDATE = "user.update"
+UserUpsert(UUID id, String username, String password, String role, UUID employeeId)
+----
+
+[source,txt]
+----
+USER_DELETE = "user.delete"
+UserDelete(UUID userId, UUID employeeId)
+----
+
+[source,txt]
+----
+USER_LOGIN = "user.login"
+UserLogin(String username, String password)
+----
+
+=== DB Einträge
+
+==== Order Service
+
+[source,txt]
+----
+{
+    _id: UUID("76895c82acd345909c007c24a70907f4"),
+    _t: 'DBOrder',
+    articles: [
+        {
+            _t: 'DBArticle',
+            id: 100016,
+            count: 5,
+            delivered: false,
+            francs: 17,
+            centimes: 35
+        }
+    ],
+    date: ISODate('2024-12-21T11:01:47.389Z'),
+    storeId: UUID("5788b73987ca416b804adb70f85d1f8c"),
+    customerId: UUID("1601ce09a90747ad86657b4705796c69"),
+    employeeId: UUID("f9e3d9094c9443e1b9722ad519ebcfb9"),
+    stateEnum: 2,
+    cancelled: false
+}
+----
+
+States können sein:
+
+* STORED(1)
+* ARTICLE_VALIDATED(2)
+* CUSTOMER_VALID(3)
+* READY(4)
+
+==== Store Management Service
+
+[source,txt]
+----
+{
+    _id: UUID("5788b73987ca416b804adb70f85d1f8c"),
+    _t: 'DBStore',
+    articleList: [
+        {
+            _t: 'DBStoreArticle',
+            id: 100054,
+            actualQuantity: 100,
+            minimumQuantity: 10,
+            refillCount: 100
+        }
+    ],
+    openOrders: [
+        {
+            _t: 'DBOrder',
+            id: UUID("76895c82acd345909c007c24a70907f4"),
+            articleOrderedList: [
+                {
+                    _t: 'DBOrderArticle',
+                    id: 100016,
+                    count: 5,
+                    ready: false
+                }
+            ]
+        }
+    ]
+}
+----
+
+==== Customer (Customer Management)
+
+* id : UUID
+* firstname : String
+* lastname : String
+
+==== Article (Article Registry)
+
+Article Registry hat fixe CSV-Dateien, welche nicht verändert werden.
+
+prices.csv:
+
+[source,txt]
+----
+ID,Francs,Rappen
+----
+
+books.csv:
+
+[source,txt]
+----
+"ISBN";"Book-Title";"Book-Author";"Year-Of-Publication";"Publisher";"Image-URL-S";"Image-URL-M";"Image-URL-L"
+----
+
+==== LogEntry (Log)
+
+* id : UUID
+* source : String
+* timestamp : long
+* userId : UUID
+* eventType : String
+* objUuid : UUID
+* message : String
+
+==== Central Warehouse Service:
+These are the tables and fields of the central_warehouse MySQL Database
+
+===== Table warehouseOrder
+* id : int
+* uuid : varchar(50)
+* store_id : varchar(50)
+* customer_order_id : varchar(50)
+* cancelled : bit
+
+===== Table warehouseOrderArticle
+* warehouse_order : int (fk to warehouseOrder.id)
+* article : int
+* count :int
+* fulfilled : int
+* next_delivery_date : Date
+
+=== Testkonzept
+Für dieses Projekt wurde kein Testkonzept erstellt. Weder zu Beginn, noch in der Definition of Done.
+
+==== Was getestet wird
+Mit dieser Grundlage sind die Microservices unterschiedlich getestet. Alle Microservices ausser dem Gateway und Auth Service enthalten mindestens Unit Tests. Die Microservices mit zentraler Business Logic sind mit hoher Coverage getestet worden und nutzen Stubs, Mocks oder Fakes für Integrationstests (Order Service, Article Registry Service, Store Management Service, Log Service). Der Central Warehouse Service und Customer Management Service nutzen Testcontainer für Persistenztests mit den jeweiligen Datenbanken.
+
+Die meisten Microservices wurden zusätzlich manuell mit Messages über den Bus oder über den Gateway-Service mit Curl oder Postman getestet, wobei Antworten, Logs und Datenbank-Einträge auf erwartete Werte geprüft wurden.
+
+Systemtests werden komplett manuell durchgeführt. Für das Testen wird eine Liste an https requests nach und nach abgearbeitet.

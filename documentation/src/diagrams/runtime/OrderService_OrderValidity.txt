@@ -1,0 +1,16 @@
+zenuml
+    title OrderService receive order validty
+    OrderService->Receiver : new Receiver(DatabaseConnector, Modifiable, Message.class, OrderService)
+    Bus ->Receiver : onMessageReceived(message)
+    Receiver->DatabaseConnector : getById(orderId)
+    DatabaseConnector->Receiver : return order
+    if (order_is_not_cancelled_and_not_null) {
+        Receiver->Modifiable : modify(order, message, service)
+        if (order_is_valid) {
+            Modifiable->OrderService : requestArticles(articlesRequest)
+            Modifiable->OrderService : checkCustomerCustomer(customerRequest)
+        } else {
+            Modifiable->Modifiable : order.setCancelled()
+        }
+    }
+    Receiver->DatabaseConnector : storeOrder(order)

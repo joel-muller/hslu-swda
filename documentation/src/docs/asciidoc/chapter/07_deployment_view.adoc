@@ -1,0 +1,32 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-deployment-view]]
+
+== Deployment View
+
+image::verteilungswda.drawio.png[Deployment View]
+
+[cols="1,1"]
+|===
+|Node / Artifakt |Beschreibung
+
+|Docker Image
+|Java-Applikation in einem Docker-Image verpackt. Verwendet die von Maven-erstellte Binary.
+
+|GitLab Repository
+|Beinhaltet die Codebase und führt gleichzeitig das Deployment mit einer GitLab CI Pipeline aus.
+
+|Database
+|Datenbankimplementierung, die in der stack.deploy.yml-Datei spezifiert wird.
+
+|Java Application
+|Deployte Java-Applikation als Docker-Container in der Produktionsumgebung.
+
+|Docker Swarm Stack
+|Die Produktionsumgebung für die Applikation, die mit Docker Swarm realisiert wird.
+
+|External RabbitMQ Bus
+|Externes Netzwerk, das innerhalb der gesamten Docker Swarm-Instanz zur Verfügung gestellt wird. Es ermöglicht die Kommunikation zwischen Stacks.
+|===
+
+Die drei Haupt-Nodes sind über das Internet miteinander verbunden. Der Docker Swarm Stack und der externen RabbitMQ-Bus sind innerhalb der Docker-Swarm-Instanz über Docker-Netzwerke verbunden.

@@ -1,0 +1,11 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-system-scope-and-context]]
+== Kontextabgrenzung
+
+Ein Mitarbeiter (Employee) kann eine Bestellung ausführen (Place Order, internal Order), sie stornieren (Cancel Order) oder den Status einer Bestellung oder eines Ladens einsehen (get information).
+Wenn eine Bestellung ready ist, wird eine Bestellbestätigung an den Accounting Service geschickt (Order information).
+Der Admin kann Logs einsehen (See logs).
+Wenn Artikel im Lager angekommen sind, kann der Datentypist diese im Bestellsystem eintragen (inventory update).
+
+image::context.png[Kontextdiagramm]

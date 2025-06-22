@@ -1,0 +1,14 @@
+/build/
+/target/
+/.dccache
+/.settings
+/.vscode/
+/.DS_Store/
+/.idea/
+*.iml
+.classpath
+.project
+.tmp*
+.$*
+desktop.ini
+effective-pom.xml

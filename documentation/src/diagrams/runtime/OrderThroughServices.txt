@@ -1,0 +1,16 @@
+zenuml
+    title Order
+    Gateway->Order: order.new
+    Order->Gateway: order.created
+    Order->ArticleRegistry : articles.check-validity
+    ArticleRegistry->Order : order.receive-validity
+    Order->CustomerManagement : customer.validate
+    Order->StoreManagement : store.request-articles
+    if(Articles_not_in_store) {
+        StoreManagement->CentralWarehouse : central-warehouse.request
+        Gateway->StoreManagement : store.inventory-update
+    }
+    CustomerManagement->Order : customer.ready
+    StoreManagement->Order : order.update
+    Order->StoreManagement : store.order-ready
+    Order->Accounting : invoice.create

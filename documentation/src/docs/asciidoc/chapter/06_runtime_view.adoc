@@ -1,0 +1,29 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-runtime-view]]
+== Runtime View
+
+=== Bestellung Microservices
+
+Wenn eine Bestellung getätigt wird (`order.new`), kommt eine Bestätigung über das Gateway zurück (`order.created`), dass die Order getätigt wurde.
+Als nächstes wird geprüft, ob die Artikel gültig sind (`articles.check-validity`).
+Wenn dies der Fall ist (`order.receive-validity`), wird parallel der Kunde validiert (`customer.validate`), und die Artikel werden dem zugehörigen Store zugewiesen (`store.request-articles`).
+Falls Artikel nachbestellt werden müssen, werden diese automatisch beim Central Warehouse bestellt (`central-warehouse.request`) und vom Datentypisten über das Gateway eingetragen (`store.inventory-update`).
+Wenn der Kunde geprüft wurde (`customer.ready`) und alle Artikel geprüft wurden (`order.update`), wird der Store über die bereite Bestellung informiert (`store.order-ready`).
+Zudem werden die Details dem Accounting Service übermittelt (`invoice.create`).
+
+image:Order_thorugh_services.png[OrderThroughServices]
+
+<<<<
+
+=== Order Service Validity Received
+
+Wenn der `OrderService` gestartet wird, erstellt er einen neuen `Receiver`.
+Sobald dieser Receiver eine neue Nachricht erhält (`onMessageReceived(..)`), holt er von der Datenbank die zugehörige Bestellung heraus (`getById(orderId)`).
+Wenn die Bestellung existiert und nicht annulliert wurde, wird sie mit dem `Modifiable` verändert (`modify(order, message, service)`).
+Der Modifier prüft, ob die Bestellung gültig ist.
+Wenn die Bestellung gültig ist, werden die Artikel beim Store Management Service bestellt (`requestArticles(..)`), und der Kunde wird geprüft (`checkCustomer(..)`).
+Wenn die Bestellung ungültig ist, wird sie annulliert (`order.setCancelled()`).
+Sobald die Bestellung modifiziert wurde, wird sie abgespeichert (`storeOrder(order)`).
+
+image:order_validity.png[OrderValidity]

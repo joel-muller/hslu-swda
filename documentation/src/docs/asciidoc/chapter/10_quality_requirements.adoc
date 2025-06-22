@@ -1,0 +1,16 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+// TODO: Beschreibung (als Auflistung) der Umsetzung von bekannten und relevanten «nicht funktionalen»-Anforderungen an das zu entwickelnde System.
+//
+// Beispiele:
+// - Wie garantieren Sie das Ihr System die Antwort (Reply) zu einer Anforderung (Request) innerhalb von maximal 100ms versendet?
+// - Wie garantieren Sie, dass Ihr System eine Verfügbarkeit von 99.9% hat?
+// - Wie garantieren Sie das Nachrichten, welche vom System, erhalten werden nicht verloren gehen?
+// - usw.
+
+
+[[section-quality-scenarios]]
+== Qualitätsanforderungen
+
+* Wenn ein Microservice gerade nicht funktioniert, sollten die anderen trotzdem noch funktionieren
+
