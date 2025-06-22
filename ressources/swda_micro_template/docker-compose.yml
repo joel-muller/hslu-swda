@@ -1,0 +1,82 @@
+ #
+ # Copyright 2024 Hochschule Luzern Informatik.
+ #
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at
+ #
+ #      http://www.apache.org/licenses/LICENSE-2.0
+ #
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS,
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ #
+networks:
+    frontend:
+        name: frontend
+
+services:
+   
+    consul:
+        image: consul:1.15.0
+        restart: always
+        ports:
+            - "8500:8500"
+        networks:
+            - frontend
+
+    jaeger:
+        image: jaegertracing/all-in-one:1.42.0
+        depends_on: 
+            - "consul"
+        restart: always
+        environment:
+            COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+        ports:
+            - "5775:5775/udp"
+            - "6831:6831/udp"
+            - "6832:6832/udp"
+            - "5778:5778"
+            - "9411:9411"
+            - "14268:14268"
+            - "16686:16686"
+        networks:
+            - frontend
+
+    postgres:
+        image: postgres:16-alpine
+        restart: always
+        environment:
+            POSTGRES_DB: microdemo
+            POSTGRES_USER: demo
+            POSTGRES_PASSWORD: demo
+        ports:
+            - "5432:5432"
+        networks:
+            - frontend
+
+    microdemo:
+        image: registry.gitlab.com/hslu-i1/swda/swda_micro_template
+        depends_on: 
+            - "consul"
+            - "jaeger"
+            - "postgres"
+        restart: always
+        environment:
+            CONSUL_HOST: consul
+            CONSUL_PORT: 8500
+            JAEGER_AGENT_HOST: jaeger
+            JAEGER_AGENT_PORT: 6831
+            JAEGER_SAMPLER_TYPE: const
+            JAEGER_SAMPLER_PARAM: 1
+            RABBITMQ_HOST: bus
+            RABBITMQ_EXCHANGE: swda
+            RABBITMQ_USER: swda
+            RABBITMQ_PASSWORD: swda
+        ports:
+            - "8090:8090"
+        networks:
+            - frontend
+    

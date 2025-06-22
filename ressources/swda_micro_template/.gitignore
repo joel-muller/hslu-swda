@@ -1,0 +1,10 @@
+/target/
+**/*.log
+/.idea/
+*.iml
+/.dccache
+/.vscode/
+/dependency-reduced-pom.xml
+/.classpath
+/.project
+/nb-configuration.xml

@@ -1,0 +1,22 @@
+micronaut:
+    server:
+        port: -1
+    metrics:
+        enabled: false
+
+endpoints:
+    metrics:
+        enabled: false
+    stop:
+        enabled: false
+    health:
+        enabled: false
+       
+tracing:
+    jaeger:
+        enabled: false   
+
+consul:
+    client:
+        registration:
+            enabled: false

@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"ch.hslu.swda.stock.api","l":"Stock"},{"p":"ch.hslu.swda.stock.api","l":"StockException"},{"p":"ch.hslu.swda.stock.api","l":"StockFactory"}];updateSearchResults();
