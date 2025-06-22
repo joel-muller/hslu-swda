@@ -1,0 +1,127 @@
+version: '3.5'
+
+networks:
+  backbone:
+  demo:
+
+services:
+  
+  bus:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/rabbitmq:3.13.7-management-alpine
+    restart: always
+    ports:
+      - "8082:15672"
+      - "5672:5672"
+    networks:
+      - backbone
+
+  portainer:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/portainer-ce:2.19.1-alpine
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+    ports:
+      - "8083:9000"
+    networks:
+      - backbone
+  
+  mongodb:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/bitnami/mongodb:4.2.19
+    restart: always
+    ports:
+      - '27017:27017'
+    networks:
+      - backbone
+
+  mongo-viewer:
+    image: cr.gitlab.switch.ch/hslu/shared/devops/docker-cache/mongo-express:0.54
+    restart: always
+    ports:
+      - "8084:8081"
+    networks:
+      - backbone
+    links:
+      - "mongodb:mongo"
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: store_management
+    ports:
+      - "3306:3306"
+    networks :
+      - backbone
+      - demo
+
+  db_test:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: store_management_test
+    ports:
+      - "3307:3306"
+    networks:
+    - backbone
+    - demo
+
+
+  mysql-viewer:
+    image: adminer:latest
+    networks:
+      - backbone
+    ports:
+      - "8080:8080"
+    restart: always
+
+
+
+##############################################
+# Demo Stack                                 #
+# you can remove these services if you want  #
+##############################################
+
+  demo-register:
+    image: cr.gitlab.switch.ch/hslu/edu/bachelor-computer-science/swda/shared/registry/register-service:1.0.0
+    restart: always
+    environment:
+      - 'RABBITMQ_URL=amqp://swda:swda@bus:5672/'
+      - 'DB_URL=mongodb://demo-db:27017'
+      - 'DB_USER=root'
+      - 'DB_PASSWORD=root'
+    networks:
+      - backbone
+    ports:
+      - '8091:8090'
+  
+  demo-statistics:
+    image: cr.gitlab.switch.ch/hslu/edu/bachelor-computer-science/swda/shared/registry/statistics-service:1.0.0
+    restart: always
+    environment:
+      - 'RABBITMQ_URL=amqp://swda:swda@bus:5672/'
+    networks:
+      - backbone
+    ports:
+      - '8092:8090'
+  
+  demo-dashboard-backend:
+    image: cr.gitlab.switch.ch/hslu/edu/bachelor-computer-science/swda/shared/registry/dashboard-service/backend:1.0.0
+    restart: always
+    environment:
+      - 'RABBITMQ_URL=amqp://swda:swda@bus:5672/'
+    networks:
+      - backbone
+      - demo
+    ports:
+      - '8093:8090'
+
+  demo-dashboard-frontend:
+    image: cr.gitlab.switch.ch/hslu/edu/bachelor-computer-science/swda/shared/registry/dashboard-service/frontend:1.0.0
+    restart: always
+    environment:
+      - SERVER_URL=http://localhost:8093
+    networks:
+      - backbone
+      - demo
+    ports:
+      - '8094:80'
